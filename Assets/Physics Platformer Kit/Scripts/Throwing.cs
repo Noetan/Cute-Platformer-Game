@@ -9,8 +9,9 @@ using System.Collections;
 public class Throwing : MonoBehaviour 
 {
 	public AudioClip pickUpSound;								//sound when you pickup/grab an object
-	public AudioClip throwSound;								//sound when you throw an object
-	public GameObject grabBox;									//objects inside this trigger box can be picked up by the player (think of this as your reach)
+	public AudioClip throwSound;                                //sound when you throw an object
+    //public GameObject grabBox;							    //objects inside this trigger box can be picked up by the player (think of this as your reach)
+    public GameObject objectInGrabbox;
 	public float gap = 0.5f;									//how high above player to hold objects
 	public Vector3 throwForce = new Vector3(0, 5, 7);			//the throw force of the player
 	public float rotateToBlockSpeed = 3;						//how fast to face the "Pushable" object you're holding/pulling
@@ -39,8 +40,9 @@ public class Throwing : MonoBehaviour
 	//setup
 	void Awake()
 	{
+        // Old, stupid way
 		//create grabBox is none has been assigned
-		if(!grabBox)
+		/*if(!grabBox)
 		{
 			grabBox = new GameObject();
 			grabBox.AddComponent<BoxCollider>();
@@ -49,7 +51,7 @@ public class Throwing : MonoBehaviour
 			grabBox.transform.localPosition = new Vector3(0f, 0f, 0.5f);
 			grabBox.layer = 2;	//ignore raycast by default
 			Debug.LogWarning("No grabBox object assigned to 'Throwing' script, one has been created and assigned for you", grabBox);
-		}
+		}*/
 		
 		playerMove = GetComponent<PlayerMove>();
 		characterMotor = GetComponent<CharacterMotor>();
@@ -58,47 +60,66 @@ public class Throwing : MonoBehaviour
 		if(animator)
 			animator.SetLayerWeight(armsAnimationLayer, 1);
 	}
-	
-	//throwing/dropping
-	void Update()
-	{
+
+    //throwing/dropping
+    void Update()
+    {
         //when we press grab button, throw object if we're holding one
-            if (Input.GetButtonDown ("Grab") && heldObj && Time.time > timeOfPickup + 0.1f)
-		{
-			if(heldObj.tag == "Pickup") 
-				ThrowPickup();
-		}
-		//set animation value for arms layer
-		if(animator)
-			if(heldObj && heldObj.tag == "Pickup")
-				animator.SetBool ("HoldingPickup", true);
-			else
-				animator.SetBool ("HoldingPickup", false);
-		
-			if(heldObj && heldObj.tag == "Pushable")
-				animator.SetBool ("HoldingPushable", true);
-			else
-				animator.SetBool ("HoldingPushable", false);
-		
-		//when grab is released, let go of any pushable objects were holding
-		if (heldObj && heldObj.tag == "Pushable")
-		{
-			characterMotor.RotateToDirection(heldObj.transform.position, rotateToBlockSpeed, true);
-			if(Input.GetButtonUp ("Grab"))
-			{
-				DropPushable();
-			}
-			
-			if(!joint)
-			{
-				DropPushable();
-				print ("'Pushable' object dropped because the 'holdingBreakForce' or 'holdingBreakTorque' was exceeded");
-			}	
-		}
-	}
-	
-	//pickup/grab
-	void OnTriggerStay(Collider other)
+        if (Input.GetButtonDown("Grab") && heldObj && Time.time > timeOfPickup + 0.1f)
+        {
+            if (heldObj.tag == "Pickup")
+                ThrowPickup();
+        }
+        //set animation value for arms layer
+        if (animator)
+            if (heldObj && heldObj.tag == "Pickup")
+                animator.SetBool("HoldingPickup", true);
+            else
+                animator.SetBool("HoldingPickup", false);
+
+        if (heldObj && heldObj.tag == "Pushable")
+            animator.SetBool("HoldingPushable", true);
+        else
+            animator.SetBool("HoldingPushable", false);
+
+        //when grab is released, let go of any pushable objects were holding
+        if (heldObj && heldObj.tag == "Pushable")
+        {
+            characterMotor.RotateToDirection(heldObj.transform.position, rotateToBlockSpeed, true);
+            if (Input.GetButtonUp("Grab"))
+            {
+                DropPushable();
+            }
+
+            if (!joint)
+            {
+                DropPushable();
+                print("'Pushable' object dropped because the 'holdingBreakForce' or 'holdingBreakTorque' was exceeded");
+            }
+        }
+
+        // Grabbing fix, actually uses other object's collider not itself
+        if (objectInGrabbox != null)
+        {
+            if (Input.GetButton("Grab"))
+            {
+
+                // Pickup
+                if (objectInGrabbox.CompareTag("Pickup") && heldObj == null && timeOfThrow + 0.2f < Time.time)
+                {
+                    LiftPickup(objectInGrabbox.GetComponent<Collider>());
+                }
+                // Grab
+                if (objectInGrabbox.CompareTag("Pushable") && heldObj == null && timeOfThrow + 0.2f < Time.time)
+                {
+                    GrabPushable(objectInGrabbox.GetComponent<Collider>());
+                }
+            }
+        }
+    }
+
+            //pickup/grab
+            void OnTriggerStay(Collider other)
 	{
 		//if grab is pressed and an object is inside the players "grabBox" trigger
 		if(Input.GetButton("Grab"))
