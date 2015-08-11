@@ -118,8 +118,8 @@ public class Throwing : MonoBehaviour
         }
     }
 
-            //pickup/grab
-            void OnTriggerStay(Collider other)
+    //pickup/grab
+    void OnTriggerStay(Collider other)
 	{
 		//if grab is pressed and an object is inside the players "grabBox" trigger
 		if(Input.GetButton("Grab"))
@@ -144,7 +144,7 @@ public class Throwing : MonoBehaviour
 		joint.breakTorque = holdingBreakTorque;
 		//stop player rotating in direction of movement, so they can face the block theyre pulling
 		playerMove.rotateSpeed = 0;
-	}
+    }
 	
 	private void LiftPickup(Collider other)
 	{
@@ -154,7 +154,7 @@ public class Throwing : MonoBehaviour
 		holdPos.y += (GetComponent<Collider>().bounds.extents.y) + (otherMesh.bounds.extents.y) + gap;
 		
 		//if there is space above our head, pick up item (layermask index 2: "Ignore Raycast", anything on this layer will be ignored)
-		if(!Physics.CheckSphere(holdPos, checkRadius, 2))
+		if(!Physics.CheckSphere(holdPos, checkRadius)) // Fixed being able to pick up things even when there were things overhead
 		{
 			gizmoColor = Color.green;
 			heldObj = other.gameObject;
@@ -183,7 +183,7 @@ public class Throwing : MonoBehaviour
 		playerMove.rotateSpeed = defRotateSpeed;
 		heldObj = null;
 		timeOfThrow = Time.time;
-	}
+    }
 	
 	public void ThrowPickup()
 	{

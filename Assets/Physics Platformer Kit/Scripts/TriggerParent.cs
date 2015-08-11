@@ -60,12 +60,34 @@ public class TriggerParent : MonoBehaviour
 			colliding = true;
 		}
 	}
-	
-	//this runs after the main code, and resets the info to false
-	//so we know when something is no longer colliding with this trigger
-	void LateUpdate()
+
+    // Added OnTriggerExit to fix Enemy AI 'flickering' movement when not using VSync, as it was turned on and off every update
+    void OnTriggerExit(Collider other)
+    {
+        if (tagsToCheck.Length > 0)
+        {
+            foreach (string tag in tagsToCheck)
+            {
+                if (other.tag == tag)
+                {
+                    colliding = false;
+                    hitObject = null;
+                    break;
+                }
+            }
+        }
+
+        else
+            return;
+    }
+
+    //this runs after the main code, and resets the info to false
+    //so we know when something is no longer colliding with this trigger
+    void LateUpdate()
 	{
-		colliding = false;
+        // Colliding bool here causes Enemy AI to move very slowly if VSync is off, as EnemyAI 'flickers' on and  off
+        // Fixed by moving this to OnTriggerExit
+		//colliding = false;
 		collided = false;
 		hitObject = null;
 	}
