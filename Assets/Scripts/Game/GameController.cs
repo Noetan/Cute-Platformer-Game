@@ -15,8 +15,6 @@ public class GameController : MonoBehaviour
         Instance = this;
         // Prevent the game controller from being destroyed when loading new levels
         DontDestroyOnLoad(this);
-
-        // Load the game here
     }
 
 	// Use this for initialization
@@ -143,4 +141,9 @@ public class GameController : MonoBehaviour
         }
     }
     #endregion
+
+    IEnumerator Delay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+    }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Standalone helper functions that can be called from anywhere
+
+using UnityEngine;
 using System.Collections.Generic;
 
 public static class Helper
@@ -7,7 +9,6 @@ public static class Helper
     /// Separates out the individual digits in an integer into a list
     /// Requires a positive number
     /// </summary>
-    /// <param name="number"></param>
     public static List<int> SeparateDigits(int number)
     {
         var digitsList = new List<int>();

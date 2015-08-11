@@ -1,13 +1,14 @@
 ﻿// Adds additional features to the default MonoBehaviour class
+// For 2D sprites only
 
 using UnityEngine;
 using System.Collections;
 
-public class CustomBehaviour : MonoBehaviour
+public class Custom2DBehaviour : MonoBehaviour
 {
     protected bool IsFlashing;
 
-    public CustomBehaviour()
+    public Custom2DBehaviour()
     {
         IsFlashing = false;
     }
@@ -33,6 +34,7 @@ public class CustomBehaviour : MonoBehaviour
     }
 
     // Zeros out the object's velocity and angular velocity
+    // Takes a physics frame to complete
     protected IEnumerator StopRigidBody2D(Rigidbody2D rb)
     {
         rb.isKinematic = true;
@@ -43,7 +45,6 @@ public class CustomBehaviour : MonoBehaviour
     /// <summary>
     /// Calls GetComponent. Use StopRigidBody2D(Rigidbody2D rb) if rigidbody2D is already cached
     /// </summary>
-    /// <returns></returns>
     protected IEnumerator StopRigidBody2D()
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
@@ -52,6 +53,7 @@ public class CustomBehaviour : MonoBehaviour
         rb.isKinematic = false;
     }
 
+    // Change the alpha of the given sprite
     protected void SetTransparency(SpriteRenderer sprite, float newAlpha)
     {
         sprite.color = new Color(sprite.color.r,

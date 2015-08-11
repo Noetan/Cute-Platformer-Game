@@ -1,12 +1,22 @@
-﻿using System;
+﻿// GameObjectPool
+// Use to store a frequently used objects (like bullets)
+// Only stores objects that have been prefabbed
+// Read constructor summary for more
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MemoryManagment
 {
-    #region Custom
-    // Used to hold gameobjects which are to be instantiated
-    // Require user to reset each gameobject manually
+    /// <summary>
+    /// Used to hold gameobjects which are to be instantiated.
+    /// Requires user to reset each gameobject manually if needed
+    /// initBuffer = how large to make the pool
+    /// preFab = the unity prefab to make copies of
+    /// parent = the object to parent the objects to in the unity editor hierachy
+    /// lazyInstance = if false, pre-instantiate all the prefabs into the pool
+    /// </summary>
     public class GameObjectPool
     {
         Stack<GameObject> m_objectStack;
@@ -75,5 +85,4 @@ namespace MemoryManagment
             return newObj;
         }
     }
-    #endregion    
 }
