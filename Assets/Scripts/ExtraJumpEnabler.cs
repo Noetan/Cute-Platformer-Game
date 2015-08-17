@@ -19,16 +19,25 @@ public class ExtraJumpEnabler : MonoBehaviour
     //We'll store here if we're swimming or not
     private bool isSwimming = false;
 
+    private PlayerWallJump playerWallJump;
+
     // Use this for initialization
     void Start()
     {
         //Pick the Player Move component
         playerMove = GetComponent<PlayerMove>();
+
+        playerWallJump = GetComponent<PlayerWallJump>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (playerWallJump.CanWallJump)
+        {
+            return;
+        }
+
         //If we receive a jump button down, we're not grounded and we can double jump...
         if (Input.GetButtonDown("Jump") && !isGrounded && canDoubleJump)
         {
