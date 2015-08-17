@@ -80,6 +80,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
         GroundedBool = playerMove.animator.GetBool("Grounded");
+        //GroundedBool = playerMove.OnGround;
         if (!GroundedBool)
         {
             //If my current Y position is less than my Previously recorded Y position, then I'm going down

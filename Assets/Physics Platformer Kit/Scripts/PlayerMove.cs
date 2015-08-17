@@ -32,8 +32,8 @@ public class PlayerMove : MonoBehaviour
 	public float jumpDelay = 0.1f;							//how fast you need to jump after hitting the ground, to do the next type of jump
 	public float jumpLeniancy = 0.17f;						//how early before hitting the ground you can press jump, and still have it work
 	[HideInInspector]
-	public int onEnemyBounce;					
-	
+	public int onEnemyBounce;
+    					
 	private int onJump;
 	private bool grounded;
 	private Transform[] floorCheckers;
