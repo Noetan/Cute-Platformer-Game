@@ -19,22 +19,31 @@ public class ExtraJumpEnabler : MonoBehaviour
     //We'll store here if we're swimming or not
     private bool isSwimming = false;
 
-    private PlayerWallJump playerWallJump;
+    // How high we jump off a wall
+    public float WallJumpYVelocity = 14;
+    // How much we multiply the normal, to force us off the wall
+    public float WallJumpHorizontalMultiplier = 750;
+    // Store normal of collision so we can use it in calculations
+    private Vector3 collisionNormal;
+    private GameObject CurrentWall;
+    private CharacterMotor characterMotor;
+    public bool CanWallJump;
 
     // Use this for initialization
     void Start()
     {
         //Pick the Player Move component
         playerMove = GetComponent<PlayerMove>();
-
-        playerWallJump = GetComponent<PlayerWallJump>();
+        characterMotor = GetComponent<CharacterMotor>();
+        CanWallJump = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerWallJump.CanWallJump)
+        if(CanWallJump)
         {
+            WallJump();
             return;
         }
 
@@ -107,6 +116,61 @@ public class ExtraJumpEnabler : MonoBehaviour
 
             //Let's turn our swimming bool off on the animator
             //playerMove.animator.SetBool ("Swimming", false);
+        }
+
+        CanWallJump = false;
+        CurrentWall = null;
+        collisionNormal = Vector3.zero;
+    }
+
+    void WallJump()
+    {
+        if (!CanWallJump)
+        {
+            return;
+        }
+        if (Input.GetButtonDown("Jump") && !isGrounded && CanWallJump)
+        {
+            Vector3 WallPos = CurrentWall.transform.position;
+            Vector3 myPos = transform.position;
+            myPos.y = 0;
+            WallPos.y = 0;
+            transform.rotation = Quaternion.LookRotation(myPos - WallPos);
+
+            // 'Reset' player velocity so we don't get 'super' walljumps/barely any momentum at all
+            Vector3 playerVel = gameObject.GetComponent<Rigidbody>().velocity;
+            playerVel = new Vector3(playerVel.x, 0f, playerVel.z);
+            gameObject.GetComponent<Rigidbody>().velocity = playerVel;
+            // Ensure for Y component to normal, for the same above reason
+            collisionNormal = new Vector3(collisionNormal.x, 0f, collisionNormal.z);
+            gameObject.GetComponent<Rigidbody>().AddForce(collisionNormal * WallJumpHorizontalMultiplier);
+            playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0));
+
+            playerMove.animator.Play("Jump1", 0);
+            //And lets set the double jump to false!
+            CanWallJump = false;
+        }
+        if (CanWallJump && !isGrounded)
+        {
+            //characterMotor.RotateToDirection(transform.position-CurrentWall.transform.position,900f,true);
+            Vector3 WallPos = CurrentWall.transform.position;
+            Vector3 myPos = transform.position;
+            myPos.y = 0;
+            WallPos.y = 0;
+            transform.rotation = Quaternion.LookRotation(WallPos - myPos);
+        }
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        foreach (ContactPoint contact in col.contacts)
+        {
+            if (Vector3.Angle(contact.normal, Vector3.up) > 80.0f)
+            {
+                CanWallJump = true;
+                CurrentWall = col.gameObject;
+                collisionNormal = contact.normal;
+            }
         }
     }
 }

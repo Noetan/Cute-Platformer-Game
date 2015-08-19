@@ -101,12 +101,9 @@ public class PlayerWallJump : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            CanWallJump = false;
-            CurrentWall = null;
-            collisionNormal = Vector3.zero;
-        }
+        CanWallJump = false;
+        CurrentWall = null;
+        collisionNormal = Vector3.zero;
     }
 }
 
