@@ -14,6 +14,12 @@ public class CameraFollow : MonoBehaviour
 	
 	private Transform followTarget;
 	private bool camColliding;
+
+    // Current time without input
+    private float noInputTimer = 0f;
+    // How long to wait for input
+    public float waitForInput = 10f;
+    private PlayerMove playerMove;
 	
 	//setup objects
 	void Awake()
@@ -28,6 +34,8 @@ public class CameraFollow : MonoBehaviour
 		//don't smooth rotate if were using mouselook
 		if(mouseFreelook)
 			rotateDamping = 0f;
+
+        playerMove = target.GetComponent<PlayerMove>();
 	}
 	
 	//run our camera functions each frame
@@ -105,5 +113,29 @@ public class CameraFollow : MonoBehaviour
 			//otherwise, move cam to intended position
 			transform.position = nextFramePosition;
 		}
-	}
+
+        float axisHorizonatal = 0;
+        float axisVertical = 0;
+        if (mouseFreelook)
+        {
+            axisHorizonatal = Input.GetAxis("Mouse X");
+            axisVertical = Input.GetAxis("Mouse Y");
+        }
+        else
+        {
+            axisHorizonatal = Input.GetAxis("CamHorizontal");
+        }
+
+        if (axisHorizonatal == 0 && axisVertical == 0)
+        {
+            noInputTimer += Time.deltaTime;
+        }
+
+        if (noInputTimer >= waitForInput)
+        {
+            float angleSnap = transform.eulerAngles.y - playerMove.transform.eulerAngles.y;
+            followTarget.RotateAround(target.position, Vector3.up, -angleSnap);
+            noInputTimer = 0f;
+        }
+    }
 }
