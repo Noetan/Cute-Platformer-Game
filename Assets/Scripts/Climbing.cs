@@ -12,6 +12,7 @@ public class Climbing : MonoBehaviour {
     private bool ClimbingLadder;
     private bool ClimbingWall;
     private bool CanClimb;
+    private Vector3 surfaceNormal;
 
     // Use this for initialization
     void Start () {
@@ -78,6 +79,9 @@ public class Climbing : MonoBehaviour {
         {
             // We are now climbing a rope
             ClimbingRope = true;
+            // Rotate to face surface
+            Quaternion rotation = Quaternion.LookRotation(-surfaceNormal);
+            transform.rotation = rotation;
             // Disable my Player Move, let me handle the input.
             playerMove.enabled = false;
             // Set the RigidBody to Kinematic as we're handling the movement
@@ -90,6 +94,14 @@ public class Climbing : MonoBehaviour {
         {
             // We are now climbing a ladder
             ClimbingLadder = true;
+            // Snap to centre of ladder
+            Vector3 centre = new Vector3(col.transform.position.x, transform.position.y,
+                col.transform.position.z);
+            transform.position = centre;
+            // Rotate to face surface
+            Quaternion rotation = Quaternion.LookRotation(-surfaceNormal);
+            transform.rotation = rotation;
+            //characterMotor.RotateToDirection(-surfaceNormal, 10000, true);
             // Disable my Player Move, let me handle the input.
             playerMove.enabled = false;
             // Set the RigidBody to Kinematic as we're handling the movement
@@ -101,6 +113,9 @@ public class Climbing : MonoBehaviour {
         {
             // We are now climbing a wall
             ClimbingWall = true;
+            // Rotate to face surface
+            Quaternion rotation = Quaternion.LookRotation(-surfaceNormal);
+            transform.rotation = rotation;
             // Disable my Player Move, let me handle the input.
             playerMove.enabled = false;
             // Set the RigidBody to Kinematic as we're handling the movement
@@ -120,8 +135,9 @@ public class Climbing : MonoBehaviour {
         {
             foreach (ContactPoint contact in col.contacts)
             {
-                Quaternion rotation = Quaternion.LookRotation(contact.normal);
-                transform.rotation = rotation;
+                /*Quaternion rotation = Quaternion.LookRotation(contact.normal);
+                transform.rotation = rotation;*/
+                surfaceNormal = contact.normal;
             }
         }
     }
