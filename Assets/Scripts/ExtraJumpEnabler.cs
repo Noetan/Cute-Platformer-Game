@@ -13,6 +13,9 @@ public class ExtraJumpEnabler : MonoBehaviour
     // How much we multiply the normal, to force us off the wall
     [SerializeField]
     float WallJumpHorizontalMultiplier = 750;
+    // How high we jump in midair
+    [SerializeField]
+    Vector3 midAirJumpForce = new Vector3(0, 10, 0);
     #endregion
     
     //We'll use this to communicate with the playerMove.
@@ -61,7 +64,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !m_isGrounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
-            m_playerMove.Jump(m_playerMove.jumpForce);
+            m_playerMove.Jump(midAirJumpForce);
             //And lets set the double jump to false!
             m_canDoubleJump = false;
         }
