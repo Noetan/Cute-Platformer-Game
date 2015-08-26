@@ -16,8 +16,11 @@ public class ExtraJumpEnabler : MonoBehaviour
     // How high we jump in midair
     [SerializeField]
     Vector3 midAirJumpForce = new Vector3(0, 10, 0);
+    // FX to play on mid air jump
+    [SerializeField]
+    public GameObject midAirJumpParticleEffect;
     #endregion
-    
+
     //We'll use this to communicate with the playerMove.
     PlayerMove m_playerMove;
 
@@ -67,6 +70,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_playerMove.Jump(midAirJumpForce);
             //And lets set the double jump to false!
             m_canDoubleJump = false;
+            Instantiate(midAirJumpParticleEffect, m_playerMove.jumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         //If we receive a jump button down, we're not grounded and we are swimming...
         else if (Input.GetButtonDown("Jump") && !m_isGrounded && m_isSwimming)
@@ -162,6 +166,8 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_playerMove.animator.Play("Jump1", 0);
             //And lets set the double jump to false!
             CanWallJump = false;
+
+            Instantiate(midAirJumpParticleEffect, m_playerMove.jumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         if (CanWallJump && !m_isGrounded)
         {
