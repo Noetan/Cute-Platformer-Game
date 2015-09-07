@@ -57,11 +57,11 @@ public class PlayerMove : MonoBehaviour
     [SerializeField]
     Vector3 m_jumpForce =  new Vector3(0, 13, 0);
     // the force of a 2nd consecutive jump
-    [SerializeField]
-    Vector3 m_secondJumpForce = new Vector3(0, 13, 0);
+    //[SerializeField]
+    Vector3 m_secondJumpForce = new Vector3(0, 17, 0);
     // the force of a 3rd consecutive jump
-    [SerializeField]
-    Vector3 m_thirdJumpForce = new Vector3(0, 13, 0);
+    //[SerializeField]
+    Vector3 m_thirdJumpForce = new Vector3(0, 20, 0);
     // how fast you need to jump after hitting the ground, to do the next type of jump
     [SerializeField]
     float m_jumpDelay = 0.1f;
@@ -72,6 +72,9 @@ public class PlayerMove : MonoBehaviour
     GameObject m_jumpingParticleEffect;
     [SerializeField]
     Transform m_jumpingEffectLocation;
+    // How long you can hold the jump button before you start falling again
+    [SerializeField]
+    float m_maxJumpTime = 0.25f;
 #endregion
 
     [HideInInspector]
@@ -271,7 +274,8 @@ public class PlayerMove : MonoBehaviour
 		{
 			//and we press jump, or we pressed jump just before hitting the ground
 			if (Input.GetButtonDown ("Jump") || airPressTime + m_jumpLeniancy > Time.time)
-			{	
+			{
+                /*
 				//increment our jump type if we haven't been on the ground for long
 				onJump = (groundedCount < m_jumpDelay) ? Mathf.Min(2, onJump + 1) : 0;
 				//execute the correct jump (like in mario64, jumping 3 times quickly will do higher jumps)
@@ -281,6 +285,9 @@ public class PlayerMove : MonoBehaviour
                         StartCoroutine( Jump(m_secondJumpForce) );
 				else if (onJump == 2)
                         StartCoroutine( Jump(m_thirdJumpForce) );
+                        */
+                StartCoroutine(Jump(m_jumpForce));
+
                 Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
 			}
 		}
@@ -312,7 +319,7 @@ public class PlayerMove : MonoBehaviour
 
         // Let the play continue moving while the jump button is held down
         // and the jump time length isnt up
-        while (Input.GetButton("Jump")) //&& timer < jumpTime)
+        while ( Input.GetButton("Jump") && timer < m_maxJumpTime )
         {
             timer += Time.deltaTime;
 
