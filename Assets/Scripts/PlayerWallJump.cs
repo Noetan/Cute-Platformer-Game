@@ -64,7 +64,7 @@ public class PlayerWallJump : MonoBehaviour
             gameObject.GetComponent<Rigidbody>().AddForce(collisionNormal * WallJumpHorizontalMultiplier);
             playerMove.Jump(new Vector3(0,WallJumpYVelocity, 0));
 
-            playerMove.animator.Play("Jump1", 0);
+            playerMove.AnimatorComp.Play("Jump1", 0);
             //And lets set the double jump to false!
             CanWallJump = false;
         }
@@ -83,7 +83,7 @@ public class PlayerWallJump : MonoBehaviour
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly
-        GroundedBool = playerMove.animator.GetBool("Grounded");
+        GroundedBool = playerMove.AnimatorComp.GetBool("Grounded");
     }
 
     void OnCollisionEnter(Collision col)

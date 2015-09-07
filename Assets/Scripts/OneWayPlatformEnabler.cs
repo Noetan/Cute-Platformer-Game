@@ -67,7 +67,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
     IEnumerator CollisionBackOn()
     {
         //Change our layer to the layer that allows our fall
-        playerMove.animator.Play("Jump1", 0);
+        playerMove.AnimatorComp.Play("Jump1", 0);
         gameObject.layer = JumpingUpLayer;
         //Wait 0.5f for us to fall
         yield return new WaitForSeconds(0.5f);
@@ -79,7 +79,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
-        GroundedBool = playerMove.animator.GetBool("Grounded");
+        GroundedBool = playerMove.AnimatorComp.GetBool("Grounded");
         //GroundedBool = playerMove.OnGround;
         if (!GroundedBool)
         {

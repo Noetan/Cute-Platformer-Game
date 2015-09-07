@@ -67,23 +67,23 @@ public class ExtraJumpEnabler : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !m_isGrounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
-            m_playerMove.Jump(midAirJumpForce);
+            StartCoroutine(m_playerMove.Jump(midAirJumpForce) );
             //And lets set the double jump to false!
             m_canDoubleJump = false;
-            Instantiate(midAirJumpParticleEffect, m_playerMove.jumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
+            Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         //If we receive a jump button down, we're not grounded and we are swimming...
         else if (Input.GetButtonDown("Jump") && !m_isGrounded && m_isSwimming)
         {
             //Do a jump with the first jump force! :D Or a third of it, because the first one is already too much for swimming
-            m_playerMove.Jump(m_playerMove.jumpForce / 3);
+            StartCoroutine(m_playerMove.Jump(m_playerMove.JumpForce / 3) );
         }
     }
 
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
-        m_isGrounded = m_playerMove.animator.GetBool("Grounded");
+        m_isGrounded = m_playerMove.AnimatorComp.GetBool("Grounded");
         //If I can't double jump...
         if (!m_canDoubleJump)
         {
@@ -120,7 +120,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_isSwimming = true;
 
             //If we have an animation for swimming we should set a bool to true or something
-            //playerMove.animator.SetBool ("Swimming", true);
+            //playerMove.AnimatorComp.SetBool ("Swimming", true);
         }
     }
 
@@ -132,7 +132,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_isSwimming = false;
 
             //Let's turn our swimming bool off on the animator
-            //playerMove.animator.SetBool ("Swimming", false);
+            //playerMove.AnimatorComp.SetBool ("Swimming", false);
         }
 
         CanWallJump = false;
@@ -161,13 +161,13 @@ public class ExtraJumpEnabler : MonoBehaviour
             // Ensure for Y component to normal, for the same above reason
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
-            m_playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0));
+            StartCoroutine( m_playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0)) );
 
-            m_playerMove.animator.Play("Jump1", 0);
+            m_playerMove.AnimatorComp.Play("Jump1", 0);
             //And lets set the double jump to false!
             CanWallJump = false;
 
-            Instantiate(midAirJumpParticleEffect, m_playerMove.jumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
+            Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         if (CanWallJump && !m_isGrounded)
         {

@@ -55,7 +55,7 @@ public class Throwing : MonoBehaviour
 		
 		playerMove = GetComponent<PlayerMove>();
 		characterMotor = GetComponent<CharacterMotor>();
-		defRotateSpeed = playerMove.rotateSpeed;
+		defRotateSpeed = playerMove.RotateSpeed;
 		//set arms animation layer to animate with 1 weight (full override)
 		if(animator)
 			animator.SetLayerWeight(armsAnimationLayer, 1);
@@ -143,7 +143,7 @@ public class Throwing : MonoBehaviour
 		joint.breakForce = holdingBreakForce;
 		joint.breakTorque = holdingBreakTorque;
 		//stop player rotating in direction of movement, so they can face the block theyre pulling
-		playerMove.rotateSpeed = 0;
+		playerMove.RotateSpeed = 0;
     }
 	
 	private void LiftPickup(Collider other)
@@ -180,7 +180,7 @@ public class Throwing : MonoBehaviour
 	{
 		heldObj.GetComponent<Rigidbody>().interpolation = objectDefInterpolation;
 		Destroy (joint);
-		playerMove.rotateSpeed = defRotateSpeed;
+		playerMove.RotateSpeed = defRotateSpeed;
 		heldObj = null;
 		timeOfThrow = Time.time;
     }

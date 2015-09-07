@@ -87,7 +87,7 @@ public class Climbing : MonoBehaviour {
             // Set the RigidBody to Kinematic as we're handling the movement
             playerRB.isKinematic = true;
             // Set the Bool ClimbingRope on the animnator to true
-            //playerMove.animator.SetBool("ClimbingRope", true);
+            //playerMove.AnimatorComp.SetBool("ClimbingRope", true);
             //...
         }
         else if (col.gameObject.CompareTag("Ladder"))
@@ -107,7 +107,7 @@ public class Climbing : MonoBehaviour {
             // Set the RigidBody to Kinematic as we're handling the movement
             playerRB.isKinematic = true;
             // Set the Bool ClimbingRope on the animnator to true
-            //playerMove.animator.SetBool("ClimbingLadder", true);
+            //playerMove.AnimatorComp.SetBool("ClimbingLadder", true);
         }
         else if (col.gameObject.CompareTag("ClimbableWall"))
         {
@@ -121,7 +121,7 @@ public class Climbing : MonoBehaviour {
             // Set the RigidBody to Kinematic as we're handling the movement
             playerRB.isKinematic = true;
             // Set the Bool ClimbingRope on the animnator to true
-            //playerMove.animator.SetBool("ClimbingWall", true);
+            //playerMove.AnimatorComp.SetBool("ClimbingWall", true);
             //...
         }
     }
@@ -168,7 +168,7 @@ public class Climbing : MonoBehaviour {
         playerMove.enabled = true;
         playerRB.isKinematic = false;
         //Let's turn off our climbing animation
-        //playerMove.animator.SetBool("ClimbingRope", false);
+        //playerMove.AnimatorComp.SetBool("ClimbingRope", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
         StartCoroutine(CanClimbAgain());
     }
@@ -183,7 +183,7 @@ public class Climbing : MonoBehaviour {
         playerMove.enabled = true;
         playerRB.isKinematic = false;
         //Let's turn off our climbing animation
-        //playerMove.animator.SetBool("ClimbingLadder", false);
+        //playerMove.AnimatorComp.SetBool("ClimbingLadder", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
         StartCoroutine(CanClimbAgain());
     }
@@ -198,7 +198,7 @@ public class Climbing : MonoBehaviour {
         playerMove.enabled = true;
         playerRB.isKinematic = false;
         //Let's turn off our climbing animation
-        playerMove.animator.SetBool("ClimbingWall", false);
+        playerMove.AnimatorComp.SetBool("ClimbingWall", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
         StartCoroutine(CanClimbAgain());
     }

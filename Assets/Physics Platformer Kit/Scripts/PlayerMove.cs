@@ -7,91 +7,145 @@ using System.Collections;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerMove : MonoBehaviour 
 {
-	//setup
-	public bool sidescroller;					//if true, won't apply vertical input
-	public Transform mainCam, floorChecks;		//main camera, and floorChecks object. FloorChecks are raycasted down from to check the player is grounded.
-	public Animator animator;					//object with animation controller on, which you want to animate
-	public AudioClip jumpSound;					//play when jumping
-	public AudioClip landSound;					//play when landing on ground
+    #region Inspector
+    // setup
+    [Header("Setup")]
+    // if true, won't apply vertical input
+    [SerializeField]
+    bool m_sidescroller;
+    // floorChecks object. FloorChecks are raycasted down from to check the player is grounded.
+    [SerializeField]
+    Transform m_floorChecks;
+    // object with animation controller on, which you want to animate
+    [SerializeField]
+    Animator m_animator;
+    // play when jumping
+    [SerializeField]
+    AudioClip m_jumpSound;
+    // play when landing on ground	
+    [SerializeField]
+    AudioClip m_landSound;                 
+
+    // movement
+    [Header("movement")]
+    // acceleration/deceleration in air or on the ground
+    [SerializeField]
+    float m_accel = 70f;					
+    [SerializeField]
+    float m_airAccel = 18f;
+    [SerializeField]
+    float m_decel = 7.6f;
+    [SerializeField]
+    float m_airDecel = 1.1f;
+    // how fast to rotate on the ground, how fast to rotate in the air
+    [SerializeField]
+    [Range(0f, 5f)]
+	float m_rotateSpeed = 0.7f, airRotateSpeed = 0.4f;
+    // maximum speed of movement in X/Z axis	
+    [SerializeField]
+    float m_maxSpeed = 9;
+    // maximum angle of slopes you can walk on, how fast to slide down slopes you can't
+    [SerializeField]
+    float m_slopeLimit = 40, m_slideAmount = 35;
+    // you'll need to tweak this to get the player to stay on moving platforms properly
+    [SerializeField]
+    float m_movingPlatformFriction = 7.7f;				
 	
-	//movement
-	public float accel = 70f;					//acceleration/deceleration in air or on the ground
-	public float airAccel = 18f;			
-	public float decel = 7.6f;
-	public float airDecel = 1.1f;
-	[Range(0f, 5f)]
-	public float rotateSpeed = 0.7f, airRotateSpeed = 0.4f;	//how fast to rotate on the ground, how fast to rotate in the air
-	public float maxSpeed = 9;								//maximum speed of movement in X/Z axis
-	public float slopeLimit = 40, slideAmount = 35;			//maximum angle of slopes you can walk on, how fast to slide down slopes you can't
-	public float movingPlatformFriction = 7.7f;				//you'll need to tweak this to get the player to stay on moving platforms properly
-	
-	//jumping
-	public Vector3 jumpForce =  new Vector3(0, 13, 0);		//normal jump force
-	public Vector3 secondJumpForce = new Vector3(0, 13, 0); //the force of a 2nd consecutive jump
-	public Vector3 thirdJumpForce = new Vector3(0, 13, 0);	//the force of a 3rd consecutive jump
-	public float jumpDelay = 0.1f;							//how fast you need to jump after hitting the ground, to do the next type of jump
-	public float jumpLeniancy = 0.17f;						//how early before hitting the ground you can press jump, and still have it work
-    public GameObject jumpingParticleEffect;
-    public Transform jumpingEffectLocation;
-	[HideInInspector]
+	// jumping
+    [Header("Jumping")]
+    // normal jump force
+    [SerializeField]
+    Vector3 m_jumpForce =  new Vector3(0, 13, 0);
+    // the force of a 2nd consecutive jump
+    [SerializeField]
+    Vector3 m_secondJumpForce = new Vector3(0, 13, 0);
+    // the force of a 3rd consecutive jump
+    [SerializeField]
+    Vector3 m_thirdJumpForce = new Vector3(0, 13, 0);
+    // how fast you need to jump after hitting the ground, to do the next type of jump
+    [SerializeField]
+    float m_jumpDelay = 0.1f;
+    // how early before hitting the ground you can press jump, and still have it work
+    [SerializeField]
+    float m_jumpLeniancy = 0.17f;
+    [SerializeField]
+    GameObject m_jumpingParticleEffect;
+    [SerializeField]
+    Transform m_jumpingEffectLocation;
+#endregion
+
+    [HideInInspector]
 	public int onEnemyBounce;
-    					
-	private int onJump;
-	private bool grounded;
-	private Transform[] floorCheckers;
-	private Quaternion screenMovementSpace;
-	private float airPressTime, groundedCount, curAccel, curDecel, curRotateSpeed, slope;
-	private Vector3 direction, moveDirection, screenMovementForward, screenMovementRight, movingObjSpeed;
+
+    // Reference to the main scene camera
+    Transform m_mainCam;
+
+    int onJump;
+	bool grounded;
+	Transform[] floorCheckers;
+	Quaternion screenMovementSpace;
+	float airPressTime, groundedCount, curAccel, curDecel, curRotateSpeed, slope;
+	Vector3 direction, moveDirection, screenMovementForward, screenMovementRight, movingObjSpeed;
+
+    // Cached components
+    CharacterMotor characterMotor;
+	EnemyAI enemyAI;
+	DealDamage dealDamage;
+    
+    Rigidbody m_Rigidbody;
+    AudioSource m_AudioSource;
+    Collider m_Collider;
 	
-	private CharacterMotor characterMotor;
-	private EnemyAI enemyAI;
-	private DealDamage dealDamage;
-	
-	//setup
+	// setup
 	void Awake()
 	{
-		//create single floorcheck in centre of object, if none are assigned
-		if(!floorChecks)
+		// create single floorcheck in centre of object, if none are assigned
+		if(!m_floorChecks)
 		{
-			floorChecks = new GameObject().transform;
-			floorChecks.name = "FloorChecks";
-			floorChecks.parent = transform;
-			floorChecks.position = transform.position;
+			m_floorChecks = new GameObject().transform;
+			m_floorChecks.name = "FloorChecks";
+			m_floorChecks.parent = transform;
+			m_floorChecks.position = transform.position;
 			GameObject check = new GameObject();
 			check.name = "Check1";
-			check.transform.parent = floorChecks;
+			check.transform.parent = m_floorChecks;
 			check.transform.position = transform.position;
-			Debug.LogWarning("No 'floorChecks' assigned to PlayerMove script, so a single floorcheck has been created", floorChecks);
+			Debug.LogWarning("No 'floorChecks' assigned to PlayerMove script, so a single floorcheck has been created", m_floorChecks);
 		}
-		//assign player tag if not already
+		// assign player tag if not already
 		if(tag != "Player")
 		{
 			tag = "Player";
 			Debug.LogWarning ("PlayerMove script assigned to object without the tag 'Player', tag has been assigned automatically", transform);
 		}
-		//usual setup
-		mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;
+		// usual setup
+		m_mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;
 		dealDamage = GetComponent<DealDamage>();
 		characterMotor = GetComponent<CharacterMotor>();
-		//gets child objects of floorcheckers, and puts them in an array
-		//later these are used to raycast downward and see if we are on the ground
-		floorCheckers = new Transform[floorChecks.childCount];
+
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_AudioSource = GetComponent<AudioSource>();
+        m_Collider = GetComponent<Collider>();
+
+        // gets child objects of floorcheckers, and puts them in an array
+        // later these are used to raycast downward and see if we are on the ground
+        floorCheckers = new Transform[m_floorChecks.childCount];
 		for (int i=0; i < floorCheckers.Length; i++)
-			floorCheckers[i] = floorChecks.GetChild(i);
+			floorCheckers[i] = m_floorChecks.GetChild(i);
 	}
 	
-	//get state of player, values and input
+	// get state of player, values and input
 	void Update()
 	{	
-		//handle jumping
+		// handle jumping
 		JumpCalculations ();
-		//adjust movement values if we're in the air or on the ground
-		curAccel = (grounded) ? accel : airAccel;
-		curDecel = (grounded) ? decel : airDecel;
-		curRotateSpeed = (grounded) ? rotateSpeed : airRotateSpeed;
+		// adjust movement values if we're in the air or on the ground
+		curAccel = (grounded) ? m_accel : m_airAccel;
+		curDecel = (grounded) ? m_decel : m_airDecel;
+		curRotateSpeed = (grounded) ? m_rotateSpeed : airRotateSpeed;
 				
 		//get movement axis relative to camera
-		screenMovementSpace = Quaternion.Euler (0, mainCam.eulerAngles.y, 0);
+		screenMovementSpace = Quaternion.Euler (0, m_mainCam.eulerAngles.y, 0);
 		screenMovementForward = screenMovementSpace * Vector3.forward;
 		screenMovementRight = screenMovementSpace * Vector3.right;
 		
@@ -100,7 +154,7 @@ public class PlayerMove : MonoBehaviour
 		float v = Input.GetAxisRaw ("Vertical");
 		
 		//only apply vertical input to movemement, if player is not sidescroller
-		if(!sidescroller)
+		if(!m_sidescroller)
 			direction = (screenMovementForward * v) + (screenMovementRight * h);
 		else
 			direction = Vector3.right * h;
@@ -114,15 +168,15 @@ public class PlayerMove : MonoBehaviour
 		grounded = IsGrounded ();
 		//move, rotate, manage speed
 		characterMotor.MoveTo (moveDirection, curAccel, 0.7f, true);
-		if (rotateSpeed != 0 && direction.magnitude != 0)
+		if (m_rotateSpeed != 0 && direction.magnitude != 0)
 			characterMotor.RotateToDirection (moveDirection , curRotateSpeed * 5, true);
-		characterMotor.ManageSpeed (curDecel, maxSpeed + movingObjSpeed.magnitude, true);
+		characterMotor.ManageSpeed (curDecel, m_maxSpeed + movingObjSpeed.magnitude, true);
 		//set animation values
-		if(animator)
+		if(m_animator)
 		{
-			animator.SetFloat("DistanceToTarget", characterMotor.DistanceToTarget);
-			animator.SetBool("Grounded", grounded);
-			animator.SetFloat("YVelocity", GetComponent<Rigidbody>().velocity.y);
+			m_animator.SetFloat("DistanceToTarget", characterMotor.DistanceToTarget);
+			m_animator.SetBool("Grounded", grounded);
+			m_animator.SetFloat("YVelocity", m_Rigidbody.velocity.y);
 		}
 	}
 	
@@ -133,11 +187,11 @@ public class PlayerMove : MonoBehaviour
 		if (other.collider.tag != "Untagged" || grounded == false)
 			return;
 		//if no movement should be happening, stop player moving in Z/X axis
-		if(direction.magnitude == 0 && slope < slopeLimit && GetComponent<Rigidbody>().velocity.magnitude < 2)
+		if(direction.magnitude == 0 && slope < m_slopeLimit && m_Rigidbody.velocity.magnitude < 2)
 		{
-			//it's usually not a good idea to alter a rigidbodies velocity every frame
-			//but this is the cleanest way i could think of, and we have a lot of checks beforehand, so it shou
-			GetComponent<Rigidbody>().velocity = Vector3.zero;
+            //it's usually not a good idea to alter a rigidbodies velocity every frame
+            //but this is the cleanest way i could think of, and we have a lot of checks beforehand, so it shou
+            m_Rigidbody.velocity = Vector3.zero;
 		}
 	}
 	
@@ -146,7 +200,7 @@ public class PlayerMove : MonoBehaviour
 	private bool IsGrounded() 
 	{
 		//get distance to ground, from centre of collider (where floorcheckers should be)
-		float dist = GetComponent<Collider>().bounds.extents.y;
+		float dist = m_Collider.bounds.extents.y;
 		//check whats at players feet, at each floorcheckers position
 		foreach (Transform check in floorCheckers)
 		{
@@ -158,13 +212,13 @@ public class PlayerMove : MonoBehaviour
 					//slope control
 					slope = Vector3.Angle (hit.normal, Vector3.up);
 					//slide down slopes
-					if(slope > slopeLimit && hit.transform.tag != "Pushable")
+					if(slope > m_slopeLimit && hit.transform.tag != "Pushable")
 					{
-						Vector3 slide = new Vector3(0f, -slideAmount, 0f);
-						GetComponent<Rigidbody>().AddForce (slide, ForceMode.Force);
+						Vector3 slide = new Vector3(0f, -m_slideAmount, 0f);
+                        m_Rigidbody.AddForce (slide, ForceMode.Force);
 					}
 					//enemy bouncing
-					if (hit.transform.tag == "Enemy" && GetComponent<Rigidbody>().velocity.y < 0)
+					if (hit.transform.tag == "Enemy" && m_Rigidbody.velocity.y < 0)
 					{
 						enemyAI = hit.transform.GetComponent<EnemyAI>();
 						enemyAI.BouncedOn();
@@ -178,8 +232,8 @@ public class PlayerMove : MonoBehaviour
 					{
 						movingObjSpeed = hit.transform.GetComponent<Rigidbody>().velocity;
 						movingObjSpeed.y = 0f;
-						//9.5f is a magic number, if youre not moving properly on platforms, experiment with this number
-						GetComponent<Rigidbody>().AddForce(movingObjSpeed * movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                        //9.5f is a magic number, if youre not moving properly on platforms, experiment with this number
+                        m_Rigidbody.AddForce(movingObjSpeed * m_movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
 					}
 					else
 					{
@@ -202,47 +256,95 @@ public class PlayerMove : MonoBehaviour
 		groundedCount = (grounded) ? groundedCount += Time.deltaTime : 0f;
 		
 		//play landing sound
-		if(groundedCount < 0.25 && groundedCount != 0 && !GetComponent<AudioSource>().isPlaying && landSound && GetComponent<Rigidbody>().velocity.y < 1)
+		if(groundedCount < 0.25 && groundedCount != 0 && !m_AudioSource.isPlaying && m_landSound && m_Rigidbody.velocity.y < 1)
 		{
-			GetComponent<AudioSource>().volume = Mathf.Abs(GetComponent<Rigidbody>().velocity.y)/40;
-			GetComponent<AudioSource>().clip = landSound;
-			GetComponent<AudioSource>().Play ();
+			m_AudioSource.volume = Mathf.Abs(m_Rigidbody.velocity.y)/40;
+			m_AudioSource.clip = m_landSound;
+			m_AudioSource.Play ();
 		}
 		//if we press jump in the air, save the time
 		if (Input.GetButtonDown ("Jump") && !grounded)
 			airPressTime = Time.time;
 		
 		//if were on ground within slope limit
-		if (grounded && slope < slopeLimit)
+		if (grounded && slope < m_slopeLimit)
 		{
-			//and we press jump, or we pressed jump justt before hitting the ground
-			if (Input.GetButtonDown ("Jump") || airPressTime + jumpLeniancy > Time.time)
+			//and we press jump, or we pressed jump just before hitting the ground
+			if (Input.GetButtonDown ("Jump") || airPressTime + m_jumpLeniancy > Time.time)
 			{	
 				//increment our jump type if we haven't been on the ground for long
-				onJump = (groundedCount < jumpDelay) ? Mathf.Min(2, onJump + 1) : 0;
+				onJump = (groundedCount < m_jumpDelay) ? Mathf.Min(2, onJump + 1) : 0;
 				//execute the correct jump (like in mario64, jumping 3 times quickly will do higher jumps)
 				if (onJump == 0)
-						Jump (jumpForce);
+						StartCoroutine( Jump (m_jumpForce) );
 				else if (onJump == 1)
-						Jump (secondJumpForce);
+                        StartCoroutine( Jump(m_secondJumpForce) );
 				else if (onJump == 2)
-						Jump (thirdJumpForce);
-                Instantiate(jumpingParticleEffect, jumpingEffectLocation.position, jumpingParticleEffect.transform.rotation);
+                        StartCoroutine( Jump(m_thirdJumpForce) );
+                Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
 			}
 		}
 	}
 	
 	//push player at jump force
+    /*
 	public void Jump(Vector3 jumpVelocity)
 	{
 		if(jumpSound)
 		{
-			GetComponent<AudioSource>().volume = 1;
-			GetComponent<AudioSource>().clip = jumpSound;
-			GetComponent<AudioSource>().Play ();
+			m_AudioSource.volume = 1;
+			m_AudioSource.clip = jumpSound;
+			m_AudioSource.Play ();
 		}
-		GetComponent<Rigidbody>().velocity = new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z);
-		GetComponent<Rigidbody>().AddRelativeForce (jumpVelocity, ForceMode.Impulse);
+        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
+        m_Rigidbody.AddRelativeForce (jumpVelocity, ForceMode.Impulse);
 		airPressTime = 0f;
 	}
+    */
+
+    public IEnumerator Jump(Vector3 jumpVelocity)
+    {
+        //Set the gravity to zero and apply the force once
+        m_Rigidbody.useGravity = false;
+        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
+        m_Rigidbody.velocity += jumpVelocity;
+        float timer = 0f;
+
+        // Let the play continue moving while the jump button is held down
+        // and the jump time length isnt up
+        while (Input.GetButton("Jump")) //&& timer < jumpTime)
+        {
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
+
+        //Set gravity back to normal at the end of the jump
+        m_Rigidbody.useGravity = true;        
+    }
+
+    #region Getters Setters
+    public Vector3 JumpForce
+    {
+        get { return m_jumpForce; }
+    }
+
+    public Animator AnimatorComp
+    {
+        get { return m_animator; }
+    }
+    public float RotateSpeed
+    {
+        get { return m_rotateSpeed; }
+        set { m_rotateSpeed = value; }
+    }
+    public Transform JumpingEffectLocation
+    {
+        get { return m_jumpingEffectLocation; }
+    }
+    public GameObject JumpingParticleEffect
+    {
+        get { return m_jumpingParticleEffect; }
+    }
+    #endregion
 }

@@ -65,14 +65,14 @@ public class PlayerMelee : MonoBehaviour
                 if (punchleft)
                 {
                     //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
-                    playerMove.animator.Play("ArmsThrow", 1);
+                    playerMove.AnimatorComp.Play("ArmsThrow", 1);
                     punchleft = false;
                     //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
                     StartCoroutine(WaitAndPunch());
                 }
                 else
                 {
-                    playerMove.animator.Play("ArmsThrow", 1);
+                    playerMove.AnimatorComp.Play("ArmsThrow", 1);
                     punchleft = true;
                     StartCoroutine(WaitAndPunch());
                 }
@@ -146,7 +146,7 @@ public class PlayerMelee : MonoBehaviour
     bool CheckIfPlaying(string Anim, int Layer)
     {
         //Grabs the AnimatorStateInfo out of our PlayerMove animator for the desired Layer.
-        AnimatorStateInfo AnimInfo = playerMove.animator.GetCurrentAnimatorStateInfo(Layer);
+        AnimatorStateInfo AnimInfo = playerMove.AnimatorComp.GetCurrentAnimatorStateInfo(Layer);
         //Returns the bool we want, by checking if the string ANIM given is playing.
         return AnimInfo.IsName(Anim);
     }
