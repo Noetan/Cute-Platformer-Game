@@ -167,7 +167,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             //And lets set the double jump to false!
             CanWallJump = false;
 
-            Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
+            //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         if (CanWallJump && !m_isGrounded)
         {

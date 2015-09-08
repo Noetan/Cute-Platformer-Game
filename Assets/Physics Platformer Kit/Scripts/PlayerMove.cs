@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MemoryManagment; // Object pools
 
 //handles player movement, utilising the CharacterMotor class
 [RequireComponent(typeof(CharacterMotor))]
@@ -10,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     #region Inspector
     // setup
     [Header("Setup")]
+
     // if true, won't apply vertical input
     [SerializeField]
     bool m_sidescroller;
@@ -28,6 +30,7 @@ public class PlayerMove : MonoBehaviour
 
     // movement
     [Header("movement")]
+
     // acceleration/deceleration in air or on the ground
     [SerializeField]
     float m_accel = 70f;					
@@ -53,28 +56,37 @@ public class PlayerMove : MonoBehaviour
 	
 	// jumping
     [Header("Jumping")]
+
     // normal jump force
     [SerializeField]
     Vector3 m_jumpForce =  new Vector3(0, 13, 0);
+
     // the force of a 2nd consecutive jump
     //[SerializeField]
-    Vector3 m_secondJumpForce = new Vector3(0, 17, 0);
+    //Vector3 m_secondJumpForce = new Vector3(0, 17, 0);
     // the force of a 3rd consecutive jump
     //[SerializeField]
-    Vector3 m_thirdJumpForce = new Vector3(0, 20, 0);
+    //Vector3 m_thirdJumpForce = new Vector3(0, 20, 0);
+
     // how fast you need to jump after hitting the ground, to do the next type of jump
     [SerializeField]
     float m_jumpDelay = 0.1f;
     // how early before hitting the ground you can press jump, and still have it work
     [SerializeField]
     float m_jumpLeniancy = 0.17f;
-    [SerializeField]
-    GameObject m_jumpingParticleEffect;
-    [SerializeField]
-    Transform m_jumpingEffectLocation;
     // How long you can hold the jump button before you start falling again
     [SerializeField]
     float m_maxJumpTime = 0.25f;
+
+    // Smoke puff that plays on jumps and landing
+    [SerializeField]
+    GameObject m_jumpingParticleEffect;
+    // Where relative to the player should it play
+    [SerializeField]
+    Transform m_jumpingEffectLocation;
+    //[SerializeField]
+    //ParticleSystem m_jumpSmoke;
+
 #endregion
 
     [HideInInspector]
@@ -98,6 +110,8 @@ public class PlayerMove : MonoBehaviour
     Rigidbody m_Rigidbody;
     AudioSource m_AudioSource;
     Collider m_Collider;
+
+    GameObjectPool smokePuffPool;
 	
 	// setup
 	void Awake()
@@ -129,6 +143,8 @@ public class PlayerMove : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
+
+        smokePuffPool = new GameObjectPool(2, JumpingParticleEffect);
 
         // gets child objects of floorcheckers, and puts them in an array
         // later these are used to raycast downward and see if we are on the ground
@@ -274,8 +290,12 @@ public class PlayerMove : MonoBehaviour
 		{
 			//and we press jump, or we pressed jump just before hitting the ground
 			if (Input.GetButtonDown ("Jump") || airPressTime + m_jumpLeniancy > Time.time)
-			{
-                /*
+			{                
+                
+                // Jump!
+                StartCoroutine( Jump(m_jumpForce) );
+
+                /* Old triple jump code
 				//increment our jump type if we haven't been on the ground for long
 				onJump = (groundedCount < m_jumpDelay) ? Mathf.Min(2, onJump + 1) : 0;
 				//execute the correct jump (like in mario64, jumping 3 times quickly will do higher jumps)
@@ -286,15 +306,15 @@ public class PlayerMove : MonoBehaviour
 				else if (onJump == 2)
                         StartCoroutine( Jump(m_thirdJumpForce) );
                         */
-                StartCoroutine(Jump(m_jumpForce));
 
-                Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
+                //Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
+                //m_jumpSmoke.Play();
 			}
 		}
 	}
 	
 	//push player at jump force
-    /*
+    /* Old jump method
 	public void Jump(Vector3 jumpVelocity)
 	{
 		if(jumpSound)
@@ -311,13 +331,22 @@ public class PlayerMove : MonoBehaviour
 
     public IEnumerator Jump(Vector3 jumpVelocity)
     {
-        //Set the gravity to zero and apply the force once
+        //Set the gravity to zero
         m_Rigidbody.useGravity = false;
+        // 0 out the y velocity so we can double jump at any time
         m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
-        m_Rigidbody.velocity += jumpVelocity;
+        //m_Rigidbody.velocity += jumpVelocity;
+        // Apply the jump force
+        m_Rigidbody.AddRelativeForce(jumpVelocity, ForceMode.Impulse);
+        // Used to cap how long the player can hold jump for
         float timer = 0f;
 
-        // Let the play continue moving while the jump button is held down
+        // Play smoke puff particle effect
+        GameObject smoke = smokePuffPool.New();
+        smoke.gameObject.transform.position = m_jumpingEffectLocation.position;
+        smoke.SetActive(true);
+
+        // Let the player continue moving while the jump button is held down
         // and the jump time length isnt up
         while ( Input.GetButton("Jump") && timer < m_maxJumpTime )
         {

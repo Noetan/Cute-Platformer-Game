@@ -1,4 +1,4 @@
-﻿// GameObjectPool
+﻿// GameObjectPool version 2 (2015/09/07)
 // Use to store a frequently used objects (like bullets)
 // Only stores objects that have been prefabbed
 // Read constructor summary for more
@@ -80,7 +80,15 @@ namespace MemoryManagment
                 newObj.transform.parent = m_parent.transform;
             }
 
-            newObj.SetActive(false);
+			newObj.SetActive(false);
+
+            // Save a reference of the pool in each gameobject if they are equipped to hold it
+            CustomBehaviour cb = newObj.GetComponent<CustomBehaviour>();
+            if (cb != null)
+            {
+                cb.SetPool(this);
+                Debug.Log("saved pool to custom behaviour");
+            }
 
             return newObj;
         }
