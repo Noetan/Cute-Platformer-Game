@@ -3,7 +3,6 @@ using System.Collections;
 
 public class SurfaceClimbing : MonoBehaviour
 {
-
     private PlayerMove m_playerMove;
     private CharacterMotor m_characterMotor;
     private Rigidbody m_playerRB;
@@ -15,6 +14,7 @@ public class SurfaceClimbing : MonoBehaviour
     private bool ClimbingLadder;
     private bool ClimbingWall;
     private bool CanClimb;
+    private bool StoppingClimbing;
     private Vector3 surfaceNormal;
     private Vector3 surfaceBackwards;
     private Vector3 climbingDirection;
@@ -30,6 +30,7 @@ public class SurfaceClimbing : MonoBehaviour
         ClimbingLadder = false;
         ClimbingWall = false;
         CanClimb = true;
+        StoppingClimbing = false;
     }
 
     // Update is called once per frame
@@ -46,7 +47,7 @@ public class SurfaceClimbing : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
-                StopClimbing();
+                StartCoroutine(StopClimbing());
                 // Jump in direction opposite of surface...
             }
 
@@ -67,6 +68,12 @@ public class SurfaceClimbing : MonoBehaviour
 
             finalMovement = verticalMovement + lateralMovement;
             m_playerRB.MovePosition(m_playerRB.position + (finalMovement * ClimbingSpeed) * Time.deltaTime);
+        }
+        else
+        {
+            ClimbingLadder = false;
+            ClimbingRope = false;
+            ClimbingWall = false;
         }
     }
 
@@ -89,7 +96,10 @@ public class SurfaceClimbing : MonoBehaviour
             return;
         }
 
-        EnterClimbable(col);
+        if (ClimbingLadder || ClimbingRope || ClimbingWall)
+        {
+            EnterClimbable(col);
+        }
     }
 
     void OnTriggerStay(Collider col)
@@ -99,7 +109,10 @@ public class SurfaceClimbing : MonoBehaviour
             return;
         }
 
-        EnterClimbable(col);
+        if (ClimbingLadder || ClimbingRope || ClimbingWall)
+        {
+            EnterClimbable(col);
+        }
     }
 
     void EnterClimbable(Collider col)
@@ -107,6 +120,10 @@ public class SurfaceClimbing : MonoBehaviour
         if (col.gameObject.CompareTag("Ladder") || col.gameObject.CompareTag("ClimbableRope")
             || col.gameObject.CompareTag("ClimbableWall"))
         {
+            // Disable Player Move and set to Kinemtatic, we're handling the movement
+            m_playerMove.enabled = false;
+            m_playerRB.isKinematic = true;
+
             // Ladders should always have Z axis facing the player
             surfaceBackwards = col.transform.TransformDirection(-Vector3.forward);
             // Our current forward vector
@@ -122,9 +139,7 @@ public class SurfaceClimbing : MonoBehaviour
             Quaternion newRotation = Quaternion.FromToRotation(playerForward, surfaceBackwards);
             Vector3 targetDirection = newRotation * playerForward;
             m_characterMotor.RotateToDirection(targetDirection, 10, true);
-            // Disable Player Move and set to Kinemtatic, we're handling the movement
-            m_playerMove.enabled = false;
-            m_playerRB.isKinematic = true;
+            
         }
 
         if (col.CompareTag("Ladder"))
@@ -155,25 +170,27 @@ public class SurfaceClimbing : MonoBehaviour
         {
             if (ClimbingLadder || ClimbingRope || ClimbingWall)
             {
-                StopClimbing();
+                StartCoroutine(StopClimbing());
             }
         }
     }
 
-    void StopClimbing()
+    IEnumerator StopClimbing()
     {
-        ClimbingLadder = false;
-        ClimbingRope = false;
-        ClimbingWall = false;
-        m_playerMove.enabled = true;
-        m_playerRB.isKinematic = false;
-        CanClimb = false;
-        StartCoroutine(CanClimbAgain());
-    }
+        if (!StoppingClimbing)
+        {
+            StoppingClimbing = true;
+            ClimbingLadder = false;
+            ClimbingRope = false;
+            ClimbingWall = false;
+            m_playerMove.enabled = true;
+            m_playerRB.isKinematic = false;
 
-    IEnumerator CanClimbAgain()
-    {
-        yield return new WaitForSeconds(0.5f);
-        CanClimb = true;
+            CanClimb = false;
+            yield return new WaitForSeconds(0.5f);
+            CanClimb = true;
+            StoppingClimbing = false;
+        }
     }
 }
+
