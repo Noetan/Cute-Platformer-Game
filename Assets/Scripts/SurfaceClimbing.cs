@@ -96,10 +96,7 @@ public class SurfaceClimbing : MonoBehaviour
             return;
         }
 
-        if (ClimbingLadder || ClimbingRope || ClimbingWall)
-        {
-            EnterClimbable(col);
-        }
+        EnterClimbable(col);
     }
 
     void OnTriggerStay(Collider col)
