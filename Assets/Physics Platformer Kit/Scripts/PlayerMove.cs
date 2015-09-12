@@ -280,6 +280,7 @@ public class PlayerMove : MonoBehaviour
 			m_AudioSource.volume = Mathf.Abs(m_Rigidbody.velocity.y)/40;
 			m_AudioSource.clip = m_landSound;
 			m_AudioSource.Play ();
+            Debug.Log("played jump sound");
 		}
 		//if we press jump in the air, save the time
 		if (Input.GetButtonDown ("Jump") && !grounded)
@@ -314,8 +315,8 @@ public class PlayerMove : MonoBehaviour
 	}
 	
 	//push player at jump force
-    /* Old jump method
-	public void Jump(Vector3 jumpVelocity)
+    // Old jump method
+	/* public void Jump(Vector3 jumpVelocity)
 	{
 		if(jumpSound)
 		{
@@ -326,8 +327,8 @@ public class PlayerMove : MonoBehaviour
         m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
         m_Rigidbody.AddRelativeForce (jumpVelocity, ForceMode.Impulse);
 		airPressTime = 0f;
-	}
-    */
+	} */
+    
 
     public IEnumerator Jump(Vector3 jumpVelocity)
     {
@@ -345,6 +346,13 @@ public class PlayerMove : MonoBehaviour
         GameObject smoke = smokePuffPool.New();
         smoke.gameObject.transform.position = m_jumpingEffectLocation.position;
         smoke.SetActive(true);
+
+        if (m_jumpSound)
+        {
+            m_AudioSource.volume = 1;
+            m_AudioSource.clip = m_jumpSound;
+            m_AudioSource.Play();
+        }
 
         // Let the player continue moving while the jump button is held down
         // and the jump time length isnt up
