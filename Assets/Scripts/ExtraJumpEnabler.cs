@@ -67,16 +67,16 @@ public class ExtraJumpEnabler : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !m_isGrounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
-            StartCoroutine(m_playerMove.Jump(midAirJumpForce) );
+            StartCoroutine( m_playerMove.Jump(midAirJumpForce, true, true) );
             //And lets set the double jump to false!
             m_canDoubleJump = false;
-            Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
+            //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         //If we receive a jump button down, we're not grounded and we are swimming...
         else if (Input.GetButtonDown("Jump") && !m_isGrounded && m_isSwimming)
         {
             //Do a jump with the first jump force! :D Or a third of it, because the first one is already too much for swimming
-            StartCoroutine(m_playerMove.Jump(m_playerMove.JumpForce / 3) );
+            StartCoroutine(m_playerMove.Jump(m_playerMove.JumpForce / 3, false) );
         }
     }
 
@@ -161,7 +161,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             // Ensure for Y component to normal, for the same above reason
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
-            StartCoroutine( m_playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0)) );
+            StartCoroutine( m_playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0), true, true) );
 
             m_playerMove.AnimatorComp.Play("Jump1", 0);
             //And lets set the double jump to false!

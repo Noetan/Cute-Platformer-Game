@@ -80,7 +80,10 @@ public class PlayerMove : MonoBehaviour
 
     // Smoke puff that plays on jumps and landing
     [SerializeField]
-    GameObject m_jumpingParticleEffect;
+    GameObject m_jumpParticleEffect;
+    // Smoke puff that plays when jumping in the air
+    [SerializeField]
+    GameObject m_midAirJumpParticleEffect;
     // Where relative to the player should it play
     [SerializeField]
     Transform m_jumpingEffectLocation;
@@ -111,6 +114,7 @@ public class PlayerMove : MonoBehaviour
     AudioSource m_AudioSource;
     Collider m_Collider;
 
+    GameObjectPool smokeCircularPool;
     GameObjectPool smokePuffPool;
 	
 	// setup
@@ -144,7 +148,8 @@ public class PlayerMove : MonoBehaviour
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
 
-        smokePuffPool = new GameObjectPool(2, JumpingParticleEffect);
+        smokeCircularPool = new GameObjectPool(1, m_jumpParticleEffect);
+        smokePuffPool = new GameObjectPool(2, m_midAirJumpParticleEffect);
 
         // gets child objects of floorcheckers, and puts them in an array
         // later these are used to raycast downward and see if we are on the ground
@@ -280,7 +285,6 @@ public class PlayerMove : MonoBehaviour
 			m_AudioSource.volume = Mathf.Abs(m_Rigidbody.velocity.y)/40;
 			m_AudioSource.clip = m_landSound;
 			m_AudioSource.Play ();
-            Debug.Log("played jump sound");
 		}
 		//if we press jump in the air, save the time
 		if (Input.GetButtonDown ("Jump") && !grounded)
@@ -294,7 +298,7 @@ public class PlayerMove : MonoBehaviour
 			{                
                 
                 // Jump!
-                StartCoroutine( Jump(m_jumpForce) );
+                StartCoroutine( Jump(m_jumpForce, true, false) );
 
                 /* Old triple jump code
 				//increment our jump type if we haven't been on the ground for long
@@ -330,23 +334,32 @@ public class PlayerMove : MonoBehaviour
 	} */
     
 
-    public IEnumerator Jump(Vector3 jumpVelocity)
+    public IEnumerator Jump(Vector3 jumpVelocity, bool smoke, bool midAir = false)
     {
         //Set the gravity to zero
         m_Rigidbody.useGravity = false;
         // 0 out the y velocity so we can double jump at any time
         m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
-        //m_Rigidbody.velocity += jumpVelocity;
         // Apply the jump force
         m_Rigidbody.AddRelativeForce(jumpVelocity, ForceMode.Impulse);
         // Used to cap how long the player can hold jump for
         float timer = 0f;
 
         // Play smoke puff particle effect
-        GameObject smoke = smokePuffPool.New();
-        smoke.gameObject.transform.position = m_jumpingEffectLocation.position;
-        smoke.SetActive(true);
+        if (!midAir && smoke)
+        {
+            GameObject smokeGO = smokeCircularPool.New();
+            smokeGO.gameObject.transform.position = m_jumpingEffectLocation.position;
+            smokeGO.SetActive(true);
+        }
+        else if (midAir && smoke)
+        {
+            GameObject smokeGO = smokePuffPool.New();
+            smokeGO.gameObject.transform.position = m_jumpingEffectLocation.position;
+            smokeGO.SetActive(true);
+        }
 
+        // Play the jump sound
         if (m_jumpSound)
         {
             m_AudioSource.volume = 1;
@@ -388,7 +401,7 @@ public class PlayerMove : MonoBehaviour
     }
     public GameObject JumpingParticleEffect
     {
-        get { return m_jumpingParticleEffect; }
+        get { return m_jumpParticleEffect; }
     }
     #endregion
 }

@@ -64,7 +64,7 @@ public class PlayerWallJump : MonoBehaviour
             // Ensure for Y component to normal, for the same above reason
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
-            m_playerMove.Jump(new Vector3(0,WallJumpYVelocity, 0));
+            StartCoroutine( m_playerMove.Jump(new Vector3(0,WallJumpYVelocity, 0), true, true) );
 
             m_playerMove.AnimatorComp.Play("Jump1", 0);
             //And lets set the double jump to false!

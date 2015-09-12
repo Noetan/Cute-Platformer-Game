@@ -36,6 +36,9 @@ public class SelfStoreParticleEffect : CustomBehaviour
                 else
                 {
                     Debug.LogWarning("SelStoreParticle had no pool to store: " + this.gameObject);
+                    Debug.LogWarning("Destroying: " + this.gameObject);
+                    Destroy(this.gameObject);
+                    break;
                 }
             }
         }
