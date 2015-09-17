@@ -176,7 +176,7 @@ public class PlayerMove : MonoBehaviour
 		//get movement input, set direction to move in
 		float h = Input.GetAxisRaw ("Horizontal");
 		float v = Input.GetAxisRaw ("Vertical");
-		
+
 		//only apply vertical input to movemement, if player is not sidescroller
 		if(!m_sidescroller)
 			direction = (screenMovementForward * v) + (screenMovementRight * h);
@@ -249,6 +249,11 @@ public class PlayerMove : MonoBehaviour
 						onEnemyBounce ++;
 						dealDamage.Attack(hit.transform.gameObject, 1, 0f, 0f);
 					}
+                    if (hit.transform.CompareTag("Spring") && m_Rigidbody.velocity.y < 0)
+                    {
+                        JumpSpring jSpring = hit.transform.GetComponent<JumpSpring>();
+                        jSpring.BouncedOn();
+                    }
 					else
 						onEnemyBounce = 0;
 					//moving platforms
