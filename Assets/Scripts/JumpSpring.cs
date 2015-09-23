@@ -12,6 +12,9 @@ public class JumpSpring : MonoBehaviour {
     // Aniator for spring
     [SerializeField]
     Animator animController;
+    // Should we set X and Z force to zero (better jump force diretion)
+    [SerializeField]
+    bool lockPlanarForce = false;
 
     private GameObject m_player;
     private PlayerMove m_playerMove;
@@ -47,7 +50,15 @@ public class JumpSpring : MonoBehaviour {
             Vector3 finalBounceForce = transform.up;
             finalBounceForce *= bounceForce;
 
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
+            if (lockPlanarForce)
+            {
+                m_Rigidbody.velocity = Vector3.zero;
+            }
+            else
+            {
+                m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
+            }
+
             m_Rigidbody.AddForce(finalBounceForce, ForceMode.Impulse);
 
             if (animController)

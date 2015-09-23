@@ -116,9 +116,21 @@ public class PlayerMove : MonoBehaviour
 
     GameObjectPool smokeCircularPool;
     GameObjectPool smokePuffPool;
-	
-	// setup
-	void Awake()
+
+    bool isCrouching = false;
+    [SerializeField]
+    float m_crouchMaxSpeed = 5f;
+    [SerializeField]
+    float m_crouchMaxAccel = 35f;
+    [SerializeField]
+    Vector3 m_crouchingBackflipJumpForce = new Vector3(0f, 15f, -7f);
+    [SerializeField]
+    Vector3 m_crouchingLongJumpForce = new Vector3(0f, 5f, 15f);
+    float OriginalMaxSpeed;
+    float OriginalMaxAccel;
+
+    // setup
+    void Awake()
 	{
 		// create single floorcheck in centre of object, if none are assigned
 		if(!m_floorChecks)
@@ -156,6 +168,9 @@ public class PlayerMove : MonoBehaviour
         floorCheckers = new Transform[m_floorChecks.childCount];
 		for (int i=0; i < floorCheckers.Length; i++)
 			floorCheckers[i] = m_floorChecks.GetChild(i);
+
+        OriginalMaxAccel = m_accel;
+        OriginalMaxSpeed = m_maxSpeed;
 	}
 	
 	// get state of player, values and input
@@ -167,6 +182,18 @@ public class PlayerMove : MonoBehaviour
 		curAccel = (grounded) ? m_accel : m_airAccel;
 		curDecel = (grounded) ? m_decel : m_airDecel;
 		curRotateSpeed = (grounded) ? m_rotateSpeed : airRotateSpeed;
+
+        if (Input.GetButton("Crouch") && grounded)
+        {
+            isCrouching = true;
+        }
+        else
+        {
+            isCrouching = false;
+        }
+
+        m_maxSpeed = (isCrouching) ? m_crouchMaxSpeed : OriginalMaxSpeed;
+        m_accel = (isCrouching) ? m_crouchMaxAccel : OriginalMaxAccel;
 				
 		//get movement axis relative to camera
 		screenMovementSpace = Quaternion.Euler (0, m_mainCam.eulerAngles.y, 0);
@@ -300,10 +327,20 @@ public class PlayerMove : MonoBehaviour
 		{
 			//and we press jump, or we pressed jump just before hitting the ground
 			if (Input.GetButtonDown ("Jump") || airPressTime + m_jumpLeniancy > Time.time)
-			{                
-                
+			{
                 // Jump!
-                StartCoroutine( Jump(m_jumpForce, true, false) );
+                if (!isCrouching)
+                {
+                    StartCoroutine(Jump(m_jumpForce, true, false));
+                }
+                else if (isCrouching && m_Rigidbody.velocity[0] > 0.1f)
+                {
+                    StartCoroutine(Jump(m_crouchingLongJumpForce, true, false));
+                }
+                else if (isCrouching && m_Rigidbody.velocity[0] <= 0.1f)
+                {
+                    StartCoroutine(Jump(m_crouchingBackflipJumpForce, true, false));
+                }
 
                 /* Old triple jump code
 				//increment our jump type if we haven't been on the ground for long
@@ -319,7 +356,7 @@ public class PlayerMove : MonoBehaviour
 
                 //Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
                 //m_jumpSmoke.Play();
-			}
+            }
 		}
 	}
 	

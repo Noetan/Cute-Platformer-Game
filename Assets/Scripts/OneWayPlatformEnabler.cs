@@ -25,6 +25,12 @@ public class OneWayPlatformEnabler : MonoBehaviour
 
     //To detect a double tap, we'll store time since last tap here.
     private float doubleTapTime;
+    // How long we have to double tap
+    private float timeBuffer = 0.3f;
+    // How many times we have tapped down
+    private int tapCount = 0;
+    // If we have tapped this frame
+    private bool verticalSwitch = false;
 
     // Use this for initialization
     void Start()
@@ -40,27 +46,42 @@ public class OneWayPlatformEnabler : MonoBehaviour
         {
             return;
         }
-        //Otherwise lets create a bool for our DoubleTap and set it to false.
-        bool doubleTapS = false;
 
-        //If we received a key down S
-        if (Input.GetKeyDown(KeyCode.S))
+        // If we have pressed twice
+        if(tapCount == 2)
         {
-            //Check last time the double tap happened. Was it less than .3f seconds ago?
-            if (Time.time < doubleTapTime + .3f)
-            {
-                //Yes it was!! turn our bool to true.
-                doubleTapS = true;
-            }
-            //Wether it was or wasn't, let's store the time of this tap for further comparison.
-            doubleTapTime = Time.time;
-        }
+            // Reset variables
+            doubleTapTime = 0;
+            tapCount = 0;
 
-        //If our bool was turned to true...
-        if (doubleTapS)
-        {
             //We should start a coroutine to change our layer so we can fall, then change it back on.
             StartCoroutine(CollisionBackOn());
+        }
+        // If we have pressed once so far, count the time
+        else if (tapCount == 1)
+        {
+            doubleTapTime += Time.deltaTime;
+        }
+
+        // Check if we have pressed down, and that we have NOT double tapped yet
+        if (Input.GetAxisRaw("Vertical") == -1 && tapCount < 2)
+        {
+            // We have pressed down
+            verticalSwitch = true;
+        }
+        // If our time buffer is not up, we must press again to confirm a double tap
+        else if(verticalSwitch && doubleTapTime <= timeBuffer)
+        {
+            if(tapCount == 0) { tapCount = 1; verticalSwitch = false; }
+            else if(tapCount == 1) { tapCount = 2; verticalSwitch = false; }
+        }
+
+        // We have only pressed once, and our time buffer ran out
+        if (tapCount == 1 && doubleTapTime >= timeBuffer)
+        {
+            // Reset variables
+            doubleTapTime = 0;
+            tapCount = 0;
         }
     }
 
