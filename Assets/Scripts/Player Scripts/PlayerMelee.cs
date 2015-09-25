@@ -56,27 +56,27 @@ public class PlayerMelee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetButtonDown("Melee"))
         {
             //First off, let's check if we're not already punching, see if the punch animations are playing.
-            if (!CheckIfPlaying("ArmsThrow", 1) && !CheckIfPlaying("ArmsThrow", 1))
-            {
+            //if (!CheckIfPlaying("ArmsThrow", 1) && !CheckIfPlaying("ArmsThrow", 1))
+            //{
                 //If I got here no punch animations are playing so we can punch now :D
-                if (punchleft)
-                {
+                //if (punchleft)
+                //{
                     //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
                     playerMove.AnimatorComp.Play("ArmsThrow", 1);
                     punchleft = false;
                     //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
                     StartCoroutine(WaitAndPunch());
-                }
+                /*}
                 else
                 {
                     playerMove.AnimatorComp.Play("ArmsThrow", 1);
                     punchleft = true;
                     StartCoroutine(WaitAndPunch());
-                }
-            }
+                }*/
+            //}
         }
     }
 
