@@ -378,12 +378,14 @@ public class PlayerMove : MonoBehaviour
 
     public IEnumerator Jump(Vector3 jumpVelocity, bool smoke, bool midAir = false)
     {
+        Debug.Log("Jump start");
+
         //Set the gravity to zero
-        m_Rigidbody.useGravity = false;
+        //m_Rigidbody.useGravity = false;
         // 0 out the y velocity so we can double jump at any time
         m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
         // Apply the jump force
-        m_Rigidbody.AddRelativeForce(jumpVelocity, ForceMode.Impulse);
+        m_Rigidbody.AddForce(jumpVelocity, ForceMode.Impulse);
         // Used to cap how long the player can hold jump for
         float timer = 0f;
 
@@ -409,6 +411,7 @@ public class PlayerMove : MonoBehaviour
             m_AudioSource.Play();
         }
 
+        /*
         // Let the player continue moving while the jump button is held down
         // and the jump time length isnt up
         while ( Input.GetButton("Jump") && timer < m_maxJumpTime )
@@ -416,10 +419,27 @@ public class PlayerMove : MonoBehaviour
             timer += Time.deltaTime;
 
             yield return null;
+        }*/
+
+        // Wait while the player is still holding jump
+        // and the character is still moving up
+        while ( Input.GetButton("Jump") && m_Rigidbody.velocity.y >= 0)
+        {
+            Debug.Log("jump vel + " + m_Rigidbody.velocity.y);
+            yield return null;
+        }
+
+        // If the character is still moving up at this stage
+        // then the player let go of the jump button early
+        // cut the velocity
+        if (m_Rigidbody.velocity.y > 0)
+        {
+            Debug.Log("early jump release");
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
         }
 
         //Set gravity back to normal at the end of the jump
-        m_Rigidbody.useGravity = true;        
+        //m_Rigidbody.useGravity = true;        
     }
 
     #region Getters Setters

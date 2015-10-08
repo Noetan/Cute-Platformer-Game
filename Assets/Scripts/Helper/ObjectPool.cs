@@ -87,7 +87,7 @@ namespace MemoryManagment
             if (cb != null)
             {
                 cb.SetPool(this);
-                Debug.Log("saved pool to custom behaviour");
+                //Debug.Log("saved pool to custom behaviour");
             }
 
             return newObj;
