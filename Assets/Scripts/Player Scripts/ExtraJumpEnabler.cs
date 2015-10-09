@@ -15,10 +15,12 @@ public class ExtraJumpEnabler : MonoBehaviour
     float WallJumpHorizontalMultiplier = 750;
     // How high we jump in midair
     [SerializeField]
-    Vector3 midAirJumpForce = new Vector3(0, 10, 0);
+    float m_airJumpVel = 12f;
     // FX to play on mid air jump
     [SerializeField]
     public GameObject midAirJumpParticleEffect;
+    [SerializeField]
+    float m_WaterJumpStrength = 0.33f;
     #endregion
 
     //We'll use this to communicate with the playerMove.
@@ -67,7 +69,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !m_isGrounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
-            StartCoroutine( m_playerMove.Jump(midAirJumpForce, true, true) );
+            StartCoroutine( m_playerMove.Jump(m_airJumpVel, true, true) );
             //And lets set the double jump to false!
             m_canDoubleJump = false;
             //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
@@ -76,7 +78,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         else if (Input.GetButtonDown("Jump") && !m_isGrounded && m_isSwimming)
         {
             //Do a jump with the first jump force! :D Or a third of it, because the first one is already too much for swimming
-            StartCoroutine(m_playerMove.Jump(m_playerMove.JumpForce / 3, false) );
+            StartCoroutine( m_playerMove.Jump(m_playerMove.JumpVelocity * m_WaterJumpStrength, false) );
         }
     }
 
@@ -161,7 +163,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             // Ensure for Y component to normal, for the same above reason
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
-            StartCoroutine( m_playerMove.Jump(new Vector3(0, WallJumpYVelocity, 0), true, true) );
+            StartCoroutine( m_playerMove.Jump(WallJumpYVelocity, true, true) );
 
             m_playerMove.AnimatorComp.Play("Jump1", 0);
             //And lets set the double jump to false!

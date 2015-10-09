@@ -57,20 +57,12 @@ public class PlayerMove : MonoBehaviour
 	// jumping
     [Header("Jumping")]
 
-    // normal jump force
+    // normal jump velocity
     [SerializeField]
-    Vector3 m_jumpForce =  new Vector3(0, 13, 0);
-
-    // the force of a 2nd consecutive jump
-    //[SerializeField]
-    //Vector3 m_secondJumpForce = new Vector3(0, 17, 0);
-    // the force of a 3rd consecutive jump
-    //[SerializeField]
-    //Vector3 m_thirdJumpForce = new Vector3(0, 20, 0);
-
-    // how fast you need to jump after hitting the ground, to do the next type of jump
+    float m_jumpVelocity =  12f;
+	// minimum jump velocity if the player releases the button immediately
     [SerializeField]
-    float m_jumpDelay = 0.1f;
+    float m_minJumpVel = 6f;
     // how early before hitting the ground you can press jump, and still have it work
     [SerializeField]
     float m_jumpLeniancy = 0.17f;
@@ -87,8 +79,6 @@ public class PlayerMove : MonoBehaviour
     // Where relative to the player should it play
     [SerializeField]
     Transform m_jumpingEffectLocation;
-    //[SerializeField]
-    //ParticleSystem m_jumpSmoke;
 
 #endregion
 
@@ -331,63 +321,25 @@ public class PlayerMove : MonoBehaviour
                 // Jump!
                 if (!isCrouching)
                 {
-                    StartCoroutine(Jump(m_jumpForce, true, false));
+                    StartCoroutine(Jump(m_jumpVelocity, true, false));
                 }
                 else if (isCrouching && m_Rigidbody.velocity[0] > 0.1f)
                 {
-                    StartCoroutine(Jump(m_crouchingLongJumpForce, true, false));
+                    FixedJump(m_crouchingLongJumpForce);
                 }
                 else if (isCrouching && m_Rigidbody.velocity[0] <= 0.1f)
                 {
-                    StartCoroutine(Jump(m_crouchingBackflipJumpForce, true, false));
+                    FixedJump(m_crouchingBackflipJumpForce);
                 }
-
-                /* Old triple jump code
-				//increment our jump type if we haven't been on the ground for long
-				onJump = (groundedCount < m_jumpDelay) ? Mathf.Min(2, onJump + 1) : 0;
-				//execute the correct jump (like in mario64, jumping 3 times quickly will do higher jumps)
-				if (onJump == 0)
-						StartCoroutine( Jump (m_jumpForce) );
-				else if (onJump == 1)
-                        StartCoroutine( Jump(m_secondJumpForce) );
-				else if (onJump == 2)
-                        StartCoroutine( Jump(m_thirdJumpForce) );
-                        */
-
-                //Instantiate(m_jumpingParticleEffect, m_jumpingEffectLocation.position, m_jumpingParticleEffect.transform.rotation);
-                //m_jumpSmoke.Play();
             }
 		}
 	}
-	
-	//push player at jump force
-    // Old jump method
-	/* public void Jump(Vector3 jumpVelocity)
-	{
-		if(jumpSound)
-		{
-			m_AudioSource.volume = 1;
-			m_AudioSource.clip = jumpSound;
-			m_AudioSource.Play ();
-		}
-        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
-        m_Rigidbody.AddRelativeForce (jumpVelocity, ForceMode.Impulse);
-		airPressTime = 0f;
-	} */
     
-
-    public IEnumerator Jump(Vector3 jumpVelocity, bool smoke, bool midAir = false)
+    // A variable height jump that goes striaght up
+    public IEnumerator Jump(float jumpVelocity, bool smoke, bool midAir = false)
     {
-        Debug.Log("Jump start");
-
-        //Set the gravity to zero
-        //m_Rigidbody.useGravity = false;
         // 0 out the y velocity so we can double jump at any time
-        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0f, m_Rigidbody.velocity.z);
-        // Apply the jump force
-        m_Rigidbody.AddForce(jumpVelocity, ForceMode.Impulse);
-        // Used to cap how long the player can hold jump for
-        float timer = 0f;
+        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, jumpVelocity, m_Rigidbody.velocity.z);
 
         // Play smoke puff particle effect
         if (!midAir && smoke)
@@ -411,41 +363,31 @@ public class PlayerMove : MonoBehaviour
             m_AudioSource.Play();
         }
 
-        /*
-        // Let the player continue moving while the jump button is held down
-        // and the jump time length isnt up
-        while ( Input.GetButton("Jump") && timer < m_maxJumpTime )
-        {
-            timer += Time.deltaTime;
-
-            yield return null;
-        }*/
-
         // Wait while the player is still holding jump
         // and the character is still moving up
-        while ( Input.GetButton("Jump") && m_Rigidbody.velocity.y >= 0)
+        while ( Input.GetButton("Jump") && m_Rigidbody.velocity.y >= m_minJumpVel)
         {
-            Debug.Log("jump vel + " + m_Rigidbody.velocity.y);
             yield return null;
         }
-
         // If the character is still moving up at this stage
         // then the player let go of the jump button early
-        // cut the velocity
-        if (m_Rigidbody.velocity.y > 0)
+        // cut the velocity to make the player fall faster
+        if (m_Rigidbody.velocity.y > m_minJumpVel)
         {
-            Debug.Log("early jump release");
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
-        }
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_minJumpVel, m_Rigidbody.velocity.z);
+        }  
+    }
 
-        //Set gravity back to normal at the end of the jump
-        //m_Rigidbody.useGravity = true;        
+    // A jump of fixed height/direction
+    public void FixedJump(Vector3 JumpForce)
+    {
+        m_Rigidbody.AddRelativeForce(JumpForce, ForceMode.VelocityChange);
     }
 
     #region Getters Setters
-    public Vector3 JumpForce
+    public float JumpVelocity
     {
-        get { return m_jumpForce; }
+        get { return m_jumpVelocity; }
     }
 
     public Animator AnimatorComp
