@@ -17,4 +17,9 @@ public class CustomBehaviour : MonoBehaviour
     {
         m_parentPool = newPool;
     }
+
+    public virtual void Reset()
+    {
+
+    }
 }

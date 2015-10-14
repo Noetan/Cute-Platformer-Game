@@ -1,34 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HealthPickup : MonoBehaviour
+public class HealthPickup : BasePickUp
 {
-    public AudioClip healthSound;
     public int healthThreshold;
     public int healthGain;
-    private Health health;
+    Health health;
 
     void Start()
     {
         health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
     }
 
-    void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             health = other.GetComponent<Health>();
-            HeartGet();
         }
+
+        base.OnTriggerEnter(other);
     }
 
-    void HeartGet()
+    public override void PickUp()
     {
-        if (healthSound)
-        {
-            AudioSource.PlayClipAtPoint(healthSound, transform.position);
-        }
-        Destroy(gameObject);
+        base.PickUp();
+
         if (health.currentHealth < healthThreshold)
         {
             health.currentHealth += healthGain;
