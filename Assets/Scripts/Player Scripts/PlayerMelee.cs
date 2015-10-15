@@ -5,15 +5,22 @@ using System.Collections.Generic;
 public class PlayerMelee : MonoBehaviour
 {
 
-    //We'll use those 3 to communicate with the rest of the kit.
-    private PlayerMove playerMove;
-    private CharacterMotor characterMotor;
-    private DealDamage DoDamage;
-
+    // Character scripts
+    private PlayerMove m_playerMove;
+    private CharacterMotor m_characterMotor;
+    private DealDamage m_DoDamage;
+    private Sliding m_Sliding;
+    private Rigidbody m_rigidBody;
     //This will be used to cycle through 2 different punch animations
     private bool punchleft;
     //This will be used to check if we should ge giving damage.
     private bool Punching;
+
+    // Check if we are diving
+    private bool diving = false;
+
+    // Check if we are grounded, using animator
+    private bool m_isGrounded;
 
     private List<GameObject> BeingPunched = new List<GameObject>();
 
@@ -25,14 +32,32 @@ public class PlayerMelee : MonoBehaviour
     public float PushHeight = 4;
     public float PushForce = 10;
 
+    // Mario-style dive attck - force to use
+    public Vector3 diveJumpForce;
+
+    public DealDamage DoDamage
+    {
+        get
+        {
+            return m_DoDamage;
+        }
+
+        set
+        {
+            m_DoDamage = value;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
         //We're supposed to be on the same gameobject as the PlayerMove,
         //CharacterMotor etc, so lets get them as reference!
-        playerMove = GetComponent<PlayerMove>();
-        characterMotor = GetComponent<CharacterMotor>();
+        m_playerMove = GetComponent<PlayerMove>();
+        m_characterMotor = GetComponent<CharacterMotor>();
         DoDamage = GetComponent<DealDamage>();
+        m_Sliding = GetComponent<Sliding>();
+        m_rigidBody = GetComponent<Rigidbody>();
 
         //Did you even make a PunchBox? Or you were lazy and didn't make one?
         if (!PunchHitBox)
@@ -56,27 +81,62 @@ public class PlayerMelee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_Sliding.m_isSliding)
+        {
+            return;
+        }
+
         if (Input.GetButtonDown("Melee"))
         {
+            #region reference
             //First off, let's check if we're not already punching, see if the punch animations are playing.
             //if (!CheckIfPlaying("ArmsThrow", 1) && !CheckIfPlaying("ArmsThrow", 1))
             //{
-                //If I got here no punch animations are playing so we can punch now :D
-                //if (punchleft)
-                //{
-                    //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
-                    playerMove.AnimatorComp.Play("ArmsThrow", 1);
-                    punchleft = false;
-                    //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
-                    StartCoroutine(WaitAndPunch());
-                /*}
-                else
-                {
-                    playerMove.AnimatorComp.Play("ArmsThrow", 1);
-                    punchleft = true;
-                    StartCoroutine(WaitAndPunch());
-                }*/
+            //If I got here no punch animations are playing so we can punch now :D
+            //if (punchleft)
+            //{
+            //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
+            //m_playerMove.AnimatorComp.Play("ArmsThrow", 1);
+            //punchleft = false;
+            //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
+            //StartCoroutine(WaitAndPunch());
+            /*}
+            else
+            {
+                playerMove.AnimatorComp.Play("ArmsThrow", 1);
+                punchleft = true;
+                StartCoroutine(WaitAndPunch());
+            }*/
             //}
+            #endregion
+
+            if (m_rigidBody.velocity[0] > 0.1f
+                    || m_rigidBody.velocity[2] > 0.1f
+                    || m_rigidBody.velocity[0] < -0.1f
+                    || m_rigidBody.velocity[2] < -0.1f)
+            {
+                Dive();
+            }
+            else
+            {
+                //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
+                m_playerMove.AnimatorComp.Play("ArmsThrow", 1);
+                punchleft = false;
+                //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
+                StartCoroutine(WaitAndPunch());
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
+        m_isGrounded = m_playerMove.AnimatorComp.GetBool("Grounded");
+
+        // Check if our slide from dive has stopped, so we can stop diving
+        if (!m_Sliding.m_isSliding && diving)
+        {
+            StopDive();
         }
     }
 
@@ -101,14 +161,18 @@ public class PlayerMelee : MonoBehaviour
             yield return 0;
     }
 
-    void PunchThem()
+    // Start punching - if NOT timed Punch, you have to end punching manually
+    void PunchThem(bool timedPunch = true)
     {
         //Enable our cool Punching Hitbox to check for enemies in there.
         PunchHitBox.enabled = true;
         //Turn our Punchin bool to true so our TriggerStay will check for people being punched.
         Punching = true;
-        //Start the coroutine that will wait for a moment and stop the punching stuff turning bools back to false.
-        StartCoroutine(WaitAndStopPunch());
+        if (timedPunch)
+        {
+            //Start the coroutine that will wait for a moment and stop the punching stuff turning bools back to false.
+            StartCoroutine(WaitAndStopPunch());
+        }
     }
 
     void StopPunch()
@@ -118,6 +182,25 @@ public class PlayerMelee : MonoBehaviour
         Punching = false;
         //Clear the List of people that got punched on this punch.
         BeingPunched.Clear();
+    }
+
+    void Dive()
+    {
+        // We are now diving
+        diving = true;
+        // Do the dive jump
+        m_playerMove.FixedJump(diveJumpForce);
+        // Start punching, we will turn off punching ourselves, so it is NOT timed
+        PunchThem(false);
+        m_playerMove.enabled = false;
+        m_Sliding.SetSliding(true);
+    }
+
+    void StopDive()
+    {
+        diving = false;
+        m_playerMove.enabled = true;
+        StopPunch();
     }
 
     //This function runs for each collider on our trigger zone, on each frame they are on our trigger zone.
@@ -146,7 +229,7 @@ public class PlayerMelee : MonoBehaviour
     bool CheckIfPlaying(string Anim, int Layer)
     {
         //Grabs the AnimatorStateInfo out of our PlayerMove animator for the desired Layer.
-        AnimatorStateInfo AnimInfo = playerMove.AnimatorComp.GetCurrentAnimatorStateInfo(Layer);
+        AnimatorStateInfo AnimInfo = m_playerMove.AnimatorComp.GetCurrentAnimatorStateInfo(Layer);
         //Returns the bool we want, by checking if the string ANIM given is playing.
         return AnimInfo.IsName(Anim);
     }

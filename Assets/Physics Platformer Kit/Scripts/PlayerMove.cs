@@ -320,11 +320,15 @@ public class PlayerMove : MonoBehaviour
                 {
                     StartCoroutine(Jump(m_jumpVelocity, true, false));
                 }
-                else if (isCrouching && m_Rigidbody.velocity[0] > 0.1f)
+                else if (isCrouching && m_Rigidbody.velocity[0] > 0.1f 
+                    || isCrouching && m_Rigidbody.velocity[2] > 0.1f
+                    || isCrouching && m_Rigidbody.velocity[0] < -0.1f
+                    || isCrouching && m_Rigidbody.velocity[2] < -0.1f)
                 {
                     FixedJump(m_crouchingLongJumpForce);
                 }
-                else if (isCrouching && m_Rigidbody.velocity[0] <= 0.1f)
+                else if (isCrouching && m_Rigidbody.velocity[0] <= 0.1f
+                    || isCrouching && m_Rigidbody.velocity[2] <= 0.1f)
                 {
                     FixedJump(m_crouchingBackflipJumpForce);
                 }
