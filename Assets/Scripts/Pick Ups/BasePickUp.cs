@@ -6,7 +6,7 @@ public class BasePickUp : CustomBehaviour
     #region Inspector Variables
     // The sound effect that plays when the item is picked up
     [SerializeField]
-    AudioClip m_soundEffect;
+    AudioSource m_soundEffect;
     // The particle effect that plays when the item is picked up
     [SerializeField]
     ParticleSystem m_touchedParticleEffect;
@@ -19,25 +19,24 @@ public class BasePickUp : CustomBehaviour
     enum State
     {
         Idle,
-        PrepareInactive,
         Inactive
     }
     State m_currentState = State.Idle;
 	
 	void Start () 
 	{
-        /*
+        
         // If the item is only meant to be picked up once per save file
         if (!m_respawns)
         {
             // Check if the player has already picked it up
-            if (false) // TO BE IMPLEMENTED
+            //if (false) // TO BE IMPLEMENTED
             {
                 // If they have don't spawn the item
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
             }
         }
-        */	
+        	
 	}
 	
 	void Update () 
@@ -45,13 +44,6 @@ public class BasePickUp : CustomBehaviour
         switch (m_currentState)
         {
             case State.Idle:
-                break;
-            case State.PrepareInactive:
-                if (m_touchedParticleEffect.isStopped)
-                {
-                    m_currentState = State.Inactive;
-                    gameObject.SetActive(false);
-                }
                 break;
             case State.Inactive:
                 break;
@@ -68,27 +60,28 @@ public class BasePickUp : CustomBehaviour
     }
 
 
-    public virtual void PickUp()
+    protected virtual void PickUp()
     {
         // play sound effect
+        if (m_soundEffect != null)
+        {
+            m_soundEffect.Play();
+        }
 
         // play particle effect
-        if (m_touchedParticleEffect)
+        if (m_touchedParticleEffect != null)
         {
             m_touchedParticleEffect.Play();
-            m_currentState = State.PrepareInactive;
-        }
-        else
-        {
-            m_currentState = State.Inactive;
         }
 
-        MeshRenderer meshRen = GetComponent<MeshRenderer>();
-        meshRen.enabled = false;
+        // Disable the item
+        gameObject.SetActive(false);
+
+        m_currentState = State.Inactive;
     }
 
     public override void Reset()
     {
-
+        m_currentState = State.Idle;
     }
 }

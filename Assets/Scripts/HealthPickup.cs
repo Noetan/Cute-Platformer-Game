@@ -22,13 +22,13 @@ public class HealthPickup : BasePickUp
         base.OnTriggerEnter(other);
     }
 
-    public override void PickUp()
+    protected override void PickUp()
     {
-        base.PickUp();
-
         if (health.currentHealth < healthThreshold)
         {
             health.currentHealth += healthGain;
         }
+
+        base.PickUp();
     }
 }

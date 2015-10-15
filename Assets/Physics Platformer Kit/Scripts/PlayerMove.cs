@@ -66,9 +66,6 @@ public class PlayerMove : MonoBehaviour
     // how early before hitting the ground you can press jump, and still have it work
     [SerializeField]
     float m_jumpLeniancy = 0.17f;
-    // How long you can hold the jump button before you start falling again
-    [SerializeField]
-    float m_maxJumpTime = 0.25f;
 
     // Smoke puff that plays on jumps and landing
     [SerializeField]

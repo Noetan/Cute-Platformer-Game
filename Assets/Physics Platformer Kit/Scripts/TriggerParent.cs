@@ -18,7 +18,7 @@ public class TriggerParent : MonoBehaviour
 			Debug.LogError ("'TriggerParent' script attached to object which does not have a trigger collider", transform);
 	}
 	
-	//see if anything entered trigger, filer by tag, store the object
+	//see if anything entered trigger, filter by tag, store the object
 	void OnTriggerEnter (Collider other)
 	{
 		if (tagsToCheck.Length > 0 && !collided)
