@@ -17,7 +17,12 @@ public class PlayerMelee : MonoBehaviour
     private bool Punching;
 
     // Check if we are diving
-    private bool diving = false;
+    [HideInInspector]
+    public bool m_diving = false;
+    // Check if we can dive
+    private bool m_canDive = true;
+    // Check if we have dived since the last time we touched the floor
+    private bool m_hasDived = false;
 
     // Check if we are grounded, using animator
     private bool m_isGrounded;
@@ -34,6 +39,10 @@ public class PlayerMelee : MonoBehaviour
 
     // Mario-style dive attck - force to use
     public Vector3 diveJumpForce;
+    // Multiplier to normal of wall, for repelling force when you dive into a wall
+    public float divingWallCrashMultiplier = 150;
+    // Layers to ignore when crashing from diving
+    public LayerMask wallCrashIgnoreLayers;
 
     public DealDamage DoDamage
     {
@@ -81,6 +90,25 @@ public class PlayerMelee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_isGrounded)
+        {
+            m_canDive = true;
+            m_hasDived = false;
+        }
+        else if (!m_isGrounded && !m_hasDived)
+        {
+            m_canDive = true;
+        }
+        else
+        {
+            m_canDive = false;
+        }
+
+        if (Input.GetButtonDown("Jump") && m_diving)
+        {
+            StopDive();
+        }
+
         if (m_Sliding.m_isSliding)
         {
             return;
@@ -115,7 +143,10 @@ public class PlayerMelee : MonoBehaviour
                     || m_rigidBody.velocity[0] < -0.1f
                     || m_rigidBody.velocity[2] < -0.1f)
             {
-                Dive();
+                if (m_canDive)
+                {
+                    Dive();
+                }
             }
             else
             {
@@ -134,7 +165,7 @@ public class PlayerMelee : MonoBehaviour
         m_isGrounded = m_playerMove.AnimatorComp.GetBool("Grounded");
 
         // Check if our slide from dive has stopped, so we can stop diving
-        if (!m_Sliding.m_isSliding && diving)
+        if (!m_Sliding.m_isSliding && m_diving)
         {
             StopDive();
         }
@@ -187,7 +218,11 @@ public class PlayerMelee : MonoBehaviour
     void Dive()
     {
         // We are now diving
-        diving = true;
+        m_diving = true;
+        // We have dived since we last touched the floor
+        m_hasDived = true;
+        // We cannot dive again mid-dive
+        m_canDive = false;
         // Do the dive jump
         m_playerMove.FixedJump(diveJumpForce);
         // Start punching, we will turn off punching ourselves, so it is NOT timed
@@ -198,7 +233,7 @@ public class PlayerMelee : MonoBehaviour
 
     void StopDive()
     {
-        diving = false;
+        m_diving = false;
         m_playerMove.enabled = true;
         StopPunch();
     }
@@ -221,6 +256,28 @@ public class PlayerMelee : MonoBehaviour
                 DoDamage.Attack(other.gameObject, PunchDamage, PushHeight, PushForce);
                 //Add him to the list, so we won't hit him again with the same punch.
                 BeingPunched.Add(other.gameObject);
+            }
+        }
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        // If we're diving...
+        if (m_diving)
+        {
+            // If it wasn't in our ignore layer...
+            if (((1 << col.gameObject.layer) & wallCrashIgnoreLayers) == 0)
+            {
+                foreach (ContactPoint contact in col.contacts)
+                {
+                    // If the angle is close to straight up
+                    if (Vector3.Angle(contact.normal, Vector3.up) > 80.0f)
+                    {
+                        // Rebound off the wall
+                        Vector3 normal = contact.normal;
+                        m_rigidBody.AddForce(normal * divingWallCrashMultiplier);
+                    }
+                }
             }
         }
     }

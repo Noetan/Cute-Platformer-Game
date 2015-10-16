@@ -158,7 +158,7 @@ public class ExtraJumpEnabler : MonoBehaviour
 
             // 'Reset' player velocity so we don't get 'super' walljumps/barely any momentum at all
             Vector3 playerVel = m_rigidBody.velocity;
-            playerVel = new Vector3(playerVel.x, 0f, playerVel.z);
+            playerVel[1] = 0f;
             m_rigidBody.velocity = playerVel;
             // Ensure for Y component to normal, for the same above reason
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
