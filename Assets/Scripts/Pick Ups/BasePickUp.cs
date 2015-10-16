@@ -25,18 +25,7 @@ public class BasePickUp : CustomBehaviour
 	
 	void Start () 
 	{
-        
-        // If the item is only meant to be picked up once per save file
-        if (!m_respawns)
-        {
-            // Check if the player has already picked it up
-            //if (false) // TO BE IMPLEMENTED
-            {
-                // If they have don't spawn the item
-                //gameObject.SetActive(false);
-            }
-        }
-        	
+        Reset();      
 	}
 	
 	void Update () 
@@ -59,9 +48,11 @@ public class BasePickUp : CustomBehaviour
         }
     }
 
-
     protected virtual void PickUp()
     {
+        // Disable the item
+        gameObject.SetActive(false);
+
         // play sound effect
         if (m_soundEffect != null)
         {
@@ -74,14 +65,25 @@ public class BasePickUp : CustomBehaviour
             m_touchedParticleEffect.Play();
         }
 
-        // Disable the item
-        gameObject.SetActive(false);
-
         m_currentState = State.Inactive;
     }
 
     public override void Reset()
     {
+        // If the item is only meant to be picked up once per save file
+        if (!m_respawns)
+        {
+            // Check if the player has already picked it up
+            //if (false) // TO BE IMPLEMENTED
+            {
+                // If they have don't spawn the item
+                //gameObject.SetActive(false);
+
+                //break;
+            }
+        }
+
         m_currentState = State.Idle;
+        gameObject.SetActive(true);
     }
 }
