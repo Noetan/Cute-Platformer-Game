@@ -16,17 +16,23 @@ using UnityEngine.Assertions;
 public class AttractedItem : MonoBehaviour
 {
     #region Inspector Variables
-    // How strongly the item is attracted
-    [SerializeField]
-    float m_attractStrength = 400f;
+    [Header("Required")]
     // The item being attracted
     [SerializeField]
     GameObject m_item;
+
+    [Header("Properties")]
+    // How strongly the item is attracted
+    [SerializeField]
+    float m_attractStrength = 400f;
+    [SerializeField]
+    float m_initalJumpHeight = 25f;
     #endregion
 
     enum State
     {
         idle,
+        starting,
         active,
         finished
     }
@@ -46,26 +52,30 @@ public class AttractedItem : MonoBehaviour
 	
 	void FixedUpdate ()
     {
-	    if (m_currentState == State.active)
+        switch (m_currentState)
         {
-            Assert.IsNotNull(m_rigidbody);
-            Assert.IsNotNull(m_player);
+            case State.starting:
+                m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
+                m_currentState = State.active;
+                break;
 
-            // Stop attracting once the item has been picked up
-            if (!m_item.activeInHierarchy)
-            {
-                m_currentState = State.finished;
-                m_rigidbody.isKinematic = true;
-                m_rigidbody.velocity = Vector3.zero;
-                return;
-            }
+            case State.active:
+                // Stop attracting once the item has been picked up
+                if (!m_item.activeInHierarchy)
+                {
+                    m_currentState = State.finished;
+                    m_rigidbody.isKinematic = true;
+                    m_rigidbody.velocity = Vector3.zero;
+                    return;
+                }
 
-            // Get the direction to the player
-            // Multiply the direction with the strength to get the force
-            // Apply the force
-            Vector3 newDir = m_player.transform.position - gameObject.transform.position;
-            newDir = newDir.normalized * m_attractStrength;
-            m_rigidbody.AddForce(newDir);
+                // Get the direction to the player
+                // Multiply the direction with the strength to get the force
+                // Apply the force
+                Vector3 newDir = m_player.transform.position - gameObject.transform.position;
+                newDir = newDir.normalized * m_attractStrength;
+                m_rigidbody.AddForce(newDir);
+                break;
         }
 	}
 
@@ -76,9 +86,11 @@ public class AttractedItem : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                m_currentState = State.active;
+                m_currentState = State.starting;
                 m_player = other.gameObject;
-                Debug.Log("attracting");
+
+                Assert.IsNotNull(m_rigidbody);
+                Assert.IsNotNull(m_player);
             }
         }
     }
