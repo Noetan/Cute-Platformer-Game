@@ -24,7 +24,7 @@ public class AttractedItem : MonoBehaviour
     [Header("Properties")]
     // How strongly the item is attracted
     [SerializeField]
-    float m_attractStrength = 400f;
+    float m_attractStrength = 450f;
     [SerializeField]
     float m_initalJumpHeight = 25f;
     #endregion
@@ -80,14 +80,25 @@ public class AttractedItem : MonoBehaviour
 	}
 
     // Check for when the player gets close enough
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if (m_currentState == State.idle)
         {
             if (other.CompareTag("Player"))
             {
-                m_currentState = State.starting;
                 m_player = other.gameObject;
+
+                // Check if there is a wall between the player and the item
+                if ( Physics.Linecast( gameObject.transform.position, m_player.transform.position, LayerMask.NameToLayer("player") ) )
+                {
+                    Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
+                    Debug.Log( string.Format( "blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject );
+                    
+                    //return;
+                }
+
+                m_currentState = State.starting;
+                
 
                 Assert.IsNotNull(m_rigidbody);
                 Assert.IsNotNull(m_player);
