@@ -42,21 +42,29 @@ public class AttractedItem : MonoBehaviour
     GameObject m_player = null;
     // The item's rigidbody
     Rigidbody m_rigidbody = null;
+    bool m_defaultGravity = false;
 
     void Start()
     {
         Assert.IsNotNull(m_item);
-        
+
         m_rigidbody = GetComponentInParent<Rigidbody>();
+        m_defaultGravity = m_rigidbody.useGravity;
     }
-	
-	void FixedUpdate ()
+
+    void FixedUpdate()
     {
         switch (m_currentState)
         {
             case State.starting:
-                m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
+                // Make the item hop up before starting to follow the player
                 m_currentState = State.active;
+                m_rigidbody.useGravity = false;
+                //m_rigidbody.detectCollisions = false;
+
+
+                m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
+                
                 break;
 
             case State.active:
@@ -77,32 +85,34 @@ public class AttractedItem : MonoBehaviour
                 m_rigidbody.AddForce(newDir);
                 break;
         }
-	}
+    }
 
     // Check for when the player gets close enough
     void OnTriggerStay(Collider other)
     {
-        if (m_currentState == State.idle)
+        if (m_currentState == State.idle && other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
+            m_player = other.gameObject;
+
+            Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
+
+            // Check if there is a wall between the player and the item
+            RaycastHit hitInfo;
+            if (Physics.Linecast(gameObject.transform.position, m_player.transform.position, out hitInfo))
             {
-                m_player = other.gameObject;
+                //Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
+                //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);               
 
-                // Check if there is a wall between the player and the item
-                if ( Physics.Linecast( gameObject.transform.position, m_player.transform.position, LayerMask.NameToLayer("player") ) )
-                {
-                    Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
-                    Debug.Log( string.Format( "blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject );
-                    
-                    //return;
-                }
+                Debug.Log(hitInfo.collider);
 
-                m_currentState = State.starting;
-                
-
-                Assert.IsNotNull(m_rigidbody);
-                Assert.IsNotNull(m_player);
+                //return;
             }
+
+            // If not, start attracting to the player
+            m_currentState = State.starting;
+
+            Assert.IsNotNull(m_rigidbody);
+            Assert.IsNotNull(m_player);
         }
     }
 
@@ -111,5 +121,7 @@ public class AttractedItem : MonoBehaviour
         m_currentState = State.idle;
         gameObject.SetActive(true);
         m_rigidbody.isKinematic = false;
+        m_rigidbody.useGravity = m_defaultGravity;
+        m_rigidbody.detectCollisions = true;
     }
 }
