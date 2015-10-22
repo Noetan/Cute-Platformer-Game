@@ -39,8 +39,8 @@ public class AttractedItem : MonoBehaviour
     }
     State m_currentState = State.idle;
 
-    // The player we're attracting towards
-    GameObject m_player = null;
+    // The object we're attracting towards
+    GameObject m_goal = null;
     // The item's rigidbody
     Rigidbody m_rigidbody = null;
     bool m_defaultGravity = false;
@@ -51,8 +51,10 @@ public class AttractedItem : MonoBehaviour
 
         m_rigidbody = GetComponentInParent<Rigidbody>();
         m_defaultGravity = m_rigidbody.useGravity;
+        m_goal = PlayerController.Player;        
         
         Assert.IsNotNull(m_rigidbody);
+        Assert.IsNotNull(m_goal);
     }
 
     void FixedUpdate()
@@ -81,7 +83,7 @@ public class AttractedItem : MonoBehaviour
                 // Get the direction to the player
                 // Multiply the direction with the strength to get the force
                 // Apply the force
-                Vector3 newDir = m_player.transform.position - gameObject.transform.position;
+                Vector3 newDir = m_goal.transform.position - gameObject.transform.position;
                 newDir = newDir.normalized * m_attractStrength;
                 m_rigidbody.AddForce(newDir);
                 break;
@@ -96,22 +98,20 @@ public class AttractedItem : MonoBehaviour
     // Check for when the player gets close enough
     void OnTriggerStay(Collider other)
     {
-        if (m_currentState == State.idle && other.CompareTag("Player"))
+        if (m_currentState == State.idle && other.CompareTag(m_goal.tag))
         {
-            m_player = other.gameObject;            
-
             // Check if there is a wall between the player and the item
             RaycastHit hitInfo;
-            if (Physics.Linecast(gameObject.transform.position, m_player.transform.position, out hitInfo, LayerMask.NameToLayer("") , QueryTriggerInteraction.Ignore))
+            if (Physics.Linecast(gameObject.transform.position, m_goal.transform.position
+                , out hitInfo, LayerMask.NameToLayer("") , QueryTriggerInteraction.Ignore))
             { 
-                Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 60);
+                //Debug.DrawLine(gameObject.transform.position, m_goal.transform.position, Color.red, 60);
                 //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);     
                 //Debug.Log(hitInfo.collider + " " + hitInfo.collider.tag);
                 //Debug.Log(LayerMask.NameToLayer(""));
 
-
                 // If there is, dont start attracting
-                if (!hitInfo.collider.CompareTag("Player"))
+                if (!hitInfo.collider.CompareTag(m_goal.tag))
                 {
                     return;
                 }
@@ -120,7 +120,7 @@ public class AttractedItem : MonoBehaviour
             // If not, start attracting to the player
             m_currentState = State.starting;
 
-            Assert.IsNotNull(m_player);
+            Assert.IsNotNull(m_goal);
         }
     }
 

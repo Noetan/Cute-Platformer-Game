@@ -48,7 +48,7 @@ public class BasePickUp : CustomBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if ( other.CompareTag("Player") )
+        if ( other.CompareTag(PlayerController.Tag) )
         {
             PickUp();
         }

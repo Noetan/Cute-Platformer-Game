@@ -1,4 +1,11 @@
-﻿using UnityEditor;
+﻿// A tool for the Unity Editor
+// Reverts all the selected gameobjects back to their prefab settings
+// How to use
+// Select the gameobjects in the hierarchy/scene view
+// Navigate to the Tools submenu at the top of the editor
+// Click Revert to Prefab
+
+using UnityEditor;
 using UnityEngine;
 
 public class RevertAllPrefabs

@@ -9,18 +9,20 @@ public class HealthPickup : BasePickUp
 
     void Start()
     {
-        health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+        //health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+        health = PlayerController.HealthComp;
     }
 
+    /*
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(PlayerController.Tag))
         {
-            health = other.GetComponent<Health>();
+            //health = other.GetComponent<Health>();
         }
 
         base.OnTriggerEnter(other);
-    }
+    }*/
 
     protected override void PickUp()
     {

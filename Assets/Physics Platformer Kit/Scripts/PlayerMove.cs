@@ -97,7 +97,7 @@ public class PlayerMove : MonoBehaviour
 	EnemyAI enemyAI;
 	DealDamage dealDamage;
     
-    Rigidbody m_Rigidbody;
+    //Rigidbody m_Rigidbody;
     AudioSource m_AudioSource;
     Collider m_Collider;
 
@@ -143,7 +143,7 @@ public class PlayerMove : MonoBehaviour
 		dealDamage = GetComponent<DealDamage>();
 		characterMotor = GetComponent<CharacterMotor>();
 
-        m_Rigidbody = GetComponent<Rigidbody>();
+        //m_Rigidbody = GetComponent<Rigidbody>();
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
 
@@ -169,33 +169,20 @@ public class PlayerMove : MonoBehaviour
 		curAccel = (grounded) ? m_accel : m_airAccel;
 		curDecel = (grounded) ? m_decel : m_airDecel;
 		curRotateSpeed = (grounded) ? m_rotateSpeed : airRotateSpeed;
-
-        if (Input.GetButton("Crouch") && grounded)
-        {
-            isCrouching = true;
-        }
-        else
-        {
-            isCrouching = false;
-        }
-
+        
         m_maxSpeed = (isCrouching) ? m_crouchMaxSpeed : OriginalMaxSpeed;
         m_accel = (isCrouching) ? m_crouchMaxAccel : OriginalMaxAccel;
 				
-		//get movement axis relative to camera
+		// get movement axis relative to camera
 		screenMovementSpace = Quaternion.Euler (0, m_mainCam.eulerAngles.y, 0);
 		screenMovementForward = screenMovementSpace * Vector3.forward;
 		screenMovementRight = screenMovementSpace * Vector3.right;
 		
-		//get movement input, set direction to move in
-		float h = Input.GetAxisRaw ("Horizontal");
-		float v = Input.GetAxisRaw ("Vertical");
-
-		//only apply vertical input to movemement, if player is not sidescroller
+		// only apply vertical input to movemement, if player is not sidescroller
 		if(!m_sidescroller)
-			direction = (screenMovementForward * v) + (screenMovementRight * h);
+			direction = (screenMovementForward * PlayerController.Instance.InputV) + (screenMovementRight * PlayerController.Instance.InputH);
 		else
-			direction = Vector3.right * h;
+			direction = Vector3.right * PlayerController.Instance.InputH;
 		moveDirection = transform.position + direction;
 	}
 	
@@ -214,7 +201,7 @@ public class PlayerMove : MonoBehaviour
 		{
 			m_animator.SetFloat("DistanceToTarget", characterMotor.DistanceToTarget);
 			m_animator.SetBool("Grounded", grounded);
-			m_animator.SetFloat("YVelocity", m_Rigidbody.velocity.y);
+			m_animator.SetFloat("YVelocity", PlayerController.RB.velocity.y);
 		}
 	}
 	
@@ -225,11 +212,11 @@ public class PlayerMove : MonoBehaviour
 		if (other.collider.tag != "Untagged" || grounded == false)
 			return;
 		//if no movement should be happening, stop player moving in Z/X axis
-		if(direction.magnitude == 0 && slope < m_slopeLimit && m_Rigidbody.velocity.magnitude < 2)
+		if(direction.magnitude == 0 && slope < m_slopeLimit && PlayerController.RB.velocity.magnitude < 2)
 		{
             //it's usually not a good idea to alter a rigidbodies velocity every frame
             //but this is the cleanest way i could think of, and we have a lot of checks beforehand, so it shou
-            m_Rigidbody.velocity = Vector3.zero;
+            PlayerController.RB.velocity = Vector3.zero;
 		}
 	}
 	
@@ -253,17 +240,17 @@ public class PlayerMove : MonoBehaviour
 					if(slope > m_slopeLimit && hit.transform.tag != "Pushable")
 					{
 						Vector3 slide = new Vector3(0f, -m_slideAmount, 0f);
-                        m_Rigidbody.AddForce (slide, ForceMode.Force);
+                        PlayerController.RB.AddForce (slide, ForceMode.Force);
 					}
 					//enemy bouncing
-					if (hit.transform.tag == "Enemy" && m_Rigidbody.velocity.y < 0)
+					if (hit.transform.tag == "Enemy" && PlayerController.RB.velocity.y < 0)
 					{
 						enemyAI = hit.transform.GetComponent<EnemyAI>();
 						enemyAI.BouncedOn();
 						onEnemyBounce ++;
 						dealDamage.Attack(hit.transform.gameObject, 1, 0f, 0f);
 					}
-                    if (hit.transform.CompareTag("Spring") && m_Rigidbody.velocity.y < 0)
+                    if (hit.transform.CompareTag("Spring") && PlayerController.RB.velocity.y < 0)
                     {
                         JumpSpring jSpring = hit.transform.GetComponent<JumpSpring>();
                         jSpring.BouncedOn();
@@ -276,7 +263,7 @@ public class PlayerMove : MonoBehaviour
 						movingObjSpeed = hit.transform.GetComponent<Rigidbody>().velocity;
 						movingObjSpeed.y = 0f;
                         //9.5f is a magic number, if youre not moving properly on platforms, experiment with this number
-                        m_Rigidbody.AddForce(movingObjSpeed * m_movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                        PlayerController.RB.AddForce(movingObjSpeed * m_movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
 					}
 					else
 					{
@@ -299,9 +286,9 @@ public class PlayerMove : MonoBehaviour
 		groundedCount = (grounded) ? groundedCount += Time.deltaTime : 0f;
 		
 		//play landing sound
-		if(groundedCount < 0.25 && groundedCount != 0 && !m_AudioSource.isPlaying && m_landSound && m_Rigidbody.velocity.y < 1)
+		if(groundedCount < 0.25 && groundedCount != 0 && !m_AudioSource.isPlaying && m_landSound && PlayerController.RB.velocity.y < 1)
 		{
-			m_AudioSource.volume = Mathf.Abs(m_Rigidbody.velocity.y)/40;
+			m_AudioSource.volume = Mathf.Abs(PlayerController.RB.velocity.y)/40;
 			m_AudioSource.clip = m_landSound;
 			m_AudioSource.Play ();
 		}
@@ -320,15 +307,15 @@ public class PlayerMove : MonoBehaviour
                 {
                     StartCoroutine(Jump(m_jumpVelocity, true, false));
                 }
-                else if (isCrouching && m_Rigidbody.velocity[0] > 0.1f 
-                    || isCrouching && m_Rigidbody.velocity[2] > 0.1f
-                    || isCrouching && m_Rigidbody.velocity[0] < -0.1f
-                    || isCrouching && m_Rigidbody.velocity[2] < -0.1f)
+                else if (isCrouching && PlayerController.RB.velocity[0] > 0.1f 
+                    || isCrouching && PlayerController.RB.velocity[2] > 0.1f
+                    || isCrouching && PlayerController.RB.velocity[0] < -0.1f
+                    || isCrouching && PlayerController.RB.velocity[2] < -0.1f)
                 {
                     FixedJump(m_crouchingLongJumpForce);
                 }
-                else if (isCrouching && m_Rigidbody.velocity[0] <= 0.1f
-                    || isCrouching && m_Rigidbody.velocity[2] <= 0.1f)
+                else if (isCrouching && PlayerController.RB.velocity[0] <= 0.1f
+                    || isCrouching && PlayerController.RB.velocity[2] <= 0.1f)
                 {
                     FixedJump(m_crouchingBackflipJumpForce);
                 }
@@ -340,7 +327,7 @@ public class PlayerMove : MonoBehaviour
     public IEnumerator Jump(float jumpVelocity, bool smoke, bool midAir = false)
     {
         // 0 out the y velocity so we can double jump at any time
-        m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, jumpVelocity, m_Rigidbody.velocity.z);
+        PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, jumpVelocity, PlayerController.RB.velocity.z);
 
         // Play smoke puff particle effect
         if (!midAir && smoke)
@@ -366,23 +353,23 @@ public class PlayerMove : MonoBehaviour
 
         // Wait while the player is still holding jump
         // and the character is still moving up
-        while ( Input.GetButton("Jump") && m_Rigidbody.velocity.y >= m_minJumpVel)
+        while ( Input.GetButton("Jump") && PlayerController.RB.velocity.y >= m_minJumpVel)
         {
             yield return null;
         }
         // If the character is still moving up at this stage
         // then the player let go of the jump button early
         // cut the velocity to make the player fall faster
-        if (m_Rigidbody.velocity.y > m_minJumpVel)
+        if (PlayerController.RB.velocity.y > m_minJumpVel)
         {
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_minJumpVel, m_Rigidbody.velocity.z);
+            PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, m_minJumpVel, PlayerController.RB.velocity.z);
         }  
     }
 
     // A jump of fixed height/direction
     public void FixedJump(Vector3 JumpForce)
     {
-        m_Rigidbody.AddRelativeForce(JumpForce, ForceMode.VelocityChange);
+        PlayerController.RB.AddRelativeForce(JumpForce, ForceMode.VelocityChange);
     }
 
     #region Getters Setters
@@ -408,5 +395,17 @@ public class PlayerMove : MonoBehaviour
     {
         get { return m_jumpParticleEffect; }
     }
+
+    public bool Crouching
+    {
+        get { return isCrouching; }
+        set { isCrouching = value; }
+    }
+
+    public bool Grounded
+    {
+        get { return grounded; }
+    }
+
     #endregion
 }
