@@ -13,8 +13,9 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
+[RequireComponent(typeof(Rigidbody))]
 public class AttractedItem : MonoBehaviour
-{
+{    
     #region Inspector Variables
     [Header("Required")]
     // The item being attracted
@@ -50,6 +51,8 @@ public class AttractedItem : MonoBehaviour
 
         m_rigidbody = GetComponentInParent<Rigidbody>();
         m_defaultGravity = m_rigidbody.useGravity;
+        
+        Assert.IsNotNull(m_rigidbody);
     }
 
     void FixedUpdate()
@@ -59,9 +62,7 @@ public class AttractedItem : MonoBehaviour
             case State.starting:
                 // Make the item hop up before starting to follow the player
                 m_currentState = State.active;
-                m_rigidbody.useGravity = false;
-                //m_rigidbody.detectCollisions = false;
-
+                m_rigidbody.useGravity = false;              
 
                 m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
                 
@@ -87,31 +88,38 @@ public class AttractedItem : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        OnTriggerStay(other);
+    }
+
     // Check for when the player gets close enough
     void OnTriggerStay(Collider other)
     {
         if (m_currentState == State.idle && other.CompareTag("Player"))
         {
-            m_player = other.gameObject;
-
-            Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
+            m_player = other.gameObject;            
 
             // Check if there is a wall between the player and the item
             RaycastHit hitInfo;
-            if (Physics.Linecast(gameObject.transform.position, m_player.transform.position, out hitInfo))
-            {
-                //Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 5);
-                //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);               
+            if (Physics.Linecast(gameObject.transform.position, m_player.transform.position, out hitInfo, LayerMask.NameToLayer("") , QueryTriggerInteraction.Ignore))
+            { 
+                Debug.DrawLine(gameObject.transform.position, m_player.transform.position, Color.red, 60);
+                //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);     
+                //Debug.Log(hitInfo.collider + " " + hitInfo.collider.tag);
+                //Debug.Log(LayerMask.NameToLayer(""));
 
-                Debug.Log(hitInfo.collider);
 
-                //return;
+                // If there is, dont start attracting
+                if (!hitInfo.collider.CompareTag("Player"))
+                {
+                    return;
+                }
             }
 
             // If not, start attracting to the player
             m_currentState = State.starting;
 
-            Assert.IsNotNull(m_rigidbody);
             Assert.IsNotNull(m_player);
         }
     }

@@ -16,6 +16,8 @@ public class BasePickUp : CustomBehaviour
     bool m_respawns = true;
     #endregion
 
+    bool m_defaultGravity = false;
+
     enum State
     {
         Idle,
@@ -23,6 +25,10 @@ public class BasePickUp : CustomBehaviour
     }
     State m_currentState = State.Idle;
 	
+    void Awake()
+    {
+    }
+
 	void Start () 
 	{
         Reset();      
