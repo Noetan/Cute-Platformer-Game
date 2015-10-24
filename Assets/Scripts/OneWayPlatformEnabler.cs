@@ -63,17 +63,17 @@ public class OneWayPlatformEnabler : MonoBehaviour
             doubleTapTime += Time.deltaTime;
         }
 
-        // Check if we have pressed down, and that we have NOT double tapped yet
-        if (Input.GetAxisRaw("Vertical") == -1 && tapCount < 2)
+        // Check if we have pressed crouch, and that we have NOT double tapped yet
+        if (Input.GetButtonDown("Crouch") && tapCount < 2)
         {
             // We have pressed down
             verticalSwitch = true;
         }
         // If our time buffer is not up, we must press again to confirm a double tap
-        else if(verticalSwitch && doubleTapTime <= timeBuffer)
+        else if (verticalSwitch && doubleTapTime <= timeBuffer)
         {
-            if(tapCount == 0) { tapCount = 1; verticalSwitch = false; }
-            else if(tapCount == 1) { tapCount = 2; verticalSwitch = false; }
+            if (tapCount == 0) { tapCount = 1; verticalSwitch = false; }
+            else if (tapCount == 1) { tapCount = 2; verticalSwitch = false; }
         }
 
         // We have only pressed once, and our time buffer ran out

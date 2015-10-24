@@ -116,6 +116,8 @@ public class PlayerMove : MonoBehaviour
     float OriginalMaxSpeed;
     float OriginalMaxAccel;
 
+    private bool canJump = true;
+
     // setup
     void Awake()
 	{
@@ -326,6 +328,14 @@ public class PlayerMove : MonoBehaviour
     // A variable height jump that goes striaght up
     public IEnumerator Jump(float jumpVelocity, bool smoke, bool midAir = false)
     {
+        // If we can't jump, return without doing anything
+        if(!canJump)
+        {
+            yield break;
+        }
+
+        canJump = false;
+
         // 0 out the y velocity so we can double jump at any time
         PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, jumpVelocity, PlayerController.RB.velocity.z);
 
@@ -363,13 +373,34 @@ public class PlayerMove : MonoBehaviour
         if (PlayerController.RB.velocity.y > m_minJumpVel)
         {
             PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, m_minJumpVel, PlayerController.RB.velocity.z);
-        }  
+        }
+
+        // Wait and set canJump to true;
+        StartCoroutine(WaitAndSetCanJumpOn());
     }
 
     // A jump of fixed height/direction
     public void FixedJump(Vector3 JumpForce)
     {
+        if(!canJump)
+        {
+            return;
+        }
+
+        canJump = false;
+
         PlayerController.RB.AddRelativeForce(JumpForce, ForceMode.VelocityChange);
+
+        StartCoroutine(WaitAndSetCanJumpOn());
+    }
+
+    // Wait and set canJump to true;
+    // Used to ensure we can't jump multiple times in very short succession,
+    // causing 'superjumps'
+    IEnumerator WaitAndSetCanJumpOn()
+    {
+        yield return new WaitForSeconds(0.05f);
+        canJump = true;
     }
 
     #region Getters Setters
