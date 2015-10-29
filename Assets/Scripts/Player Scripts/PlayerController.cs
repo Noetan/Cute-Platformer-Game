@@ -17,8 +17,6 @@ public class PlayerController : MonoBehaviour
     #region Inspector Variables
     #endregion
 
-
-
     void Awake()
     {
         Instance = this;

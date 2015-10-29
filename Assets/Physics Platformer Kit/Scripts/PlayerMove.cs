@@ -337,7 +337,7 @@ public class PlayerMove : MonoBehaviour
         canJump = false;
 
         // 0 out the y velocity so we can double jump at any time
-        PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, jumpVelocity, PlayerController.RB.velocity.z);
+        PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, jumpVelocity, PlayerController.RB.velocity.z);        
 
         // Play smoke puff particle effect
         if (!midAir && smoke)
@@ -361,7 +361,7 @@ public class PlayerMove : MonoBehaviour
             m_AudioSource.Play();
         }
 
-        // Wait while the player is still holding jump
+        // Wait while the player is still holding the jump button
         // and the character is still moving up
         while ( Input.GetButton("Jump") && PlayerController.RB.velocity.y >= m_minJumpVel)
         {
@@ -437,6 +437,5 @@ public class PlayerMove : MonoBehaviour
     {
         get { return grounded; }
     }
-
     #endregion
 }

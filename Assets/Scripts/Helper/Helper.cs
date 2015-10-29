@@ -1,6 +1,7 @@
 ﻿// Standalone helper functions that can be called from anywhere
 
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public static class Helper
@@ -37,13 +38,6 @@ public static class Helper
     /// <returns>1 or -1</returns>
     public static int GetSign(float number)
     {
-        if ( number >= 0 )
-        {
-            return 1;
-        }
-        else
-        {
-            return -1;
-        }
-    }
+        return number >= 0 ? 1 : -1;
+    }    
 }
