@@ -16,6 +16,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections; // Enumerators
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 public class AttractedItem : MonoBehaviour
@@ -25,9 +26,6 @@ public class AttractedItem : MonoBehaviour
     // The item being attracted
     [SerializeField]
     GameObject m_item;
-    // The item's collider
-    [SerializeField]
-    Collider m_itemCollider;
 
     [Header("Properties")]
     // How strongly the item is attracted
@@ -55,6 +53,8 @@ public class AttractedItem : MonoBehaviour
     // The item's rigidbody
     Rigidbody m_rigidbody = null;
     bool m_defaultGravity = false;
+    // The item's colldiers
+    List<Collider> m_itemColliders = new List<Collider>();
 
     void Start()
     {
@@ -67,6 +67,17 @@ public class AttractedItem : MonoBehaviour
         Assert.IsNotNull(m_goal);
 
         m_defaultGravity = m_rigidbody.useGravity;
+
+        // Get all the colliders of our pick up item
+        Collider[] newColliders = m_item.GetComponents<Collider>();
+        for (int i = 0; i < newColliders.Length; i++)
+        {
+            if (!newColliders[i].isTrigger)
+            {
+                m_itemColliders.Add(newColliders[i]);
+                Debug.Log("Adding " + newColliders[i]);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -139,6 +150,14 @@ public class AttractedItem : MonoBehaviour
         m_rigidbody.isKinematic = false;
         m_rigidbody.useGravity = m_defaultGravity;
         m_rigidbody.detectCollisions = true;
+
+        for (int i = 0; i < m_itemColliders.Count; i++)
+        {
+            m_itemColliders[i].enabled = true;
+            Debug.Log("enabling " + m_itemColliders[i]);
+        }
+
+        m_itemColliders.Clear();
     }
 
     IEnumerator Hop()
@@ -153,6 +172,13 @@ public class AttractedItem : MonoBehaviour
     void InitActiveState()
     {
         m_rigidbody.useGravity = false;
+        
+        for (int i = 0; i < m_itemColliders.Count; i++)
+        {
+            m_itemColliders[i].enabled = false;
+            Debug.Log("disabling " + m_itemColliders[i]);
+        }
+
         m_currentState = State.active;
     }
 }
