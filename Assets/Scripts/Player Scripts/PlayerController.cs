@@ -11,11 +11,13 @@ public class PlayerController : MonoBehaviour
     public static GameObject Player;
     public static Rigidbody RB;
     public static string Tag;
-    public static Health HealthComp;
+    static Health HealthComp;
     public static PlayerMove MoveComp;
 
     #region Inspector Variables
     #endregion
+
+    int m_hp = 0;
 
     void Awake()
     {
@@ -40,6 +42,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void AddHealth(int diff)
+    {
+        int newHp = HealthComp.currentHealth += diff;
+
+        newHp = Mathf.Clamp(newHp, 0, HealthComp.maxHealth);
+        HealthComp.currentHealth = newHp;
+    }
+
     #region Getters
     public float InputH
     {
@@ -48,6 +58,11 @@ public class PlayerController : MonoBehaviour
     public float InputV
     {
         get { return Input.GetAxis("Vertical"); }
+    }
+
+    public int CurrentHealth
+    {
+        get { return HealthComp.currentHealth; }
     }
     #endregion
 }

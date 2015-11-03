@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
 	public AudioClip impactSound;					//play when object imacts with something else
 	public AudioClip hurtSound;						//play when this object recieves damage
 	public AudioClip deadSound;						//play when this object dies
+    [HideInInspector]
 	public int currentHealth = 1;					//health of the object
 	public bool takeImpactDmg;						//does this object take damage from impacts?
 	public bool onlyRigidbodyImpact;				//if yes to the above, does it only take impact damage from other rigidbodies?
@@ -18,6 +19,7 @@ public class Health : MonoBehaviour
 	public Color hitFlashColor = Color.red;			//color object should flash when it takes damage
 	public Transform flashObject;					//object to flash upon receiving damage (ie: a child mesh). If left blank it defaults to this object.
 	public GameObject[] spawnOnDeath;				//objects to spawn upon death of this object (ie: a particle effect or a coin)
+    public int maxHealth = 5;
 	
 	[HideInInspector]
 	public bool dead, flashing;
@@ -39,7 +41,8 @@ public class Health : MonoBehaviour
 		if(flashObject == null)
 			flashObject = transform;
 		originalColor = flashObject.GetComponent<Renderer>().material.color;
-		defHealth = currentHealth;
+        currentHealth = maxHealth;
+		defHealth = maxHealth;
 		respawnPos = transform.position;
 	}
 	

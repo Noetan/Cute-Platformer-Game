@@ -3,21 +3,12 @@ using System.Collections;
 
 public class HealthPickup : BasePickUp
 {
-    public int healthThreshold;
-    public int healthGain;
-    Health health;
-
-    void Start()
-    {
-        health = PlayerController.HealthComp;
-    }
+    [SerializeField]
+    int healthGain = 1;
 
     protected override void PickUp()
     {
-        if (health.currentHealth < healthThreshold)
-        {
-            health.currentHealth += healthGain;
-        }
+        PlayerController.Instance.AddHealth(healthGain);
 
         base.PickUp();
     }
