@@ -18,11 +18,11 @@ public class PlayerGrabbing : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        throwingClassOnPlayer.objectInGrabbox = other.gameObject;
+        //throwingClassOnPlayer.objectInGrabbox = other.gameObject;
     }
 
     void OnTriggerExit(Collider other)
     {
-        throwingClassOnPlayer.objectInGrabbox = null;
+        //throwingClassOnPlayer.objectInGrabbox = null;
     }
 }

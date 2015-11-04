@@ -148,7 +148,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         {
             return;
         }
-        if (Input.GetButtonDown("Jump") && !m_isGrounded && CanWallJump)
+        if (Input.GetButtonDown("Jump") && !m_isGrounded && CanWallJump && m_currentWall != null)
         {
             Vector3 WallPos = m_currentWall.transform.position;
             Vector3 myPos = transform.position;
@@ -171,7 +171,7 @@ public class ExtraJumpEnabler : MonoBehaviour
 
             //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
-        if (CanWallJump && !m_isGrounded)
+        if (CanWallJump && !m_isGrounded && m_currentWall != null)
         {
             //characterMotor.RotateToDirection(transform.position-CurrentWall.transform.position,900f,true);
             Vector3 WallPos = m_currentWall.transform.position;

@@ -64,7 +64,7 @@ public class EnemyAI : MonoBehaviour
 	void Update()
 	{
 		//chase
-		if (sightTrigger && sightTrigger.colliding && chase)
+		if (sightTrigger && sightTrigger.colliding && chase && sightTrigger.hitObject != null && sightTrigger.hitObject.activeInHierarchy)
 		{
 			characterMotor.MoveTo (sightTrigger.hitObject.transform.position, acceleration, chaseStopDistance, ignoreY);
 			//nofity animator controller
