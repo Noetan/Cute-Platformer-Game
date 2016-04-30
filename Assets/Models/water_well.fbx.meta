@@ -1,0 +1,224 @@
+fileFormatVersion: 2
+guid: bb97195ac3cdef148afc10f0624b7add
+timeCreated: 1461547346
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Bucket
+    100002: Bucket Handle
+    100004: Handle
+    100006: Handle connector
+    100008: Handle lever
+    100010: Lamp
+    100012: Lamp.001
+    100014: Left roof support
+    100016: Left support
+    100018: Right roof support
+    100020: Right support
+    100022: Roof Half
+    100024: Roof1
+    100026: Roof1.001
+    100028: Roof2
+    100030: Roof2.001
+    100032: Roof3
+    100034: Roof3.001
+    100036: Roof4
+    100038: Roof4.001
+    100040: Roof5
+    100042: Roof5.001
+    100044: Rope
+    100046: Rope banner
+    100048: Rope wrap
+    100050: //RootNode
+    100052: Well
+    100054: Collision
+    100056: Water well_LOD0
+    100058: Water_well_collider
+    100060: Water_well_LOD0
+    100062: Area
+    100064: Point
+    100066: Point.001
+    100068: Point.002
+    100070: Point.003
+    100072: Sun
+    400000: Bucket
+    400002: Bucket Handle
+    400004: Handle
+    400006: Handle connector
+    400008: Handle lever
+    400010: Lamp
+    400012: Lamp.001
+    400014: Left roof support
+    400016: Left support
+    400018: Right roof support
+    400020: Right support
+    400022: Roof Half
+    400024: Roof1
+    400026: Roof1.001
+    400028: Roof2
+    400030: Roof2.001
+    400032: Roof3
+    400034: Roof3.001
+    400036: Roof4
+    400038: Roof4.001
+    400040: Roof5
+    400042: Roof5.001
+    400044: Rope
+    400046: Rope banner
+    400048: Rope wrap
+    400050: //RootNode
+    400052: Well
+    400054: Collision
+    400056: Water well_LOD0
+    400058: Water_well_collider
+    400060: Water_well_LOD0
+    400062: Area
+    400064: Point
+    400066: Point.001
+    400068: Point.002
+    400070: Point.003
+    400072: Sun
+    2300000: Bucket
+    2300002: Bucket Handle
+    2300004: Handle
+    2300006: Handle connector
+    2300008: Handle lever
+    2300010: Left roof support
+    2300012: Left support
+    2300014: Right roof support
+    2300016: Right support
+    2300018: Roof1
+    2300020: Roof1.001
+    2300022: Roof2
+    2300024: Roof2.001
+    2300026: Roof3
+    2300028: Roof3.001
+    2300030: Roof4
+    2300032: Roof4.001
+    2300034: Roof5
+    2300036: Roof5.001
+    2300038: Rope
+    2300040: Rope banner
+    2300042: Rope wrap
+    2300044: Well
+    2300046: //RootNode
+    2300048: Collision
+    2300050: Water well_LOD0
+    2300052: Water_well_collider
+    2300054: Water_well_LOD0
+    3300000: Bucket
+    3300002: Bucket Handle
+    3300004: Handle
+    3300006: Handle connector
+    3300008: Handle lever
+    3300010: Left roof support
+    3300012: Left support
+    3300014: Right roof support
+    3300016: Right support
+    3300018: Roof1
+    3300020: Roof1.001
+    3300022: Roof2
+    3300024: Roof2.001
+    3300026: Roof3
+    3300028: Roof3.001
+    3300030: Roof4
+    3300032: Roof4.001
+    3300034: Roof5
+    3300036: Roof5.001
+    3300038: Rope
+    3300040: Rope banner
+    3300042: Rope wrap
+    3300044: Well
+    3300046: //RootNode
+    3300048: Collision
+    3300050: Water well_LOD0
+    3300052: Water_well_collider
+    3300054: Water_well_LOD0
+    4300000: Roof1.001
+    4300002: Roof2.001
+    4300004: Roof4.001
+    4300006: Roof3.001
+    4300008: Roof5.001
+    4300010: Handle
+    4300012: Handle lever
+    4300014: Handle connector
+    4300016: Left roof support
+    4300018: Right roof support
+    4300020: Rope wrap
+    4300022: Rope
+    4300024: Bucket Handle
+    4300026: Rope banner
+    4300028: Bucket
+    4300030: Right support
+    4300032: Left support
+    4300034: Well
+    4300036: Water well
+    4300038: Collision
+    4300040: Water well_LOD0
+    4300042: Water_well_collider
+    4300044: Water_well_LOD0
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 0
+    splitTangentsAcrossUV: 1
+    normalImportMode: 1
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

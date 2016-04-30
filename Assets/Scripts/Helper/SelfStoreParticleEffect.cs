@@ -9,9 +9,11 @@ public class SelfStoreParticleEffect : CustomBehaviour
 {
     ParticleSystem m_particleSystem;
 
-    void Start()
+    public override void Start()
     {
         m_particleSystem = GetComponent<ParticleSystem>();
+
+        base.Start();
     }
 
     void OnEnable()

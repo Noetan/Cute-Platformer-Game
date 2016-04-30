@@ -18,7 +18,7 @@ using UnityEngine.Assertions;
 using System.Collections; // Enumerators
 using System.Collections.Generic;
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class AttractedItem : MonoBehaviour
 {    
     #region Inspector Variables
@@ -75,7 +75,6 @@ public class AttractedItem : MonoBehaviour
             if (!newColliders[i].isTrigger)
             {
                 m_itemColliders.Add(newColliders[i]);
-                Debug.Log("Adding " + newColliders[i]);
             }
         }
     }

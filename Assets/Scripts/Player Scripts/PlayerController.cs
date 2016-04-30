@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     #region Inspector Variables
     #endregion
 
-    int m_hp = 0;
+    //int m_hp = 0;
+    int m_konpeito = 0;
 
     void Awake()
     {
@@ -50,6 +51,14 @@ public class PlayerController : MonoBehaviour
         HealthComp.currentHealth = newHp;
     }
 
+    public void AddKonpeito(int diff)
+    {
+        int newKonp = m_konpeito += diff;
+        newKonp = Mathf.Clamp(newKonp, 0, 9999999);
+
+        m_konpeito = newKonp;
+    }
+
     #region Getters
     public float InputH
     {
@@ -63,6 +72,11 @@ public class PlayerController : MonoBehaviour
     public int CurrentHealth
     {
         get { return HealthComp.currentHealth; }
+    }
+
+    public int CurrentKonpeito
+    {
+        get { return m_konpeito; }
     }
     #endregion
 }
