@@ -18,6 +18,8 @@ public class Konpeito : BasePickUp
     MeshRenderer m_meshRend;
     // Used to change halo colour
     Light m_light;
+    // Used to cycle through the available colours
+    static int m_currentColor = 0;
 
     public override void Awake()
     {
@@ -29,7 +31,7 @@ public class Konpeito : BasePickUp
 
     public override void Start()
     {
-        //RandomizeColor();
+        CycleColor();
 
         base.Start();
     }
@@ -41,10 +43,28 @@ public class Konpeito : BasePickUp
         base.PickUp();
     }
 
+    // Pick a random color from the ColorSet and assign it
     void RandomizeColor()
     {
         int newColor = Random.Range(0, ColorSet.Length - 1);
 
+        SetColor(newColor);
+    }
+
+    // Change the color to the next color in the ColorSet
+    // Note this counter is global for all konpeitos in the scene
+    void CycleColor()
+    {
+        int newColor = (m_currentColor++) % ColorSet.Length;
+        SetColor(newColor);
+    }
+
+    /// <summary>
+    /// Changes the colour of the konpeito to one in the ColorSet
+    /// </summary>
+    /// <param name="newColor">Must be a valid index in the ColorSet</param>
+    void SetColor(int newColor)
+    {
         if (ColorSet[newColor] == null)
         {
             Debug.LogWarning("Konpeito ColorSet not complete");
