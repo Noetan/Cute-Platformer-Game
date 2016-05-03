@@ -175,7 +175,7 @@ public class AttractedItem : MonoBehaviour
         for (int i = 0; i < m_itemColliders.Count; i++)
         {
             m_itemColliders[i].enabled = false;
-            Debug.Log("disabling " + m_itemColliders[i]);
+            //Debug.Log("disabling " + m_itemColliders[i]);
         }
 
         m_currentState = State.active;

@@ -71,3 +71,155 @@ $RECYCLE.BIN/
 /Assets/Graphics
 /Assets/PrimitivePlus
 desktop.ini
+/Assets/Editor/CrossPlatformInput/desktop.ini.meta
+/Assets/Editor/ImageEffects/desktop.ini.meta
+/Assets/Editor/desktop.ini.meta
+/Assets/Game Jam Menu Template/Animation/desktop.ini.meta
+/Assets/Game Jam Menu Template/Audio/Music/desktop.ini.meta
+/Assets/Game Jam Menu Template/Audio/desktop.ini.meta
+/Assets/Game Jam Menu Template/Fonts/OpenSans/desktop.ini.meta
+/Assets/Game Jam Menu Template/Fonts/desktop.ini.meta
+/Assets/Game Jam Menu Template/Prefabs/desktop.ini.meta
+/Assets/Game Jam Menu Template/Scripts/desktop.ini.meta
+/Assets/Game Jam Menu Template/desktop.ini.meta
+/Assets/Materials/Emissive QT/desktop.ini.meta
+/Assets/Materials/Physics Materials/desktop.ini.meta
+/Assets/Materials/desktop.ini.meta
+/Assets/Mesh/desktop.ini.meta
+/Assets/Models/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/Blank/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/Environment/Materials/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/Environment/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/Other/SkyBox/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/Other/desktop.ini.meta
+/Assets/Physics Platformer Kit/Materials/desktop.ini.meta
+/Assets/Physics Platformer Kit/Misc/desktop.ini.meta
+/Assets/Physics Platformer Kit/Models/Materials/desktop.ini.meta
+/Assets/Physics Platformer Kit/Models/desktop.ini.meta
+/Assets/Physics Platformer Kit/Prefabs/desktop.ini.meta
+/Assets/Physics Platformer Kit/Scenes/desktop.ini.meta
+/Assets/Physics Platformer Kit/Scripts/desktop.ini.meta
+/Assets/Physics Platformer Kit/Sounds/desktop.ini.meta
+/Assets/Physics Platformer Kit/desktop.ini.meta
+/Assets/Prefabs/Camera/desktop.ini.meta
+/Assets/Prefabs/Enemies/desktop.ini.meta
+/Assets/Prefabs/Environment/desktop.ini.meta
+/Assets/Prefabs/FX/desktop.ini.meta
+/Assets/Prefabs/Particle Effects/desktop.ini.meta
+/Assets/Prefabs/PickUps/desktop.ini.meta
+/Assets/Prefabs/Platforms/desktop.ini.meta
+/Assets/Prefabs/Projectiles/desktop.ini.meta
+/Assets/Prefabs/desktop.ini.meta
+/Assets/SampleScenes/Materials/desktop.ini.meta
+/Assets/SampleScenes/Models/desktop.ini.meta
+/Assets/SampleScenes/PhysicsMaterials/desktop.ini.meta
+/Assets/SampleScenes/Prefabs/desktop.ini.meta
+/Assets/SampleScenes/Scripts/desktop.ini.meta
+/Assets/SampleScenes/desktop.ini.meta
+/Assets/Scenes/desktop.ini.meta
+/Assets/Scripts/Editor/desktop.ini.meta
+/Assets/Scripts/Enemy Scripts/desktop.ini.meta
+/Assets/Scripts/Game/desktop.ini.meta
+/Assets/Scripts/Helper/desktop.ini.meta
+/Assets/Scripts/Levels/desktop.ini.meta
+/Assets/Scripts/Pick Ups/desktop.ini.meta
+/Assets/Scripts/Player Scripts/desktop.ini.meta
+/Assets/Scripts/_Utilities/desktop.ini.meta
+/Assets/Scripts/desktop.ini.meta
+/Assets/Shaders/desktop.ini.meta
+/Assets/Sprites/Placeholders/desktop.ini.meta
+/Assets/Sprites/desktop.ini.meta
+/Assets/Standard Assets/Cameras/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Cameras/Scripts/desktop.ini.meta
+/Assets/Standard Assets/Cameras/desktop.ini.meta
+/Assets/Standard Assets/Characters/FirstPersonCharacter/Audio/desktop.ini.meta
+/Assets/Standard Assets/Characters/FirstPersonCharacter/desktop.ini.meta
+/Assets/Standard Assets/Characters/desktop.ini.meta
+/Assets/Standard Assets/CrossPlatformInput/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/CrossPlatformInput/Scripts/PlatformSpecific/desktop.ini.meta
+/Assets/Standard Assets/CrossPlatformInput/Scripts/desktop.ini.meta
+/Assets/Standard Assets/CrossPlatformInput/Sprites/desktop.ini.meta
+/Assets/Standard Assets/CrossPlatformInput/desktop.ini.meta
+/Assets/Standard Assets/Effects/GlassRefraction/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/GlassRefraction/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/GlassRefraction/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/GlassRefraction/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Scripts/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Shaders/Contrast Stretch/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Shaders/_Antialiasing/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Shaders/_BloomAndFlares/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Shaders/_DepthOfField/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/ImageEffects/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightCookies/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightCookies/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightFlares/Flares/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightFlares/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightFlares/Textures/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/Textures/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/desktop.ini.meta
+/Assets/Standard Assets/Environment/desktop.ini.meta
+/Assets/Standard Assets/Fonts/OpenSans/desktop.ini.meta
+/Assets/Standard Assets/Fonts/desktop.ini.meta
+/Assets/Standard Assets/Utility/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Utility/desktop.ini.meta
+/Assets/Standard Assets/desktop.ini.meta
+/Assets/Textures/Caustic Textures/desktop.ini.meta
+/Assets/Textures/desktop.ini.meta
+/Assets/Tree_Textures/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Editor/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Coil/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Crate/Materials/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Crate/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Lamp/Materials/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Lamp/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Materials/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Physic Materials/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Ring/Materials/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Ring/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Sample Scripts/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Sphere/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/Scripts/desktop.ini.meta
+/Assets/Ultimate Game Tools/RopeEditor/desktop.ini.meta
+/Assets/Ultimate Game Tools/desktop.ini.meta
+/Assets/UnityVS/Editor/desktop.ini.meta
+/Assets/UnityVS/desktop.ini.meta
+/Assets/desktop.ini.meta
+/Assets/Standard Assets/Effects/Projectors/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/Projectors/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Effects/Projectors/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/Projectors/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/Projectors/desktop.ini.meta
+/Assets/Standard Assets/Effects/TessellationShaders/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/TessellationShaders/Models/desktop.ini.meta
+/Assets/Standard Assets/Effects/TessellationShaders/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/TessellationShaders/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/TessellationShaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/ToonShading/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/ToonShading/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Effects/ToonShading/Textures/desktop.ini.meta
+/Assets/Standard Assets/Effects/ToonShading/desktop.ini.meta
+/Assets/Standard Assets/Effects/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Materials/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Models/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Scripts/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/Textures/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water (Basic)/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Materials/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Models/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Scripts/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Shaders/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/Textures/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/Materials/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/Models/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/Prefabs/desktop.ini.meta
+/Assets/Standard Assets/Environment/Water/Water4/Shaders/desktop.ini.meta
+/Assets/Models/Materials/desktop.ini.meta
+/Assets/Standard Assets/Effects/LightFlares/desktop.ini.meta

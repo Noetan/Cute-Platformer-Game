@@ -14,55 +14,14 @@ public class BasePickUp : CustomBehaviour
     // Does the item respawn even after it's been picked up before?
     [SerializeField]
     bool m_respawns = true;
-
-    /* *** NOT IMPLEMENTED AND WONT UNTIL WE ACTUALLY NEED THIS ***
-     * 
-    [Header("Bob animation")]
-    // Does the item bob up and down?
-    [SerializeField]
-    bool m_bobAnimation = false;
-    // How fast it bobs up and down
-    [SerializeField]
-    float m_bobSpeed = 1.0f;
-    // How far it bob up and down
-    [SerializeField]
-    float m_bobHeight = 1.0f;
-    */
     #endregion
 
-    enum State
-    {
-        Idle,
-        Inactive
-    }
-    State m_currentState = State.Idle;
-	
-    public override void Awake()
-    {
-        base.Awake();
-    }
-
-	public override void Start () 
+    public override void Start () 
 	{
         Reset();
 
         base.Start();  
-	}
-	
-	public override void Update () 
-	{
-        switch (m_currentState)
-        {
-            case State.Idle:
-                //if (m_bobAnimation)
-
-                break;
-            case State.Inactive:
-                break;
-        }
-
-        base.Update();
-	}
+	} 
 
     protected virtual void OnTriggerEnter(Collider other)
     {
@@ -88,8 +47,6 @@ public class BasePickUp : CustomBehaviour
         {
             m_touchedParticleEffect.Play();
         }
-
-        m_currentState = State.Inactive;
     }
 
     public override void Reset()
@@ -106,8 +63,7 @@ public class BasePickUp : CustomBehaviour
                 //break;
             }
         }
-
-        m_currentState = State.Idle;
+        
         gameObject.SetActive(true);
     }
 }
