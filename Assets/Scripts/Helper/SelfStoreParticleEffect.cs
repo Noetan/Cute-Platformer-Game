@@ -3,15 +3,19 @@
 
 using UnityEngine;
 using System.Collections;
-using MemoryManagment;
+using UnityEngine.Assertions;
+
 
 public class SelfStoreParticleEffect : CustomBehaviour
 {
     ParticleSystem m_particleSystem;
 
-    public override void Start()
+    protected override void Start()
     {
         m_particleSystem = GetComponent<ParticleSystem>();
+
+        Assert.IsNotNull(m_particleSystem);
+        Assert.IsNotNull(m_parentPool);
 
         base.Start();
     }

@@ -21,7 +21,7 @@ public class Konpeito : BasePickUp
     // Used to cycle through the available colours
     static int m_currentColor = 0;
 
-    public override void Awake()
+    protected override void Awake()
     {
         m_meshRend = GetComponent<MeshRenderer>();
         m_light = GetComponent<Light>();
@@ -29,7 +29,7 @@ public class Konpeito : BasePickUp
         base.Awake();
     }
 
-    public override void Start()
+    protected override void Start()
     {
         CycleColor();
 

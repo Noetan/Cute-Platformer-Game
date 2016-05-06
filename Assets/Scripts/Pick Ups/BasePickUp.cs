@@ -14,11 +14,45 @@ public class BasePickUp : CustomBehaviour
     // Does the item respawn even after it's been picked up before?
     [SerializeField]
     bool m_respawns = true;
+
+    [Header("Animation")]
+    // Does the item rotate when active
+    [SerializeField]
+    bool m_rotate = false;
+    [SerializeField]
+    float m_rotateSpeedMin = 50f;
+    [SerializeField]
+    float m_rotateSpeedMax = 100f;
+
+    // Does the item float/bob up and down when active
+    [SerializeField]
+    bool m_bob = false;
+    [SerializeField]
+    float m_bobSpeedMin = 1.0f;
+    [SerializeField]
+    float m_bobSpeedMax = 1.5f;
+    [SerializeField]
+    float m_bobHeight = 1.0f;
     #endregion
 
-    public override void Start () 
+    enum State
+    {
+        Idle,
+        Active
+    }
+    State m_currentState = State.Idle;
+
+    float m_rotateSpeed = 0.0f;
+    float m_bobSpeed = 0.0f;
+    Vector3 m_defaultPosition = Vector3.zero;
+
+    protected override void Start () 
 	{
         Reset();
+
+        m_defaultPosition = transform.position;
+        m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
+        m_bobSpeed = Random.Range(m_bobSpeedMin, m_bobSpeedMax);
 
         base.Start();  
 	} 
@@ -63,7 +97,34 @@ public class BasePickUp : CustomBehaviour
                 //break;
             }
         }
-        
+
+        m_currentState = State.Idle;
         gameObject.SetActive(true);
+    }
+
+    protected override void Update()
+    {
+        switch(m_currentState)
+        {
+            case State.Idle:
+                if (m_rotate)
+                {
+                    transform.Rotate(Vector3.up, m_rotateSpeed * Time.deltaTime);
+                }
+                if (m_bob)
+                {
+                    float newPosY = (Mathf.Sin(Time.time * m_bobSpeed) * m_bobHeight);
+                    transform.position = m_defaultPosition + new Vector3(0.0f, newPosY, 0.0f);
+                }
+                break;
+        }
+
+        base.Update();
+    }
+
+    // Allows item to follow player if being attracted
+    public void Activate()
+    {
+        m_currentState = State.Active;
     }
 }

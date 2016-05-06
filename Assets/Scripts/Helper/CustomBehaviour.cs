@@ -9,17 +9,22 @@ public class CustomBehaviour : MonoBehaviour
 {
     protected GameObjectPool m_parentPool;
 
-    public virtual void Start()
+    protected virtual void Start()
     {
 
     }
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
 
     }
 
-    public virtual void Update()
+    protected virtual void Update()
+    {
+
+    }
+
+    protected virtual void FixedUpdate()
     {
 
     }

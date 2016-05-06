@@ -30,7 +30,7 @@ public class AttractedItem : MonoBehaviour
     [Header("Properties")]
     // How strongly the item is attracted
     [SerializeField]
-    float m_attractStrength = 450f;
+    float m_attractStrength = 500f;
     // How strong the item jumps up before it starts attracting
     [SerializeField]
     float m_initalJumpHeight = 55f;
@@ -55,6 +55,8 @@ public class AttractedItem : MonoBehaviour
     bool m_defaultGravity = false;
     // The item's colldiers
     List<Collider> m_itemColliders = new List<Collider>();
+    // The item's script
+    BasePickUp m_itemScript = null;
 
     void Start()
     {
@@ -77,10 +79,13 @@ public class AttractedItem : MonoBehaviour
                 m_itemColliders.Add(newColliders[i]);
             }
         }
+        m_itemScript = m_item.GetComponent<BasePickUp>();
     }
 
     void FixedUpdate()
     {
+        transform.position = m_item.transform.position;
+
         switch (m_currentState)
         {
             case State.starting:
@@ -135,6 +140,7 @@ public class AttractedItem : MonoBehaviour
 
             // If not, start attracting to the player
             // Make the item hop up before starting to follow the player
+            m_itemScript.Activate();
             StartCoroutine(Hop());
             m_currentState = State.starting;
 
