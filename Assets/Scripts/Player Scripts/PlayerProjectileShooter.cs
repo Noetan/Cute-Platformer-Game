@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class PlayerProjectileShooter: MonoBehaviour
 {
@@ -44,18 +45,18 @@ public class PlayerProjectileShooter: MonoBehaviour
                 // Turn on animation
                 //m_playerMove.AnimatorComp.Play("ArmsThrow", 1);
                 // Wait for the set delay and then fire the projectile
-                StartCoroutine(WaitAndFire(WaitBeforeFiring));
+                Timing.RunCoroutine(WaitAndFire(WaitBeforeFiring));
                 // Start the cooldown
                 CanShoot = false;
-                StartCoroutine(CoolDown(CooldownTime));
+                Timing.RunCoroutine(CoolDown(CooldownTime));
             //}
         }
     }
 
     // Enumerator to wait the set delay, and then fire the projectile 
-    IEnumerator WaitAndFire(float waitTime)
+    IEnumerator<float> WaitAndFire(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return Timing.WaitForSeconds(waitTime);
 
         Vector3 spawnPos = Vector3.zero;
 
@@ -85,9 +86,9 @@ public class PlayerProjectileShooter: MonoBehaviour
     }
 
     // Cool down delay to stop projectile spam
-    IEnumerator CoolDown(float waitTime)
+    IEnumerator<float> CoolDown(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return Timing.WaitForSeconds(waitTime);
         CanShoot = true;
     }
 

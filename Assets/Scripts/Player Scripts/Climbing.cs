@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class Climbing : MonoBehaviour {
 
@@ -170,7 +171,7 @@ public class Climbing : MonoBehaviour {
         //Let's turn off our climbing animation
         //playerMove.AnimatorComp.SetBool("ClimbingRope", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
-        StartCoroutine(CanClimbAgain());
+        Timing.RunCoroutine(_CanClimbAgain());
     }
 
     void StopClimbingLadder()
@@ -185,7 +186,7 @@ public class Climbing : MonoBehaviour {
         //Let's turn off our climbing animation
         //playerMove.AnimatorComp.SetBool("ClimbingLadder", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
-        StartCoroutine(CanClimbAgain());
+        Timing.RunCoroutine(_CanClimbAgain());
     }
 
     void StopClimbingWall()
@@ -200,18 +201,12 @@ public class Climbing : MonoBehaviour {
         //Let's turn off our climbing animation
         playerMove.AnimatorComp.SetBool("ClimbingWall", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
-        StartCoroutine(CanClimbAgain());
+        Timing.RunCoroutine(_CanClimbAgain());
     }
 
-    IEnumerator CanClimbAgain()
+    IEnumerator<float> _CanClimbAgain()
     {
-        yield return StartCoroutine(Wait(0.5f));
+        yield return Timing.WaitForSeconds(0.5f);
         CanClimb = true;
-    }
-
-    IEnumerator Wait(float duration)
-    {
-        for (float timer = 0; timer < duration; timer += Time.deltaTime)
-            yield return 0;
     }
 }

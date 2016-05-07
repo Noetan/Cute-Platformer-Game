@@ -15,8 +15,8 @@
 
 using UnityEngine;
 using UnityEngine.Assertions;
-using System.Collections; // Enumerators
 using System.Collections.Generic;
+using MovementEffects;
 
 //[RequireComponent(typeof(Rigidbody))]
 public class AttractedItem : MonoBehaviour
@@ -47,6 +47,12 @@ public class AttractedItem : MonoBehaviour
         finished
     }
     State m_currentState = State.idle;
+
+    enum AttractMode
+    {
+        pickedup,
+        explode
+    }
 
     // The object we're attracting towards
     GameObject m_goal = null;
@@ -140,11 +146,7 @@ public class AttractedItem : MonoBehaviour
 
             // If not, start attracting to the player
             // Make the item hop up before starting to follow the player
-            m_itemScript.Activate();
-            StartCoroutine(Hop());
-            m_currentState = State.starting;
-
-            Assert.IsNotNull(m_goal);
+            StartAttract(AttractMode.pickedup);
         }
     }
 
@@ -165,15 +167,24 @@ public class AttractedItem : MonoBehaviour
         m_itemColliders.Clear();
     }
 
-    IEnumerator Hop()
+    // Bounces the item up before starting to attract
+    IEnumerator<float> _Hop()
     {
         m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
 
-        yield return new WaitForSeconds(m_jumpDelay);
+        yield return Timing.WaitForSeconds(m_jumpDelay);
+
+        InitActiveState();
+    }
+    // Starts a timer before starting to attract
+    IEnumerator<float> _Wait()
+    {
+        yield return Timing.WaitForSeconds(m_jumpDelay);
 
         InitActiveState();
     }
 
+    // Prepares the item for attraction before starting to attract
     void InitActiveState()
     {
         m_rigidbody.useGravity = false;
@@ -185,5 +196,23 @@ public class AttractedItem : MonoBehaviour
         }
 
         m_currentState = State.active;
+    }
+
+    // Start the attraction process
+    void StartAttract(AttractMode attractMode)
+    {
+        // Disables the item's animations (which prevent movement)
+        m_itemScript.Activate();
+
+        if (attractMode == AttractMode.pickedup)
+        {
+            Timing.RunCoroutine(_Hop());
+        }
+        else if (attractMode == AttractMode.explode)
+        {
+            Timing.RunCoroutine(_Wait());
+        }
+
+        m_currentState = State.starting;
     }
 }

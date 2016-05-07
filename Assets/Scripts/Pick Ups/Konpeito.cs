@@ -2,13 +2,14 @@
 // 
 
 using UnityEngine;
-using System.Collections;
 
 public class Konpeito : BasePickUp
 {
     #region Inspector
     [SerializeField]
     Material[] ColorSet;
+    [SerializeField]
+    TrailRenderer m_trailRenderer;
         
     [SerializeField]
     int value = 1;
@@ -20,6 +21,8 @@ public class Konpeito : BasePickUp
     Light m_light;
     // Used to cycle through the available colours
     static int m_currentColor = 0;
+    // cache propety id of konpeito's material's shader's color
+    int m_trailShaderColorID = -1;
 
     protected override void Awake()
     {
@@ -31,6 +34,7 @@ public class Konpeito : BasePickUp
 
     protected override void Start()
     {
+        m_trailShaderColorID = Shader.PropertyToID("_TintColor");
         CycleColor();
 
         base.Start();
@@ -72,7 +76,10 @@ public class Konpeito : BasePickUp
         }
 
         m_meshRend.material = ColorSet[newColor];
+
         m_light.color = ColorSet[newColor].color;   // Use this with emissive shader
         //m_light.color = ColorSet[newColor].GetColor("_ReflectionTint");   // Use this is using reflective shader
+
+        m_trailRenderer.material.SetColor(m_trailShaderColorID, ColorSet[newColor].color);
     }
 }

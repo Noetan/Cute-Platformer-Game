@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using MovementEffects;
 
 public class PlayerMelee : MonoBehaviour
 {
@@ -127,13 +127,13 @@ public class PlayerMelee : MonoBehaviour
             //m_playerMove.AnimatorComp.Play("ArmsThrow", 1);
             //punchleft = false;
             //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
-            //StartCoroutine(WaitAndPunch());
+            //Timing.RunCoroutine(WaitAndPunch());
             /*}
             else
             {
                 playerMove.AnimatorComp.Play("ArmsThrow", 1);
                 punchleft = true;
-                StartCoroutine(WaitAndPunch());
+                Timing.RunCoroutine(WaitAndPunch());
             }*/
             //}
             #endregion
@@ -154,7 +154,7 @@ public class PlayerMelee : MonoBehaviour
                 m_playerMove.AnimatorComp.Play("ArmsThrow", 1);
                 punchleft = false;
                 //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
-                StartCoroutine(WaitAndPunch());
+                Timing.RunCoroutine(_WaitAndPunch());
             }
         }
     }
@@ -171,26 +171,27 @@ public class PlayerMelee : MonoBehaviour
         }
     }
 
-    IEnumerator WaitAndPunch()
+    IEnumerator<float> _WaitAndPunch()
     {
         //Wait for 0.12f time and then punch them in their stupid faces!
-        yield return StartCoroutine(Wait(0.12f));
+        yield return Timing.WaitForSeconds(0.12f);
         PunchThem();
     }
 
-    IEnumerator WaitAndStopPunch()
+    IEnumerator<float> _WaitAndStopPunch()
     {
         //Wait for 0.1f time before stopping the punch
-        yield return StartCoroutine(Wait(0.1f));
+        yield return Timing.WaitForSeconds(0.1f);
         StopPunch();
     }
 
+    /* Redundant
     //Coroutine for cool waiting stuff
-    IEnumerator Wait(float duration)
+    IEnumerator<float> Wait(float duration)
     {
         for (float timer = 0; timer < duration; timer += Time.deltaTime)
             yield return 0;
-    }
+    } */
 
     // Start punching - if NOT timed Punch, you have to end punching manually
     void PunchThem(bool timedPunch = true)
@@ -202,7 +203,7 @@ public class PlayerMelee : MonoBehaviour
         if (timedPunch)
         {
             //Start the coroutine that will wait for a moment and stop the punching stuff turning bools back to false.
-            StartCoroutine(WaitAndStopPunch());
+            Timing.RunCoroutine(_WaitAndStopPunch());
         }
     }
 

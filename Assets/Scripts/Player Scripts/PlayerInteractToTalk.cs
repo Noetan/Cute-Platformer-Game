@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Fungus; // Remember to add this when using Fungus
 
 public class PlayerInteractToTalk : MonoBehaviour {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class SurfaceClimbing : MonoBehaviour
 {
@@ -47,7 +48,7 @@ public class SurfaceClimbing : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
-                StartCoroutine(StopClimbing());
+                Timing.RunCoroutine(_StopClimbing());
                 // Jump in direction opposite of surface...
             }
 
@@ -167,12 +168,12 @@ public class SurfaceClimbing : MonoBehaviour
         {
             if (ClimbingLadder || ClimbingRope || ClimbingWall)
             {
-                StartCoroutine(StopClimbing());
+                Timing.RunCoroutine(_StopClimbing());
             }
         }
     }
 
-    IEnumerator StopClimbing()
+    IEnumerator<float> _StopClimbing()
     {
         if (!StoppingClimbing)
         {
@@ -184,7 +185,7 @@ public class SurfaceClimbing : MonoBehaviour
             m_playerRB.isKinematic = false;
 
             CanClimb = false;
-            yield return new WaitForSeconds(0.5f);
+            yield return Timing.WaitForSeconds(0.5f);
             CanClimb = true;
             StoppingClimbing = false;
         }
