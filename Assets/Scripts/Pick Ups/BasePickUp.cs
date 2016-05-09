@@ -1,16 +1,11 @@
 ﻿// Base class for world items that can be "picked up" by touching them with the player
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class BasePickUp : CustomBehaviour
 {
     #region Inspector Variables
-    // The sound effect that plays when the item is picked up
-    [SerializeField]
-    AudioSource m_soundEffect;
-    // The particle effect that plays when the item is picked up
-    [SerializeField]
-    ParticleSystem m_touchedParticleEffect;
-
+    [Header("Gameplay")]
     // Does the item respawn even after it's been picked up before?
     [SerializeField]
     bool m_respawns = true;
@@ -35,31 +30,69 @@ public class BasePickUp : CustomBehaviour
     float m_bobHeight = 1.0f;
     #endregion
 
-    enum State
+    public enum State
     {
         Idle,
-        Active
+        Active,
+        Disabled
     }
-    State m_currentState = State.Idle;
+    public State CurrentState { get; private set; }
 
     float m_rotateSpeed = 0.0f;
     float m_bobSpeed = 0.0f;
     Vector3 m_defaultPosition = Vector3.zero;
 
-    protected override void Start () 
-	{
-        Reset();
+    
+    AudioSource m_soundEffect;
+    ParticleSystem m_touchedParticleEffect;
 
-        m_defaultPosition = transform.position;
+    protected override void Awake()
+    {
+        m_meshRend = GetComponent<MeshRenderer>();
+        m_soundEffect = GetComponent<AudioSource>();
+        m_touchedParticleEffect = GetComponent<ParticleSystem>();
+        m_light = GetComponent<Light>();
+
+        Assert.IsNotNull(m_meshRend);
+        Assert.IsNotNull(m_soundEffect);
+        Assert.IsNotNull(m_touchedParticleEffect);
+        Assert.IsNotNull(m_light);
+
         m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
         m_bobSpeed = Random.Range(m_bobSpeedMin, m_bobSpeedMax);
+
+        CurrentState = State.Idle;
+
+        base.Awake();
+    }
+
+    protected override void Start () 
+	{
+        /// Note this gets called multiple times at the start of the level for some reason ///
+        /// Keep that in mind when doing things here, nothing that must only be called once ///
+
+        // If the item is only meant to be picked up once per save file
+        if (!m_respawns)
+        {
+            // Check if the player has already picked it up
+            //if (false) // TO BE IMPLEMENTED
+            {
+                // If they have don't spawn the item
+                //break;
+            }
+        }
+
+        m_defaultPosition = transform.position;
+        CurrentState = State.Idle;
+        ShowModel(true);
+        Debug.Log("basepickup start");
 
         base.Start();  
 	} 
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if ( other.CompareTag(PlayerController.Tag) )
+        if ( other.CompareTag(PlayerController.Tag) && CurrentState != State.Disabled)
         {
             PickUp();
         }
@@ -68,7 +101,8 @@ public class BasePickUp : CustomBehaviour
     protected virtual void PickUp()
     {
         // Disable the item
-        gameObject.SetActive(false);
+        CurrentState = State.Disabled;
+        ShowModel(false);
 
         // play sound effect
         if (m_soundEffect != null)
@@ -83,28 +117,9 @@ public class BasePickUp : CustomBehaviour
         }
     }
 
-    public override void Reset()
+    protected override void FixedUpdate()
     {
-        // If the item is only meant to be picked up once per save file
-        if (!m_respawns)
-        {
-            // Check if the player has already picked it up
-            //if (false) // TO BE IMPLEMENTED
-            {
-                // If they have don't spawn the item
-                //gameObject.SetActive(false);
-
-                //break;
-            }
-        }
-
-        m_currentState = State.Idle;
-        gameObject.SetActive(true);
-    }
-
-    protected override void Update()
-    {
-        switch(m_currentState)
+        switch(CurrentState)
         {
             case State.Idle:
                 if (m_rotate)
@@ -125,6 +140,16 @@ public class BasePickUp : CustomBehaviour
     // Allows item to follow player if being attracted
     public void Activate()
     {
-        m_currentState = State.Active;
+        CurrentState = State.Active;
+    }
+
+    void ShowModel(bool enable)
+    {
+        m_meshRend.enabled = enable;
+
+        if (m_light != null)
+        {
+            m_light.enabled = enable;
+        }
     }
 }

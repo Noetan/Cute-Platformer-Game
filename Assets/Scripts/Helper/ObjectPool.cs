@@ -73,21 +73,34 @@ namespace MemoryManagment
         GameObject SpawnGameObject()
         {
             GameObject newObj = GameObject.Instantiate(m_prefab) as GameObject;
+            newObj.SetActive(false);
+
+            // Save a reference of the pool in each gameobject if they are equipped to hold it
+            CustomBehaviour cb = newObj.GetComponent<CustomBehaviour>();
+            CustomBehaviour[] cb2 = newObj.GetComponentsInChildren<CustomBehaviour>(true);
+            if (cb != null)
+            {
+                cb.SetPool(this);
+                //Debug.Log("saved pool to custom behaviour");
+            }
+            /*
+            // If they have more than 1 custom behaviour in their children then fuck it set the parent pool to them all
+            else if (cb2.Length > 0)
+            {
+                for (int i = 0; i < cb2.Length; i++)
+                {
+                    cb2[i].SetPool(this);
+                }
+            }*/
+            else
+            {
+                Debug.Log("not a custom behaviour");
+            }
 
             // Parent this gameobject if a parent is provided
             if (m_parent != null)
             {
                 newObj.transform.parent = m_parent.transform;
-            }
-
-			newObj.SetActive(false);
-
-            // Save a reference of the pool in each gameobject if they are equipped to hold it
-            CustomBehaviour cb = newObj.GetComponent<CustomBehaviour>();
-            if (cb != null)
-            {
-                cb.SetPool(this);
-                //Debug.Log("saved pool to custom behaviour");
             }
 
             return newObj;

@@ -9,29 +9,31 @@ public class CustomBehaviour : MonoBehaviour
 {
     protected GameObjectPool m_parentPool;
 
-    protected virtual void Start()
-    {
+    protected MeshRenderer m_meshRend = null;
+    protected TrailRenderer m_trailRender = null;
+    protected Light m_light = null;
 
+    #region Unity Functions
+    public CustomBehaviour()
+    {
+    }
+
+    protected virtual void Start()
+    {        
     }
 
     protected virtual void Awake()
     {
-
     }
 
     protected virtual void Update()
     {
-
     }
 
     protected virtual void FixedUpdate()
     {
-
     }
-
-    public CustomBehaviour()
-    {
-    }
+    #endregion
 
     public void SetPool(GameObjectPool newPool)
     {

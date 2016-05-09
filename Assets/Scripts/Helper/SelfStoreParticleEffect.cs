@@ -2,19 +2,26 @@
 // This object will store itself back into the objectpool after a period of time
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.Assertions;
+using System.Collections.Generic;
+using MovementEffects;
 
 
 public class SelfStoreParticleEffect : CustomBehaviour
 {
     ParticleSystem m_particleSystem;
 
-    protected override void Start()
+    protected override void Awake()
     {
         m_particleSystem = GetComponent<ParticleSystem>();
 
         Assert.IsNotNull(m_particleSystem);
+
+        base.Awake();
+    }
+
+    protected override void Start()
+    {
         Assert.IsNotNull(m_parentPool);
 
         base.Start();
@@ -22,16 +29,13 @@ public class SelfStoreParticleEffect : CustomBehaviour
 
     void OnEnable()
     {
-        StartCoroutine("CheckIfAlive");
+        Timing.RunCoroutine(_CheckIfAlive(), Segment.SlowUpdate);        
     }
 
-    IEnumerator CheckIfAlive()
+    IEnumerator<float> _CheckIfAlive()
     {
         while (true)
         {
-            // Check every half second if the particle effect is still running
-            yield return new WaitForSeconds(0.5f);
-
             // When the effect is finished, store it back in the pool
             if (!m_particleSystem.IsAlive(true))
             {
@@ -43,10 +47,13 @@ public class SelfStoreParticleEffect : CustomBehaviour
                 {
                     Debug.LogWarning("SelStoreParticle had no pool to store: " + this.gameObject);
                     Debug.LogWarning("Destroying: " + this.gameObject);
-                    Destroy(this.gameObject);
-                    break;
+                    Destroy(this.gameObject);                    
                 }
+
+                yield break;
             }
+
+            yield return 0f;
         }
-    }    
+    }
 }

@@ -1,17 +1,7 @@
 ﻿// Use alongside BasePickup or inheritor of BasePickup
-// Though technically this can be used with any gameobject
-// Bear in the mind the attraction will only stop once the other gameobject has been disabled
-// Be careful that they're not parented to each other
-
-// Here's how it should be set out
-// Parent (rigidbody) -> Child 1 & Child 2
-// Child 1 (model, idle animation and effects, BasePickUp.cs, trigger collider for picking up the item)
-// Child 2 (the touched effects like AudioSource, ParticleSystem, AttractedItem.cs and the trigger collider to set off the attraction)
-
-// Assign the object (e.g. the player) you want to attract to m_item.
-// Assign the pick up's model collider to m_collider
-
 // Make sure the drag on the parent's rigidbody is high enough (something like 20) to avoid items orbitting forever
+// While code can attract to something other than the player, there's no way to set that, add it if you need it
+// It's m_goal
 
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -20,23 +10,21 @@ using MovementEffects;
 
 //[RequireComponent(typeof(Rigidbody))]
 public class AttractedItem : MonoBehaviour
-{    
+{
     #region Inspector Variables
-    [Header("Required")]
-    // The item being attracted
-    [SerializeField]
-    GameObject m_item;
-
     [Header("Properties")]
+    // How close can the player get before the attraction is triggered
+    [SerializeField]
+    float m_attractRadius = 3f;
     // How strongly the item is attracted
     [SerializeField]
-    float m_attractStrength = 500f;
+    float m_attractStrength = 650f;
     // How strong the item jumps up before it starts attracting
     [SerializeField]
-    float m_initalJumpHeight = 55f;
+    float m_initalJumpHeight = 40f;
     // How long after it first jumps before it starts attracting
     [SerializeField]
-    float m_jumpDelay = 0.2f;
+    float m_jumpDelay = 0.25f;
     #endregion
 
     enum State
@@ -48,7 +36,7 @@ public class AttractedItem : MonoBehaviour
     }
     State m_currentState = State.idle;
 
-    enum AttractMode
+    public enum AttractMode
     {
         pickedup,
         explode
@@ -60,22 +48,18 @@ public class AttractedItem : MonoBehaviour
     Rigidbody m_rigidbody = null;
     bool m_defaultGravity = false;
     // The item's colldiers
-    List<Collider> m_itemColliders = new List<Collider>();
+    //List<Collider> m_itemColliders = new List<Collider>();
     // The item's script
-    BasePickUp m_itemScript = null;
+    BasePickUp m_item = null;
 
-    void Start()
+    void Awake()
     {
+        m_rigidbody = GetComponentInParent<Rigidbody>();
+        m_item = GetComponent<BasePickUp>();
+        Assert.IsNotNull(m_rigidbody);
         Assert.IsNotNull(m_item);
 
-        m_rigidbody = GetComponentInParent<Rigidbody>();
-        m_goal = PlayerController.Player;        
-        
-        Assert.IsNotNull(m_rigidbody);
-        Assert.IsNotNull(m_goal);
-
-        m_defaultGravity = m_rigidbody.useGravity;
-
+        /*
         // Get all the colliders of our pick up item
         Collider[] newColliders = m_item.GetComponents<Collider>();
         for (int i = 0; i < newColliders.Length; i++)
@@ -86,20 +70,29 @@ public class AttractedItem : MonoBehaviour
             }
         }
         m_itemScript = m_item.GetComponent<BasePickUp>();
+        Assert.IsNotNull(m_itemScript);
+        */
+    }
+
+    void Start()
+    {
+        m_goal = PlayerController.Player;
+        Assert.IsNotNull(m_goal);
+
+        m_defaultGravity = m_rigidbody.useGravity;
     }
 
     void FixedUpdate()
     {
-        transform.position = m_item.transform.position;
-
         switch (m_currentState)
         {
-            case State.starting:
+            case State.idle:
+                CheckCollision();
                 break;
 
             case State.active:
                 // Stop attracting once the item has been picked up
-                if (!m_item.activeInHierarchy)
+                if (m_item.CurrentState == BasePickUp.State.Disabled)
                 {
                     m_currentState = State.finished;
                     m_rigidbody.isKinematic = true;
@@ -117,21 +110,23 @@ public class AttractedItem : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        OnTriggerStay(other);
-    }
-
     // Check for when the player gets close enough
-    void OnTriggerStay(Collider other)
+    void CheckCollision()
     {
-        if (m_currentState == State.idle && other.CompareTag(m_goal.tag))
+        if (m_currentState == State.idle)
         {
+            // Check if the player is close enough to trigger the attraction
+            float dist = Vector3.Distance(transform.position, m_goal.transform.position);
+            if (dist > m_attractRadius)
+            {
+                return;
+            }
+
             // Check if there is a wall between the player and the item
             RaycastHit hitInfo;
             if (Physics.Linecast(gameObject.transform.position, m_goal.transform.position
-                , out hitInfo, LayerMask.NameToLayer("") , QueryTriggerInteraction.Ignore))
-            { 
+                , out hitInfo, LayerMask.NameToLayer(""), QueryTriggerInteraction.Ignore))
+            {
                 //Debug.DrawLine(gameObject.transform.position, m_goal.transform.position, Color.red, 60);
                 //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);     
                 //Debug.Log(hitInfo.collider + " " + hitInfo.collider.tag);
@@ -158,13 +153,12 @@ public class AttractedItem : MonoBehaviour
         m_rigidbody.useGravity = m_defaultGravity;
         m_rigidbody.detectCollisions = true;
 
+        /*
         for (int i = 0; i < m_itemColliders.Count; i++)
         {
             m_itemColliders[i].enabled = true;
             Debug.Log("enabling " + m_itemColliders[i]);
-        }
-
-        m_itemColliders.Clear();
+        }*/
     }
 
     // Bounces the item up before starting to attract
@@ -188,21 +182,28 @@ public class AttractedItem : MonoBehaviour
     void InitActiveState()
     {
         m_rigidbody.useGravity = false;
-        
+
+        /*
         for (int i = 0; i < m_itemColliders.Count; i++)
         {
             m_itemColliders[i].enabled = false;
             //Debug.Log("disabling " + m_itemColliders[i]);
-        }
+        }*/
 
         m_currentState = State.active;
     }
 
     // Start the attraction process
-    void StartAttract(AttractMode attractMode)
+    public void StartAttract(AttractMode attractMode, Vector3 upVector)
     {
+        // Don't do anything if the item has already been picked up
+        if (m_item.CurrentState == BasePickUp.State.Disabled)
+        {
+            return;
+        }
+
         // Disables the item's animations (which prevent movement)
-        m_itemScript.Activate();
+        m_item.Activate();
 
         if (attractMode == AttractMode.pickedup)
         {
@@ -214,5 +215,15 @@ public class AttractedItem : MonoBehaviour
         }
 
         m_currentState = State.starting;
+    }
+    public void StartAttract(AttractMode attractMode)
+    {
+        StartAttract(attractMode, Vector3.up);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, m_attractRadius);
     }
 }

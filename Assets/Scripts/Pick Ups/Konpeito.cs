@@ -2,23 +2,20 @@
 // 
 
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Konpeito : BasePickUp
 {
     #region Inspector
+    [Header("Konpeito required at least 1")]
     [SerializeField]
     Material[] ColorSet;
-    [SerializeField]
-    TrailRenderer m_trailRenderer;
-        
+
+    [Header("Konpeito gameplay")]
     [SerializeField]
     int value = 1;
     #endregion
-
-    // Used to change mesh's material colour
-    MeshRenderer m_meshRend;
-    // Used to change halo colour
-    Light m_light;
+    
     // Used to cycle through the available colours
     static int m_currentColor = 0;
     // cache propety id of konpeito's material's shader's color
@@ -26,24 +23,19 @@ public class Konpeito : BasePickUp
 
     protected override void Awake()
     {
-        m_meshRend = GetComponent<MeshRenderer>();
-        m_light = GetComponent<Light>();
-
         base.Awake();
-    }
+        
+        m_trailRender = GetComponent<TrailRenderer>();
+        
+        Assert.IsNotNull(m_trailRender);
 
-    protected override void Start()
-    {
-        m_trailShaderColorID = Shader.PropertyToID("_TintColor");
+        m_trailShaderColorID = Shader.PropertyToID("_TintColor");         
         CycleColor();
-
-        base.Start();
     }
 
     protected override void PickUp()
     {
         PlayerController.Instance.AddKonpeito(value);
-
         base.PickUp();
     }
 
@@ -80,6 +72,6 @@ public class Konpeito : BasePickUp
         m_light.color = ColorSet[newColor].color;   // Use this with emissive shader
         //m_light.color = ColorSet[newColor].GetColor("_ReflectionTint");   // Use this is using reflective shader
 
-        m_trailRenderer.material.SetColor(m_trailShaderColorID, ColorSet[newColor].color);
+        m_trailRender.material.SetColor(m_trailShaderColorID, ColorSet[newColor].color);
     }
 }
