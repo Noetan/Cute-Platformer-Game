@@ -1,5 +1,7 @@
 ﻿// Attach this to a prefab/gameobject containing a particle system
 // This object will store itself back into the objectpool after a period of time
+// Note: The particlesystem should be set to "Play on awake" and "looping off" for best ease of use
+// If looping is enabled it will never store itself until you do it manually somehow or the level changes
 
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -9,8 +11,6 @@ using MovementEffects;
 
 public class SelfStoreParticleEffect : CustomBehaviour
 {
-    ParticleSystem m_particleSystem;
-
     protected override void Awake()
     {
         m_particleSystem = GetComponent<ParticleSystem>();
@@ -41,7 +41,7 @@ public class SelfStoreParticleEffect : CustomBehaviour
             {
                 if (m_parentPool != null)
                 {
-                    m_parentPool.Store(this.gameObject);
+                    SelfStore();
                 }
                 else
                 {

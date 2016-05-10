@@ -1,6 +1,8 @@
 ﻿// Base class for world items that can be "picked up" by touching them with the player
 using UnityEngine;
 using UnityEngine.Assertions;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class BasePickUp : CustomBehaviour
 {
@@ -28,6 +30,9 @@ public class BasePickUp : CustomBehaviour
     float m_bobSpeedMax = 1.5f;
     [SerializeField]
     float m_bobHeight = 1.0f;
+
+    [SerializeField]
+    ParticleDB.Type m_touchedParticle = ParticleDB.Type.None;
     #endregion
 
     public enum State
@@ -44,18 +49,17 @@ public class BasePickUp : CustomBehaviour
 
     
     AudioSource m_soundEffect;
-    ParticleSystem m_touchedParticleEffect;
+    //ParticleSystem m_touchedParticleEffect;
 
     protected override void Awake()
     {
         m_meshRend = GetComponent<MeshRenderer>();
         m_soundEffect = GetComponent<AudioSource>();
-        m_touchedParticleEffect = GetComponent<ParticleSystem>();
+        m_particleSystem = GetComponent<ParticleSystem>();
         m_light = GetComponent<Light>();
 
         Assert.IsNotNull(m_meshRend);
-        Assert.IsNotNull(m_soundEffect);
-        Assert.IsNotNull(m_touchedParticleEffect);
+        //Assert.IsNotNull(m_soundEffect);
         Assert.IsNotNull(m_light);
 
         m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
@@ -66,7 +70,7 @@ public class BasePickUp : CustomBehaviour
         base.Awake();
     }
 
-    protected override void Start () 
+    protected override void OnEnable () 
 	{
         /// Note this gets called multiple times at the start of the level for some reason ///
         /// Keep that in mind when doing things here, nothing that must only be called once ///
@@ -85,7 +89,7 @@ public class BasePickUp : CustomBehaviour
         m_defaultPosition = transform.position;
         CurrentState = State.Idle;
         ShowModel(true);
-        Debug.Log("basepickup start");
+        //Debug.Log("basepickup start");
 
         base.Start();  
 	} 
@@ -110,11 +114,17 @@ public class BasePickUp : CustomBehaviour
             m_soundEffect.Play();
         }
 
-        // play particle effect
-        if (m_touchedParticleEffect != null)
+        // Spawn the touched particle effect where the pickup is
+        // Only if one exists
+        if (m_touchedParticle != ParticleDB.Type.None)
         {
-            m_touchedParticleEffect.Play();
+            GameObject GO = ParticleDB.Instance.Spawn(m_touchedParticle);
+            GO.transform.position = transform.position;
+            GO.SetActive(true);
         }
+
+        // Self store this pickup if it applies
+        Timing.RunCoroutine(_StoreWhenDone(), Segment.SlowUpdate);
     }
 
     protected override void FixedUpdate()
@@ -143,13 +153,17 @@ public class BasePickUp : CustomBehaviour
         CurrentState = State.Active;
     }
 
-    void ShowModel(bool enable)
+    // pickup will automatically store itself back into its pool if it has one
+    IEnumerator<float> _StoreWhenDone()
     {
-        m_meshRend.enabled = enable;
-
-        if (m_light != null)
+        if (m_soundEffect != null)
         {
-            m_light.enabled = enable;
+            while (m_soundEffect.isPlaying)
+            {
+                yield return 0f;
+            }
         }
+
+        SelfStore(0f);
     }
 }

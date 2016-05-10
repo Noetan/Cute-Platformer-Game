@@ -2,13 +2,16 @@
 // Make sure the drag on the parent's rigidbody is high enough (something like 20) to avoid items orbitting forever
 // While code can attract to something other than the player, there's no way to set that, add it if you need it
 // It's m_goal
+// Note, this supports pickups with a physical collider but the code has been commented out and might be out of date
 
 using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections.Generic;
 using MovementEffects;
 
-//[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(BasePickUp))]
+
 public class AttractedItem : MonoBehaviour
 {
     #region Inspector Variables
@@ -25,6 +28,9 @@ public class AttractedItem : MonoBehaviour
     // How long after it first jumps before it starts attracting
     [SerializeField]
     float m_jumpDelay = 0.25f;
+    // How long after it explodes before the item start attracting
+    [SerializeField]
+    float m_explodeDelay = 0.75f;
     #endregion
 
     enum State
@@ -46,10 +52,10 @@ public class AttractedItem : MonoBehaviour
     GameObject m_goal = null;
     // The item's rigidbody
     Rigidbody m_rigidbody = null;
-    bool m_defaultGravity = false;
+    //bool m_defaultGravity = false;
     // The item's colldiers
     //List<Collider> m_itemColliders = new List<Collider>();
-    // The item's script
+    // The item's script    
     BasePickUp m_item = null;
 
     void Awake()
@@ -79,7 +85,13 @@ public class AttractedItem : MonoBehaviour
         m_goal = PlayerController.Player;
         Assert.IsNotNull(m_goal);
 
-        m_defaultGravity = m_rigidbody.useGravity;
+        //m_defaultGravity = m_rigidbody.useGravity;
+        //m_rigidbody.isKinematic = false;
+    }
+
+    void OnEnable()
+    {
+        m_currentState = State.idle;
     }
 
     void FixedUpdate()
@@ -95,7 +107,7 @@ public class AttractedItem : MonoBehaviour
                 if (m_item.CurrentState == BasePickUp.State.Disabled)
                 {
                     m_currentState = State.finished;
-                    m_rigidbody.isKinematic = true;
+                    //m_rigidbody.isKinematic = true;
                     m_rigidbody.velocity = Vector3.zero;
                     return;
                 }
@@ -146,13 +158,7 @@ public class AttractedItem : MonoBehaviour
     }
 
     public void Reset()
-    {
-        m_currentState = State.idle;
-        gameObject.SetActive(true);
-        m_rigidbody.isKinematic = false;
-        m_rigidbody.useGravity = m_defaultGravity;
-        m_rigidbody.detectCollisions = true;
-
+    {  
         /*
         for (int i = 0; i < m_itemColliders.Count; i++)
         {
@@ -164,7 +170,11 @@ public class AttractedItem : MonoBehaviour
     // Bounces the item up before starting to attract
     IEnumerator<float> _Hop()
     {
-        m_rigidbody.AddForce(0, m_initalJumpHeight, 0, ForceMode.VelocityChange);
+        // Up being relative to the rotation of the item
+        Vector3 newForce = transform.up * m_initalJumpHeight;
+        m_rigidbody.AddForce(newForce, ForceMode.VelocityChange);
+
+        m_rigidbody.useGravity = true;
 
         yield return Timing.WaitForSeconds(m_jumpDelay);
 
@@ -177,24 +187,31 @@ public class AttractedItem : MonoBehaviour
 
         InitActiveState();
     }
+    // Explodes the item out before starting to attract
+    IEnumerator<float> _Explode()
+    {
+        m_rigidbody.useGravity = true;
+
+        yield return Timing.WaitForSeconds(m_explodeDelay);
+
+        InitActiveState();
+    }
 
     // Prepares the item for attraction before starting to attract
     void InitActiveState()
     {
-        m_rigidbody.useGravity = false;
-
         /*
         for (int i = 0; i < m_itemColliders.Count; i++)
         {
             m_itemColliders[i].enabled = false;
             //Debug.Log("disabling " + m_itemColliders[i]);
         }*/
-
+        m_rigidbody.useGravity = false;
         m_currentState = State.active;
     }
 
     // Start the attraction process
-    public void StartAttract(AttractMode attractMode, Vector3 upVector)
+    public void StartAttract(AttractMode attractMode)
     {
         // Don't do anything if the item has already been picked up
         if (m_item.CurrentState == BasePickUp.State.Disabled)
@@ -211,16 +228,18 @@ public class AttractedItem : MonoBehaviour
         }
         else if (attractMode == AttractMode.explode)
         {
-            Timing.RunCoroutine(_Wait());
+            Timing.RunCoroutine(_Explode());
         }
 
         m_currentState = State.starting;
     }
-    public void StartAttract(AttractMode attractMode)
+
+    public void AddForce(Vector3 force)
     {
-        StartAttract(attractMode, Vector3.up);
+        m_rigidbody.AddForce(force, ForceMode.VelocityChange);
     }
 
+    // Used to draw how big the attract radius is in the Unity Editor scene view
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.magenta;

@@ -1,11 +1,16 @@
 ﻿// Used to keep track and store all the collectibles in the game
 
+// To add new pick up items
+// 1. Add to the Types enum
+// 2. Assign a prefab
+// 3. Create a pool for it
+
 using UnityEngine;
 using MemoryManagment;
 
-public class PickUpController : MonoBehaviour 
+public class PickUpDB : MonoBehaviour 
 {
-    public static PickUpController Instance;
+    public static PickUpDB Instance;
 
     #region Inspector
     [SerializeField]
@@ -14,7 +19,7 @@ public class PickUpController : MonoBehaviour
 
     GameObjectPool m_dropsPool;
 
-    public enum Types
+    public enum Type
     {
         drops,
         health
@@ -23,17 +28,17 @@ public class PickUpController : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        m_dropsPool = new GameObjectPool(1, m_DropsPrefab, this.gameObject);
+        m_dropsPool = new GameObjectPool(0, m_DropsPrefab, this.gameObject);
     }
 
-    public GameObject Spawn(Types newPup)
+    public GameObject Spawn(Type newPup)
     {
         switch (newPup)
         {
-            case Types.drops:
+            case Type.drops:
                 return m_dropsPool.New();
 
-            case Types.health:
+            case Type.health:
                 Debug.LogWarning("Requested health pickup from controller. Not implemented yet");
                 return null;
 

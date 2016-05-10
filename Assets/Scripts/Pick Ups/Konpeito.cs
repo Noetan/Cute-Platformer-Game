@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 public class Konpeito : BasePickUp
 {
     #region Inspector
-    [Header("Konpeito required at least 1")]
+    [Header("Konpeito Graphics")]
     [SerializeField]
     Material[] ColorSet;
 
@@ -35,7 +35,9 @@ public class Konpeito : BasePickUp
 
     protected override void PickUp()
     {
+        // Increase the player's moneys
         PlayerController.Instance.AddKonpeito(value);
+
         base.PickUp();
     }
 
