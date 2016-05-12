@@ -12,8 +12,9 @@ public class Konpeito : BasePickUp
     Material[] ColorSet;
 
     [Header("Konpeito gameplay")]
+    // Possible values for the konpeito to be worth
     [SerializeField]
-    int value = 1;
+    int[] values = { 1, 2, 5, 10, 15, 20 };
     #endregion
     
     // Used to cycle through the available colours
@@ -36,7 +37,15 @@ public class Konpeito : BasePickUp
     protected override void PickUp()
     {
         // Increase the player's moneys
-        PlayerController.Instance.AddKonpeito(value);
+        if (values.Length > 0)
+        {
+            PlayerController.Instance.AddKonpeito(values[Random.Range(0, values.Length)]);
+        }
+        else
+        {
+            PlayerController.Instance.AddKonpeito(1);
+            Debug.LogWarning("konpeito values is not set and empty");
+        }
 
         base.PickUp();
     }

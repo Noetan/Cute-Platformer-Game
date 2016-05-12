@@ -1,11 +1,16 @@
-﻿// Spawn into levels
-// 
+﻿// Spews drops out at this location
+// Meant to be spawned in-game and will automatically trigger attracted items
+
+// Can either be set to spawn on enable (i.e. spawning it into a broken crate or dead enemy)
+// Or can spawn when the player touches its trigger collider
+
+// Will destroy/store itself once it's done spawning
 
 using UnityEngine;
 using System.Collections.Generic;
 using MovementEffects;
 
-public class PickUpSpawner : CustomBehaviour 
+public class PickUpSpawner : CustomBehaviour
 {
     #region Inspector
     [Header("Required")]
@@ -31,24 +36,19 @@ public class PickUpSpawner : CustomBehaviour
 
     protected override void OnEnable()
     {
-        for (int i = 0; i < 100; i++)
-        {
-
-        }
-
         // Prevent this being called when the gameobject is first created
         // As this is called even if the GO is immeditately set inactive
-        //if (m_startDone)
+
+        finished = false;
+
+        if (m_spawnOnEnable)
         {
-            if (m_spawnOnEnable)
-            {                
-                base.OnEnable();
-                Timing.RunCoroutine( _Spawn(m_itemType) );                
-            }            
+            base.OnEnable();
+            Timing.RunCoroutine(_Spawn(m_itemType));
         }
+
     }
 
-    
     void OnTriggerEnter(Collider other)
     {
         if (!finished && other.CompareTag("Player"))
@@ -66,15 +66,20 @@ public class PickUpSpawner : CustomBehaviour
 
         // Get random amount
         int amount = Random.Range(m_emitAmountMin, m_emitAmountMax);
-        Debug.Log("spawning " + amount + " drops");
 
         for (int i = 0; i < amount; i++)
         {
+            // Make sure Start() is initialized before continuing
+            while (!m_startDone)
+            {
+                yield return 0f;
+            }
+
             // Retrieve the pick up from their pool
             GameObject GO = PickUpDB.Instance.Spawn(type);
             // Set their starting position 
             GO.transform.position = transform.position;
-            GO.SetActive(true);     
+            GO.SetActive(true);
 
             // Get random direction
             Vector3 newPoint = Helper.GetPointOnSphere(directionUp, m_emitAngle);
@@ -92,7 +97,4 @@ public class PickUpSpawner : CustomBehaviour
         // Store spawner back into pool
         SelfStore();
     }
-
-
-
 }

@@ -27,7 +27,7 @@ public class SelfStoreParticleEffect : CustomBehaviour
         base.Start();
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
         Timing.RunCoroutine(_CheckIfAlive(), Segment.SlowUpdate);        
     }

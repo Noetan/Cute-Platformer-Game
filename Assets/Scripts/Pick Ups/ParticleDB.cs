@@ -30,18 +30,22 @@ public class ParticleDB : MonoBehaviour
 
     // 2.
     [SerializeField]
+    GameObject m_None;
+    [SerializeField]
     GameObject m_DropsPickUpShatter;
 
 
     // 3.
     GameObjectPool dropsPickUpShatterPool;
+    GameObjectPool nonePool;
 
     void Awake()
     {
         Instance = this;
 
         // Init pools here
-        dropsPickUpShatterPool = new GameObjectPool(0, m_DropsPickUpShatter, this.gameObject);
+        dropsPickUpShatterPool = new GameObjectPool(10, m_DropsPickUpShatter, this.gameObject);
+        nonePool = new GameObjectPool(0, m_None, this.gameObject);
     }
 
     public GameObject Spawn(Type type)
@@ -50,6 +54,9 @@ public class ParticleDB : MonoBehaviour
         {
             case Type.DropsPickUpShatter:
                 return dropsPickUpShatterPool.New();
+
+            case Type.None:
+                return nonePool.New();
 
             default:
                 Debug.LogWarning("ParticleDB Spawn() requested an invalid Type");
