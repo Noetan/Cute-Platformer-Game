@@ -62,45 +62,30 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-/Assets/Quantum Theory
 /.vs/UnityVS.Cute-Platformer-Game/v14/*.suo
-/Assets/JMO Assets
 /.vs/Cute-Platformer-Game/v14/.suo
 /Assets/Audio
+/Assets/BezierCurves
 /Assets/Fungus
+/Assets/Game Jam Menu Template
+/Assets/GeometryFXParticles
 /Assets/Graphics
+/Assets/JMO Assets
+/Assets/Physics Platformer Kit
+/Assets/Plugins
 /Assets/PrimitivePlus
+/Assets/Quantum Theory
+/Assets/Tree_Textures
+/Assets/Ultimate Game Tools
 desktop.ini
 /Assets/Editor/CrossPlatformInput/desktop.ini.meta
 /Assets/Editor/ImageEffects/desktop.ini.meta
 /Assets/Editor/desktop.ini.meta
-/Assets/Game Jam Menu Template/Animation/desktop.ini.meta
-/Assets/Game Jam Menu Template/Audio/Music/desktop.ini.meta
-/Assets/Game Jam Menu Template/Audio/desktop.ini.meta
-/Assets/Game Jam Menu Template/Fonts/OpenSans/desktop.ini.meta
-/Assets/Game Jam Menu Template/Fonts/desktop.ini.meta
-/Assets/Game Jam Menu Template/Prefabs/desktop.ini.meta
-/Assets/Game Jam Menu Template/Scripts/desktop.ini.meta
-/Assets/Game Jam Menu Template/desktop.ini.meta
 /Assets/Materials/Emissive QT/desktop.ini.meta
 /Assets/Materials/Physics Materials/desktop.ini.meta
 /Assets/Materials/desktop.ini.meta
 /Assets/Mesh/desktop.ini.meta
 /Assets/Models/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/Blank/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/Environment/Materials/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/Environment/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/Other/SkyBox/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/Other/desktop.ini.meta
-/Assets/Physics Platformer Kit/Materials/desktop.ini.meta
-/Assets/Physics Platformer Kit/Misc/desktop.ini.meta
-/Assets/Physics Platformer Kit/Models/Materials/desktop.ini.meta
-/Assets/Physics Platformer Kit/Models/desktop.ini.meta
-/Assets/Physics Platformer Kit/Prefabs/desktop.ini.meta
-/Assets/Physics Platformer Kit/Scenes/desktop.ini.meta
-/Assets/Physics Platformer Kit/Scripts/desktop.ini.meta
-/Assets/Physics Platformer Kit/Sounds/desktop.ini.meta
-/Assets/Physics Platformer Kit/desktop.ini.meta
 /Assets/Prefabs/Camera/desktop.ini.meta
 /Assets/Prefabs/Enemies/desktop.ini.meta
 /Assets/Prefabs/Environment/desktop.ini.meta
@@ -169,22 +154,6 @@ desktop.ini
 /Assets/Textures/Caustic Textures/desktop.ini.meta
 /Assets/Textures/desktop.ini.meta
 /Assets/Tree_Textures/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Editor/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Coil/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Crate/Materials/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Crate/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Lamp/Materials/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Lamp/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Materials/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Physic Materials/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Ring/Materials/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Ring/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Sample Scripts/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/Sphere/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Sample Scenes/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/Scripts/desktop.ini.meta
-/Assets/Ultimate Game Tools/RopeEditor/desktop.ini.meta
-/Assets/Ultimate Game Tools/desktop.ini.meta
 /Assets/UnityVS/Editor/desktop.ini.meta
 /Assets/UnityVS/desktop.ini.meta
 /Assets/desktop.ini.meta
