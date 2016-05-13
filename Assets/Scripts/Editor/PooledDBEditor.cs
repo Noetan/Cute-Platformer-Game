@@ -1,4 +1,7 @@
-﻿using UnityEditor;
+﻿// Lists the enums in the PooledDB class into the inspector
+// So the user can easily assign prefabs in the right order
+
+using UnityEditor;
 using System;
 
 [CustomEditor( typeof(PooledDB) )]
@@ -20,8 +23,11 @@ public class PooledDBEditor : Editor
             pickupEnum = pickupEnum + "\n" + Enum.GetName(typeof(PooledDB.PickUp), i);
         }
 
-        helpBox =
-            "Particles\n" + particleEnum + "\n\nPick Ups\n" + pickupEnum;
+        helpBox = string.Format("Particles ({0}) \n{1} \n\nPick Ups ({2}) \n{3}", 
+            Helper.CountEnum(typeof(PooledDB.Particle)),
+            particleEnum,
+            Helper.CountEnum(typeof(PooledDB.PickUp)),
+            pickupEnum );
 
         EditorGUILayout.HelpBox(helpBox, MessageType.None, false);
 
