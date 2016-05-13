@@ -1,17 +1,16 @@
 ﻿// Standalone helper functions that can be called from anywhere
 
 using UnityEngine;
-using System.Collections.Generic;
-
+//using System.Collections.Generic;
 public static class Helper
 {
     /// <summary>
     /// Separates out the individual digits in an integer into a list
     /// Requires a positive number
     /// </summary>
-    public static List<int> SeparateDigits(int number)
+    public static System.Collections.Generic.List<int> SeparateDigits(int number)
     {
-        var digitsList = new List<int>();
+        var digitsList = new System.Collections.Generic.List<int>();
         
         while (number > 0)
         {
@@ -56,5 +55,13 @@ public static class Helper
 
         // Rotate this point around to the target direction
         return targetDirection * v;
+    }
+
+    public static int CountEnum(System.Type type)
+    {
+        if (!type.IsEnum)
+            Debug.LogWarning("HELPER: COUNTENUM NOT GIVEN AN ENUM");
+
+        return System.Enum.GetValues(type).Length;
     }
 }

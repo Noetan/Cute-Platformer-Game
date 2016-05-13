@@ -15,7 +15,7 @@ public class PickUpSpawner : CustomBehaviour
     #region Inspector
     [Header("Required")]
     [SerializeField]
-    PickUpDB.Type m_itemType;
+    PooledDB.PickUp m_itemType;
 
     [Header("Spawn properties")]
     [SerializeField]
@@ -58,11 +58,11 @@ public class PickUpSpawner : CustomBehaviour
         }
     }
 
-    IEnumerator<float> _Spawn(PickUpDB.Type type)
+    IEnumerator<float> _Spawn(PooledDB.PickUp type)
     {
         // transform.rotation points forward, not up as we want
         // so rotate our spawner's rotation back 90 degrees
-        Quaternion directionUp = Quaternion.LookRotation(transform.up, -transform.forward);
+        var directionUp = Quaternion.LookRotation(transform.up, -transform.forward);
 
         // Get random amount
         int amount = Random.Range(m_emitAmountMin, m_emitAmountMax);
@@ -76,19 +76,16 @@ public class PickUpSpawner : CustomBehaviour
             }
 
             // Retrieve the pick up from their pool
-            GameObject GO = PickUpDB.Instance.Spawn(type);
-            // Set their starting position 
-            GO.transform.position = transform.position;
-            GO.SetActive(true);
+            var GO = PooledDB.Instance.Spawn(type, transform.position, true);
 
             // Get random direction
-            Vector3 newPoint = Helper.GetPointOnSphere(directionUp, m_emitAngle);
+            var newPoint = Helper.GetPointOnSphere(directionUp, m_emitAngle);
             Debug.DrawLine(transform.position, transform.position + (newPoint * 5), Color.red, 60);
 
             // Wait for the pickup to initialize Start()
             yield return 0f;
 
-            AttractedItem goScript = GO.GetComponent<AttractedItem>();
+            var goScript = GO.GetComponent<AttractedItem>();
 
             goScript.AddForce(newPoint * m_emitSpeed);
             goScript.StartAttract(AttractedItem.AttractMode.explode);

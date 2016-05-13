@@ -32,7 +32,7 @@ public class BasePickUp : CustomBehaviour
     float m_bobHeight = 1.0f;
 
     [SerializeField]
-    ParticleDB.Type m_touchedParticle = ParticleDB.Type.None;
+    PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
     #endregion
 
     public enum State
@@ -46,8 +46,7 @@ public class BasePickUp : CustomBehaviour
     float m_rotateSpeed = 0.0f;
     float m_bobSpeed = 0.0f;
     Vector3 m_defaultPosition = Vector3.zero;
-
-    
+        
     AudioSource m_soundEffect;
     //ParticleSystem m_touchedParticleEffect;
 
@@ -67,7 +66,7 @@ public class BasePickUp : CustomBehaviour
 
         CurrentState = State.Idle;
 
-        base.Awake();
+        base.Awake();        
     }
 
     protected override void OnEnable () 
@@ -116,11 +115,9 @@ public class BasePickUp : CustomBehaviour
 
         // Spawn the touched particle effect where the pickup is
         // Only if one exists
-        if (m_touchedParticle != ParticleDB.Type.None)
+        if (m_touchedParticle != PooledDB.Particle.None)
         {
-            GameObject GO = ParticleDB.Instance.Spawn(m_touchedParticle);
-            GO.transform.position = transform.position;
-            GO.SetActive(true);
+            PooledDB.Instance.Spawn(m_touchedParticle, transform.position, true);
         }
 
         // Self store this pickup if it applies

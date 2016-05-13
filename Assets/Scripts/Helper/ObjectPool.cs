@@ -44,14 +44,14 @@ namespace MemoryManagment
 
         // Return an inactive gameobject for use
         // Creates a new one if none are available
-        public GameObject New()
+        public GameObject New(Vector3 position)
         {
             GameObject newObj;
 
             // Retrieve an unused gameobject from the stack
             if (m_objectStack.Count > 0)
             {
-                newObj = m_objectStack.Pop();
+                newObj = m_objectStack.Pop();                
             }
             // Create a new one if the stack is empty
             else
@@ -59,7 +59,13 @@ namespace MemoryManagment
                 newObj = SpawnGameObject();
             }
 
+            newObj.transform.position = position;
             return newObj;
+        }
+
+        public GameObject New()
+        {
+            return New(Vector3.zero);
         }
 
         // Store the newObj for later re-use
@@ -72,12 +78,11 @@ namespace MemoryManagment
         // Instantiate and set up a new gameobject
         GameObject SpawnGameObject()
         {
-            GameObject newObj = GameObject.Instantiate(m_prefab) as GameObject;
+            var newObj = GameObject.Instantiate(m_prefab) as GameObject;
             newObj.SetActive(false);
 
             // Save a reference of the pool in each gameobject if they are equipped to hold it
-            CustomBehaviour cb = newObj.GetComponent<CustomBehaviour>();
-            CustomBehaviour[] cb2 = newObj.GetComponentsInChildren<CustomBehaviour>(true);
+            var cb = newObj.GetComponent<CustomBehaviour>();
             if (cb != null)
             {
                 cb.SetPool(this);
