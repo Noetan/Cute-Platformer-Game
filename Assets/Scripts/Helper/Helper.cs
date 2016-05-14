@@ -48,7 +48,7 @@ public static class Helper
     {
         // Convert the angle given to radians
         float angleInRad = Random.Range(0.0f, angle) * Mathf.Deg2Rad;
-        
+
         // Find a random point relative to how large the defined area is        
         Vector3 pointOnCircle = Random.insideUnitCircle.normalized * Mathf.Sin(angleInRad);
         Vector3 v = new Vector3(pointOnCircle.x, pointOnCircle.y, Mathf.Cos(angleInRad));

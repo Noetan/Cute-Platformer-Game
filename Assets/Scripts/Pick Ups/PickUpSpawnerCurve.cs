@@ -25,8 +25,6 @@ public class PickUpSpawnerCurve : MonoBehaviour
     //[SerializeField]
     //bool m_rotateItemToCurve = false;
 
-
-
     BezierCurve m_bezierCurve;
 
     void Awake()
@@ -62,7 +60,7 @@ public class PickUpSpawnerCurve : MonoBehaviour
             Vector3 pos = m_bezierCurve.GetPointAt(progress);
 
             // Spawn
-            GameObject GO = PooledDB.Instance.Spawn(m_item, pos, true);
+            PooledDB.Instance.Spawn(m_item, pos, true);
 
             progress += step;
         }

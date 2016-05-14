@@ -15,15 +15,15 @@ public class PooledDBEditor : Editor
 
         for (int i = 0; i < Helper.CountEnum(typeof(PooledDB.Particle)); i++)
         {
-            particleEnum = particleEnum + "\n" + Enum.GetName(typeof(PooledDB.Particle), i);
+            particleEnum = particleEnum + "\n" + i + ". " + Enum.GetName(typeof(PooledDB.Particle), i);
         }
 
         for (int i = 0; i < Helper.CountEnum(typeof(PooledDB.PickUp)); i++)
         {
-            pickupEnum = pickupEnum + "\n" + Enum.GetName(typeof(PooledDB.PickUp), i);
+            pickupEnum = pickupEnum + "\n" + i + ". " + Enum.GetName(typeof(PooledDB.PickUp), i);
         }
 
-        helpBox = string.Format("Particles ({0}) \n{1} \n\nPick Ups ({2}) \n{3}", 
+        helpBox = string.Format("  Particles ({0}) \n{1} \n\n  Pick Ups ({2}) \n{3}", 
             Helper.CountEnum(typeof(PooledDB.Particle)),
             particleEnum,
             Helper.CountEnum(typeof(PooledDB.PickUp)),

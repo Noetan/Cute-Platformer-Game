@@ -24,22 +24,19 @@ namespace MemoryManagment
         GameObject m_parent;
 
         // Constructor
-        public GameObjectPool(int initialBufferSize, GameObject preFab, GameObject parent = null
-            , bool lazyInstance = false)
+        public GameObjectPool(int initialBufferSize, GameObject preFab, GameObject parent = null)
         {
             m_objectStack = new Stack<GameObject>(initialBufferSize);
             m_prefab = preFab;
             m_parent = parent;
 
-            // Pre-instantiate all the gameobjects unless stated otherwise
-            if (!lazyInstance)
+            // Pre-instantiate all the gameobjects
+            for (int i = 0; i < initialBufferSize; i++)
             {
-                for (int i = 0; i < initialBufferSize; i++)
-                {
-                    GameObject newObj = SpawnGameObject();
-                    m_objectStack.Push(newObj);
-                }
+                GameObject newObj = SpawnGameObject();
+                m_objectStack.Push(newObj);
             }
+            
         }
 
         // Return an inactive gameobject for use

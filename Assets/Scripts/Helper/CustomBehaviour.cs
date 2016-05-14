@@ -14,6 +14,7 @@ public class CustomBehaviour : MonoBehaviour
     protected TrailRenderer m_trailRender = null;
     protected Light m_light = null;
     protected ParticleSystem m_particleSystem = null;
+    protected AudioSource m_AudioSource = null;
 
     protected bool m_startDone = false;
 
@@ -29,7 +30,12 @@ public class CustomBehaviour : MonoBehaviour
 
     protected virtual void Awake()
     {
-    }
+        m_meshRend = GetComponent<MeshRenderer>();
+    m_trailRender = GetComponent<TrailRenderer>();
+      m_light = GetComponent<Light>();
+      m_particleSystem = GetComponent<ParticleSystem>();
+      m_AudioSource = GetComponent<AudioSource>();
+}
 
     protected virtual void Update()
     {
@@ -55,7 +61,7 @@ public class CustomBehaviour : MonoBehaviour
     }
 
     // Use this to store this gameobject back into its pool
-    protected void SelfStore(float delay = 0f)
+    public void SelfStore(float delay = 0f)
     {
         if (m_parentPool == null)
         {
@@ -98,6 +104,14 @@ public class CustomBehaviour : MonoBehaviour
             {
                 m_particleSystem.Stop();
             }
+        }
+    }
+
+    public AudioSource GetAudioSource
+    {
+        get
+        {
+            return m_AudioSource;
         }
     }
 }

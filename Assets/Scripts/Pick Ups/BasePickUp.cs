@@ -107,11 +107,7 @@ public class BasePickUp : CustomBehaviour
         CurrentState = State.Disabled;
         ShowModel(false);
 
-        // play sound effect
-        if (m_soundEffect != null)
-        {
-            m_soundEffect.Play();
-        }
+        AudioPool.Instance.PlayRandom(AudioPool.Bank.DropPickUp, transform.position);
 
         // Spawn the touched particle effect where the pickup is
         // Only if one exists
