@@ -46,19 +46,14 @@ public class BasePickUp : CustomBehaviour
     float m_rotateSpeed = 0.0f;
     float m_bobSpeed = 0.0f;
     Vector3 m_defaultPosition = Vector3.zero;
-        
-    AudioSource m_soundEffect;
-    //ParticleSystem m_touchedParticleEffect;
 
     protected override void Awake()
     {
         m_meshRend = GetComponent<MeshRenderer>();
-        m_soundEffect = GetComponent<AudioSource>();
         m_particleSystem = GetComponent<ParticleSystem>();
         m_light = GetComponent<Light>();
 
         Assert.IsNotNull(m_meshRend);
-        //Assert.IsNotNull(m_soundEffect);
         Assert.IsNotNull(m_light);
 
         m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
@@ -117,7 +112,7 @@ public class BasePickUp : CustomBehaviour
         }
 
         // Self store this pickup if it applies
-        Timing.RunCoroutine(_StoreWhenDone(), Segment.SlowUpdate);
+        SelfStore();
     }
 
     protected override void FixedUpdate()
@@ -144,19 +139,5 @@ public class BasePickUp : CustomBehaviour
     public void Activate()
     {
         CurrentState = State.Active;
-    }
-
-    // pickup will automatically store itself back into its pool if it has one
-    IEnumerator<float> _StoreWhenDone()
-    {
-        if (m_soundEffect != null)
-        {
-            while (m_soundEffect.isPlaying)
-            {
-                yield return 0f;
-            }
-        }
-
-        SelfStore(0f);
     }
 }
