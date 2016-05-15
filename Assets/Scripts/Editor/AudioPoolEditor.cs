@@ -9,6 +9,7 @@ public class AudioPoolEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        /*
         string helpBox = "";
         string clipString = "";
 
@@ -22,7 +23,7 @@ public class AudioPoolEditor : Editor
             clipString);
 
         EditorGUILayout.HelpBox(helpBox, MessageType.None, false);
-
+        */
         DrawDefaultInspector();        
     }
 }

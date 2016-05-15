@@ -352,9 +352,7 @@ public class PlayerMove : MonoBehaviour
         // Play the jump sound
         if (m_jumpSound)
         {
-            m_AudioSource.volume = 1;
-            m_AudioSource.clip = m_jumpSound;
-            m_AudioSource.Play();
+            AudioPool.Instance.Play(m_jumpSound, transform.position);
         }
 
         // Wait while the player is still holding the jump button

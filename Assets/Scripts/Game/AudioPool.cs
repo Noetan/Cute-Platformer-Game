@@ -4,44 +4,24 @@ using UnityEngine.Assertions;
 using MemoryManagment;
 using System.Collections.Generic;
 using MovementEffects;
+using UnityEngine.Audio;
 
 public class AudioPool : MonoBehaviour
 {
-    // Add your entry here. Then assign the audio file in the inspector of this object.
-    public enum Bank
-    {
-        DropPickUp,
-        Jump
-    }
-
     #region Internals
-    [Serializable]
-    public class Clip
-    {
-        public AudioClip[] ClipFile;
-        public bool SingleInstance = false;
-        [HideInInspector]
-        public bool Running = false;
-
-        int currentClip = 0;
-
-        public AudioClip GetNextClip()
-        {
-            return ClipFile[(currentClip++) % ClipFile.Length];
-        }
-    }
-
-    // The audio files that match up with each Bank entry
-    [SerializeField]
-    Clip[] m_AudioFiles = new Clip[Enum.GetValues(typeof(Bank)).Length];
+    [Header("Don't touch")]
     [SerializeField]
     GameObject m_emptyPrefab;
+    [SerializeField]
+    AudioMixer m_masterMixer;
+    [Header("Settings")]
     [SerializeField]
     [Range(0.0f, 1.0f)]
     float m_overlapThreshold = 0.8f;
 
     public static AudioPool Instance { get; set; }
     GameObjectPool m_AudioSources;
+    AudioClipSettings defaultSettings;
 
     // Use this for initialization
     void Awake()
@@ -49,18 +29,18 @@ public class AudioPool : MonoBehaviour
         Assert.IsNull(Instance, "More than 1 instance of AudioPool detected. ONLY HAVE 1 IN THE SCENE PLZ");
         Instance = this;
 
-        Assert.AreEqual(m_AudioFiles.Length, Helper.CountEnum(typeof(Bank)));
-
+        defaultSettings = new AudioClipSettings();
         // Set up the object pool of audio sources
-        m_AudioSources = new GameObjectPool(1, m_emptyPrefab, this.gameObject);        
+        m_AudioSources = new GameObjectPool(1, m_emptyPrefab, this.gameObject);
     }
-
-    IEnumerator<float> StoreClip(CustomBehaviour cb, Clip clip)
+    
+    IEnumerator<float> StoreClip(CustomBehaviour cb)
     {
+        /*
         float overlapDelay = cb.GetAudioSource.clip.length * m_overlapThreshold;
 
         yield return Timing.WaitForSeconds(overlapDelay);
-        clip.Running = false;
+        clip.Running = false;*/
 
         while (cb.GetAudioSource.isPlaying)
         {
@@ -72,51 +52,90 @@ public class AudioPool : MonoBehaviour
 
     /// <summary>
     /// Plays the given audio clip in the position given
-    /// Note: Wont play if audio clip is marked single instance and is already playing
     /// </summary>
-    public void Play(Bank type, Vector3 pos)
+    public void Play(AudioClip newClip, Vector3 pos)
     {
-        var clip = m_AudioFiles[(int)type];
-
-        // Don't play the audio clip if it's marked as a single instance 
-        // and it's already playing
-        if (clip.SingleInstance && clip.Running)
-        {
-            return;
-        }
-
-        var newGO = m_AudioSources.New(pos);
-        var goCB = newGO.GetComponent<CustomBehaviour>();
-
-        newGO.transform.position = pos;
-        goCB.GetAudioSource.clip = clip.ClipFile[0];
-        clip.Running = true;
-        newGO.SetActive(true);
-
-        Timing.RunCoroutine(StoreClip(goCB, clip), Segment.SlowUpdate);
+        PlayRandom(newClip, pos, defaultSettings);
     }
 
-    public void PlayRandom(Bank type, Vector3 pos)
+    /// <summary>
+    /// Plays the given audio clip with a random pitch and volume as defined in the settings given
+    /// </summary>
+    public void PlayRandom(AudioClip newClip, Vector3 pos, AudioClipSettings settings)
     {
-        var clip = m_AudioFiles[(int)type];
+        var newSound = m_AudioSources.New(pos);
+        var cb = newSound.GetComponent<CustomBehaviour>();
+        var audSrc = cb.GetAudioSource;
+        float randomPitch = UnityEngine.Random.Range(settings.MinPitch, settings.MaxPitch);
+        float randomVol = UnityEngine.Random.Range(settings.MinVolume, settings.MaxVolume);
 
-        // Don't play the audio clip if it's marked as a single instance 
-        // and it's already playing
-        if (clip.SingleInstance && clip.Running)
-        {
-            return;
-        }
+        newSound.transform.position = pos;
+        audSrc.clip = newClip;
+        audSrc.pitch = randomPitch;
+        audSrc.volume = randomVol;
 
-        var newGO = m_AudioSources.New(pos);
-        var goCB = newGO.GetComponent<CustomBehaviour>();
-        int randomClip = UnityEngine.Random.Range(0, clip.ClipFile.Length);
-
-        newGO.transform.position = pos;
-        goCB.GetAudioSource.clip = clip.GetNextClip();
-        clip.Running = true;
-        newGO.SetActive(true);
-
-        Timing.RunCoroutine(StoreClip(goCB, clip), Segment.SlowUpdate);
+        newSound.SetActive(true);
+        Timing.RunCoroutine(StoreClip(cb), Segment.SlowUpdate);
     }
 }
+
+[Serializable]
+public class AudioClipSettings
+{
+    [SerializeField]
+    AudioMixer MixerGroup { get; set; }
+    [SerializeField]
+    [Range(-3.0f, 3.0f)]
+    float m_minPitch = 1.0f;
+    [SerializeField]
+    [Range(-3.0f, 3.0f)]
+    float m_maxPitch = 1.0f;
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float m_minVolume = 1.0f;
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float m_maxVolume = 1.0f;
+
+    
+    public float MinPitch
+    {
+        get { return m_minPitch; }
+        set
+        {
+            m_minPitch = Mathf.Clamp(value, -3.0f, 3.0f);
+        }
+    }
+    
+    public float MaxPitch
+    {
+        get { return m_maxPitch; }
+        set
+        {
+            m_maxPitch = Mathf.Clamp(value, -3.0f, 3.0f);
+        }
+    }
+    
+    public float MinVolume
+    {
+        get { return m_minVolume; }
+        set
+        {
+            m_minVolume = Mathf.Clamp(value, 0.0f, 10.0f);
+        }
+    }
+    
+    public float MaxVolume
+    {
+        get { return m_maxVolume; }
+        set
+        {
+            m_maxVolume = Mathf.Clamp(value, 0.0f, 1.0f);
+        }
+    }
+}
+
+
+
+
 

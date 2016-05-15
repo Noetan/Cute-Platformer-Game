@@ -31,8 +31,13 @@ public class BasePickUp : CustomBehaviour
     [SerializeField]
     float m_bobHeight = 1.0f;
 
+    [Header("Effects")]
     [SerializeField]
     PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
+    [SerializeField]
+    AudioClip m_touchedSFX;
+    [SerializeField]
+    AudioClipSettings m_SFXSettings;
     #endregion
 
     public enum State
@@ -49,19 +54,15 @@ public class BasePickUp : CustomBehaviour
 
     protected override void Awake()
     {
-        m_meshRend = GetComponent<MeshRenderer>();
-        m_particleSystem = GetComponent<ParticleSystem>();
-        m_light = GetComponent<Light>();
-
-        Assert.IsNotNull(m_meshRend);
-        Assert.IsNotNull(m_light);
-
         m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
         m_bobSpeed = Random.Range(m_bobSpeedMin, m_bobSpeedMax);
 
         CurrentState = State.Idle;
 
-        base.Awake();        
+        base.Awake();
+
+        Assert.IsNotNull(m_meshRend);
+        Assert.IsNotNull(m_light);
     }
 
     protected override void OnEnable () 
@@ -102,7 +103,7 @@ public class BasePickUp : CustomBehaviour
         CurrentState = State.Disabled;
         ShowModel(false);
 
-        AudioPool.Instance.PlayRandom(AudioPool.Bank.DropPickUp, transform.position);
+        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
 
         // Spawn the touched particle effect where the pickup is
         // Only if one exists
