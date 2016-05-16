@@ -8,12 +8,25 @@ using UnityEngine.Audio;
 
 public class AudioPool : MonoBehaviour
 {
+    public enum MixerGroup
+    {
+        Master,
+        Music,
+        SFX,
+        Dialogue,
+        VoiceClips,
+        Ambient,
+        Collectibles,
+        Tunes,
+        Menu
+    }
+
     #region Internals
     [Header("Don't touch")]
     [SerializeField]
     GameObject m_emptyPrefab;
     [SerializeField]
-    AudioMixer m_masterMixer;
+    AudioMixerGroup[] m_mixerGroups;
     [Header("Settings")]
     [SerializeField]
     [Range(0.0f, 1.0f)]
@@ -21,7 +34,7 @@ public class AudioPool : MonoBehaviour
 
     public static AudioPool Instance { get; set; }
     GameObjectPool m_AudioSources;
-    AudioClipSettings defaultSettings;
+    public static AudioClipSettings DefaultSettings;
 
     // Use this for initialization
     void Awake()
@@ -29,39 +42,33 @@ public class AudioPool : MonoBehaviour
         Assert.IsNull(Instance, "More than 1 instance of AudioPool detected. ONLY HAVE 1 IN THE SCENE PLZ");
         Instance = this;
 
-        defaultSettings = new AudioClipSettings();
+        DefaultSettings = new AudioClipSettings();
         // Set up the object pool of audio sources
         m_AudioSources = new GameObjectPool(1, m_emptyPrefab, this.gameObject);
     }
     
     IEnumerator<float> StoreClip(CustomBehaviour cb)
     {
-        /*
-        float overlapDelay = cb.GetAudioSource.clip.length * m_overlapThreshold;
-
-        yield return Timing.WaitForSeconds(overlapDelay);
-        clip.Running = false;*/
-
         while (cb.GetAudioSource.isPlaying)
         {
             yield return 0f;
         }
         cb.SelfStore();
     }
+
+    /// <summary>
+    /// Returns the Mixer Group linked with the enum entry provided
+    /// </summary>
+    public AudioMixerGroup GetMixerGroup(MixerGroup mg)
+    {
+        return m_mixerGroups[(int)mg];
+    }
     #endregion
 
     /// <summary>
-    /// Plays the given audio clip in the position given
+    /// Plays the given audio clip with a random pitch and volume as defined in the settings given.
     /// </summary>
-    public void Play(AudioClip newClip, Vector3 pos)
-    {
-        PlayRandom(newClip, pos, defaultSettings);
-    }
-
-    /// <summary>
-    /// Plays the given audio clip with a random pitch and volume as defined in the settings given
-    /// </summary>
-    public void PlayRandom(AudioClip newClip, Vector3 pos, AudioClipSettings settings)
+    public void PlayRandom(AudioClip clip, Vector3 pos, AudioClipSettings settings)
     {
         var newSound = m_AudioSources.New(pos);
         var cb = newSound.GetComponent<CustomBehaviour>();
@@ -70,12 +77,31 @@ public class AudioPool : MonoBehaviour
         float randomVol = UnityEngine.Random.Range(settings.MinVolume, settings.MaxVolume);
 
         newSound.transform.position = pos;
-        audSrc.clip = newClip;
+        audSrc.clip = clip;
         audSrc.pitch = randomPitch;
         audSrc.volume = randomVol;
+        // If settings doesnt have a mixer assigned then use the Master Mixer
+        //audSrc.outputAudioMixerGroup = settings.MixerGroup == null ? m_mixerGroups[0] : settings.MixerGroup;
+        audSrc.outputAudioMixerGroup = settings.MixerGroup;
 
         newSound.SetActive(true);
         Timing.RunCoroutine(StoreClip(cb), Segment.SlowUpdate);
+    }
+
+    /// <summary>
+    /// Plays the given audio clip in the position given.
+    /// </summary>
+    public void Play(AudioClip newClip, Vector3 pos)
+    {
+        PlayRandom(newClip, pos, DefaultSettings);
+    }
+
+    /// <summary>
+    /// Plays a random clip from the given clips. With a random pitch and volume as defined in the settings given.
+    /// </summary>
+    public void PlayRandom(AudioClip[] clips, Vector3 pos, AudioClipSettings settings)
+    {
+        PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
     }
 }
 
@@ -83,7 +109,7 @@ public class AudioPool : MonoBehaviour
 public class AudioClipSettings
 {
     [SerializeField]
-    AudioMixer MixerGroup { get; set; }
+    AudioPool.MixerGroup m_mixerGroup;
     [SerializeField]
     [Range(-3.0f, 3.0f)]
     float m_minPitch = 1.0f;
@@ -96,7 +122,6 @@ public class AudioClipSettings
     [SerializeField]
     [Range(0.0f, 1.0f)]
     float m_maxVolume = 1.0f;
-
     
     public float MinPitch
     {
@@ -131,6 +156,14 @@ public class AudioClipSettings
         set
         {
             m_maxVolume = Mathf.Clamp(value, 0.0f, 1.0f);
+        }
+    }
+
+    public AudioMixerGroup MixerGroup
+    {
+        get
+        {
+            return AudioPool.Instance.GetMixerGroup(m_mixerGroup);
         }
     }
 }

@@ -9,21 +9,21 @@ public class AudioPoolEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        /*
+        
         string helpBox = "";
         string clipString = "";
 
-        for (int i = 0; i < Helper.CountEnum(typeof(AudioPool.Bank)); i++)
+        for (int i = 0; i < Helper.CountEnum(typeof(AudioPool.MixerGroup)); i++)
         {
-            clipString = clipString + "\n" + i + ". " + Enum.GetName(typeof(AudioPool.Bank), i);
+            clipString = clipString + "\n" + i + ". " + Enum.GetName(typeof(AudioPool.MixerGroup), i);
         }
 
-        helpBox = string.Format("   Bank ({0}) \n{1}",
-            Helper.CountEnum(typeof(AudioPool.Bank)),
+        helpBox = string.Format("   MixerGroup ({0}) \n{1}",
+            Helper.CountEnum(typeof(AudioPool.MixerGroup)),
             clipString);
 
         EditorGUILayout.HelpBox(helpBox, MessageType.None, false);
-        */
+        
         DrawDefaultInspector();        
     }
 }

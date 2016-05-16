@@ -35,7 +35,7 @@ public class BasePickUp : CustomBehaviour
     [SerializeField]
     PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
     [SerializeField]
-    AudioClip m_touchedSFX;
+    AudioClip[] m_touchedSFX;
     [SerializeField]
     AudioClipSettings m_SFXSettings;
     #endregion
