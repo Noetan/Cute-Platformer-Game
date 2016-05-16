@@ -29,7 +29,8 @@ public class PooledDB : MonoBehaviour
         None,
         Drop,
         Health,
-        DropsSpawner
+        DropsSpawner,
+        DropMass
     }
 
     // NO NEED TO TOUCH ANYTHING DOWN HERE ANYMORE
@@ -53,7 +54,7 @@ public class PooledDB : MonoBehaviour
         Instance = this;
 
         Assert.AreEqual(m_ParticlePrefabs.Length, Helper.CountEnum(typeof(Particle)));
-        Assert.AreEqual(m_ParticlePrefabs.Length, Helper.CountEnum(typeof(PickUp)));
+        Assert.AreEqual(m_PickUpsPrefabs.Length, Helper.CountEnum(typeof(PickUp)));
 
         // Set up the object pools for each entry
         for (int i = 0; i < Helper.CountEnum(typeof(Particle)); i++)

@@ -33,11 +33,11 @@ public class BasePickUp : CustomBehaviour
 
     [Header("Effects")]
     [SerializeField]
-    PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
+    protected PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
     [SerializeField]
-    AudioClip[] m_touchedSFX;
+    protected AudioClip[] m_touchedSFX;
     [SerializeField]
-    AudioClipSettings m_SFXSettings;
+    protected AudioClipSettings m_SFXSettings;
     #endregion
 
     public enum State
@@ -46,7 +46,7 @@ public class BasePickUp : CustomBehaviour
         Active,
         Disabled
     }
-    public State CurrentState { get; private set; }
+    public State CurrentState { get; protected set; }
 
     float m_rotateSpeed = 0.0f;
     float m_bobSpeed = 0.0f;
@@ -96,17 +96,14 @@ public class BasePickUp : CustomBehaviour
             PickUp();
         }
     }
-    static float diff = -12.0f;
+    
     protected virtual void PickUp()
     {
         // Disable the item
         CurrentState = State.Disabled;
         ShowModel(false);
-
-        //AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
-        Debug.Log(diff);
-        AudioPool.Instance.PlayPitchShift(m_touchedSFX, transform.position, m_SFXSettings, diff++);
-        //diff++;
+       
+        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
 
         // Spawn the touched particle effect where the pickup is
         // Only if one exists

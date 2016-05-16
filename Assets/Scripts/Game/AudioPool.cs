@@ -150,10 +150,11 @@ public class AudioPool : MonoBehaviour
     /// This clip will then be pitch shifted using the mixergroup by the semitone difference given
     /// Note, make sure your mixergroup has a pitch shifter effect applied
     /// </summary>
-    public AudioSource PlayPitchShift(AudioClip clip, Vector3 pos, AudioClipSettings settings, float semitoneDiff)
+    public AudioSource PlayPitchShift(AudioClip clip, Vector3 pos, AudioClipSettings settings
+        , float semitoneDiff, string pitchShifter)
     {
         float newPitch = 1 * Mathf.Pow(SEMITONE_BASE, semitoneDiff);
-        settings.MixerGroup.audioMixer.SetFloat("CollectiblesPitchShift", newPitch);
+        settings.MixerGroup.audioMixer.SetFloat(pitchShifter, newPitch);
         /*
         float test = 0.0f;
         settings.MixerGroup.audioMixer.GetFloat("CollectiblesPitchShift", out test);
@@ -162,9 +163,10 @@ public class AudioPool : MonoBehaviour
         return PlayRandom(clip, pos, settings);
     }
 
-    public AudioSource PlayPitchShift(AudioClip[] clips, Vector3 pos, AudioClipSettings settings, float semitoneDiff)
+    public AudioSource PlayPitchShift(AudioClip[] clips, Vector3 pos, AudioClipSettings settings
+        , float semitoneDiff, string pitchShifter)
     {
-        return PlayPitchShift(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings, semitoneDiff);
+        return PlayPitchShift(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings, semitoneDiff, pitchShifter);
     }
 }
 
