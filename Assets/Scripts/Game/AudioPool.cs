@@ -26,15 +26,24 @@ public class AudioPool : MonoBehaviour
     [SerializeField]
     GameObject m_emptyPrefab;
     [SerializeField]
+    [Tooltip("Match these with the MixerGroup enum")]
     AudioMixerGroup[] m_mixerGroups;
     [Header("Settings")]
+    // How much time must pass before a single instance audioclip can play again
+    // Note this ends when the clip stops playing regardless of how high you set this
     [SerializeField]
     [Range(0.0f, 1.0f)]
-    float m_overlapThreshold = 0.8f;
+    float m_overlapThreshold = 0.1f;
 
+    // A reference to this object
     public static AudioPool Instance { get; set; }
+    // The pool which holds all one shot audiosources in the game
     GameObjectPool m_AudioSources;
+    // Audio settings set to default values, free to use throughout the codebase
     public static AudioClipSettings DefaultSettings;
+    // A list of singleinstance audio clips that are currently playing
+    List<AudioSource> m_activeClips = new List<AudioSource>();
+    // 
 
     // Use this for initialization
     void Awake()
@@ -68,9 +77,34 @@ public class AudioPool : MonoBehaviour
     /// <summary>
     /// Plays the given audio clip with a random pitch and volume as defined in the settings given.
     /// </summary>
-    public void PlayRandom(AudioClip clip, Vector3 pos, AudioClipSettings settings)
+    public AudioSource PlayRandom(AudioClip clip, Vector3 pos, AudioClipSettings settings)
     {
-        var newSound = m_AudioSources.New(pos);
+        if (settings.SingleInstance && m_activeClips.Count > 0)
+        {
+            // Search the list for the matching audio clip
+            for (int i = 0; i < m_activeClips.Count; i++)
+            {
+                if (m_activeClips[i].clip.GetInstanceID() == clip.GetInstanceID())
+                {
+                    // Found and overlap period not over yet
+                    // End the function and skip the audio clip
+                    if (m_activeClips[i].time < m_overlapThreshold && m_activeClips[i].isPlaying)
+                    {
+                        Debug.Log(m_activeClips[i].time);
+                        return null;
+                    }
+                    // Found and overlap is over
+                    else
+                    {
+                        Debug.Log("removed time: " + m_activeClips[i].time);
+                        m_activeClips.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        GameObject newSound = m_AudioSources.New(pos);
         var cb = newSound.GetComponent<CustomBehaviour>();
         var audSrc = cb.GetAudioSource;
         float randomPitch = UnityEngine.Random.Range(settings.MinPitch, settings.MaxPitch);
@@ -80,28 +114,33 @@ public class AudioPool : MonoBehaviour
         audSrc.clip = clip;
         audSrc.pitch = randomPitch;
         audSrc.volume = randomVol;
-        // If settings doesnt have a mixer assigned then use the Master Mixer
-        //audSrc.outputAudioMixerGroup = settings.MixerGroup == null ? m_mixerGroups[0] : settings.MixerGroup;
         audSrc.outputAudioMixerGroup = settings.MixerGroup;
+
+        if (settings.SingleInstance)
+        {
+            m_activeClips.Add(audSrc);
+        }
 
         newSound.SetActive(true);
         Timing.RunCoroutine(StoreClip(cb), Segment.SlowUpdate);
+
+        return audSrc;       
     }
 
     /// <summary>
     /// Plays the given audio clip in the position given.
     /// </summary>
-    public void Play(AudioClip newClip, Vector3 pos)
+    public AudioSource Play(AudioClip newClip, Vector3 pos)
     {
-        PlayRandom(newClip, pos, DefaultSettings);
+        return PlayRandom(newClip, pos, DefaultSettings);
     }
 
     /// <summary>
     /// Plays a random clip from the given clips. With a random pitch and volume as defined in the settings given.
     /// </summary>
-    public void PlayRandom(AudioClip[] clips, Vector3 pos, AudioClipSettings settings)
+    public AudioSource PlayRandom(AudioClip[] clips, Vector3 pos, AudioClipSettings settings)
     {
-        PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
+        return PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
     }
 }
 
@@ -110,6 +149,7 @@ public class AudioClipSettings
 {
     [SerializeField]
     AudioPool.MixerGroup m_mixerGroup;
+    [Header("Randomization")]
     [SerializeField]
     [Range(-3.0f, 3.0f)]
     float m_minPitch = 1.0f;
@@ -122,7 +162,14 @@ public class AudioClipSettings
     [SerializeField]
     [Range(0.0f, 1.0f)]
     float m_maxVolume = 1.0f;
-    
+    [SerializeField]
+    public bool SingleInstance = false;
+    [Header("Pitch Cycle")]
+    [SerializeField]
+    float m_pitchCycleStep = 0.1f;
+    [SerializeField]
+    float m_pitchCycleCap = 1.5f;
+
     public float MinPitch
     {
         get { return m_minPitch; }
@@ -146,7 +193,7 @@ public class AudioClipSettings
         get { return m_minVolume; }
         set
         {
-            m_minVolume = Mathf.Clamp(value, 0.0f, 10.0f);
+            m_minVolume = Mathf.Clamp(value, 0.0f, 1.0f);
         }
     }
     
