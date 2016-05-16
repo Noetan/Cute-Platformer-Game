@@ -8,6 +8,7 @@ using UnityEngine.Audio;
 
 public class AudioPool : MonoBehaviour
 {
+    // Even if these go unused best to leave them in to avoid breaking any references
     public enum MixerGroup
     {
         Master,
@@ -43,7 +44,8 @@ public class AudioPool : MonoBehaviour
     public static AudioClipSettings DefaultSettings;
     // A list of singleinstance audio clips that are currently playing
     List<AudioSource> m_activeClips = new List<AudioSource>();
-    // 
+    // This constant defines the base part of a semitone
+    public const float SEMITONE_BASE = 1.05946f;
 
     // Use this for initialization
     void Awake()
@@ -90,13 +92,11 @@ public class AudioPool : MonoBehaviour
                     // End the function and skip the audio clip
                     if (m_activeClips[i].time < m_overlapThreshold && m_activeClips[i].isPlaying)
                     {
-                        Debug.Log(m_activeClips[i].time);
                         return null;
                     }
                     // Found and overlap is over
                     else
                     {
-                        Debug.Log("removed time: " + m_activeClips[i].time);
                         m_activeClips.RemoveAt(i);
                         break;
                     }
@@ -104,9 +104,11 @@ public class AudioPool : MonoBehaviour
             }
         }
 
+        // Retrieve unused audio source from pool
         GameObject newSound = m_AudioSources.New(pos);
         var cb = newSound.GetComponent<CustomBehaviour>();
         var audSrc = cb.GetAudioSource;
+        // Randomization
         float randomPitch = UnityEngine.Random.Range(settings.MinPitch, settings.MaxPitch);
         float randomVol = UnityEngine.Random.Range(settings.MinVolume, settings.MaxVolume);
 
@@ -142,13 +144,39 @@ public class AudioPool : MonoBehaviour
     {
         return PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
     }
+
+    /// <summary>
+    /// Plays the given audioclip at a random setting based on AudioClipSettings
+    /// This clip will then be pitch shifted using the mixergroup by the semitone difference given
+    /// Note, make sure your mixergroup has a pitch shifter effect applied
+    /// </summary>
+    public AudioSource PlayPitchShift(AudioClip clip, Vector3 pos, AudioClipSettings settings, float semitoneDiff)
+    {
+        float newPitch = 1 * Mathf.Pow(SEMITONE_BASE, semitoneDiff);
+        settings.MixerGroup.audioMixer.SetFloat("CollectiblesPitchShift", newPitch);
+        /*
+        float test = 0.0f;
+        settings.MixerGroup.audioMixer.GetFloat("CollectiblesPitchShift", out test);
+        Debug.Log("set to " + test);*/
+
+        return PlayRandom(clip, pos, settings);
+    }
+
+    public AudioSource PlayPitchShift(AudioClip[] clips, Vector3 pos, AudioClipSettings settings, float semitoneDiff)
+    {
+        return PlayPitchShift(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings, semitoneDiff);
+    }
 }
+
+/// 
+/// AudioClipSettings
+/// 
 
 [Serializable]
 public class AudioClipSettings
 {
     [SerializeField]
-    AudioPool.MixerGroup m_mixerGroup;
+    AudioPool.MixerGroup m_mixerGroup = AudioPool.MixerGroup.SFX;
     [Header("Randomization")]
     [SerializeField]
     [Range(-3.0f, 3.0f)]
@@ -164,11 +192,6 @@ public class AudioClipSettings
     float m_maxVolume = 1.0f;
     [SerializeField]
     public bool SingleInstance = false;
-    [Header("Pitch Cycle")]
-    [SerializeField]
-    float m_pitchCycleStep = 0.1f;
-    [SerializeField]
-    float m_pitchCycleCap = 1.5f;
 
     public float MinPitch
     {
@@ -208,10 +231,7 @@ public class AudioClipSettings
 
     public AudioMixerGroup MixerGroup
     {
-        get
-        {
-            return AudioPool.Instance.GetMixerGroup(m_mixerGroup);
-        }
+        get { return AudioPool.Instance.GetMixerGroup(m_mixerGroup); }
     }
 }
 

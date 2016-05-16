@@ -96,14 +96,17 @@ public class BasePickUp : CustomBehaviour
             PickUp();
         }
     }
-
+    static float diff = -12.0f;
     protected virtual void PickUp()
     {
         // Disable the item
         CurrentState = State.Disabled;
         ShowModel(false);
 
-        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
+        //AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
+        Debug.Log(diff);
+        AudioPool.Instance.PlayPitchShift(m_touchedSFX, transform.position, m_SFXSettings, diff++);
+        //diff++;
 
         // Spawn the touched particle effect where the pickup is
         // Only if one exists
