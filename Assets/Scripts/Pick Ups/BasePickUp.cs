@@ -102,15 +102,10 @@ public class BasePickUp : CustomBehaviour
         // Disable the item
         CurrentState = State.Disabled;
         ShowModel(false);
-       
-        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
 
-        // Spawn the touched particle effect where the pickup is
-        // Only if one exists
-        if (m_touchedParticle != PooledDB.Particle.None)
-        {
-            PooledDB.Instance.Spawn(m_touchedParticle, transform.position, true);
-        }
+        PlaySFX();
+
+        PlayParticleFX();
 
         // Self store this pickup if it applies
         SelfStore();
@@ -135,6 +130,22 @@ public class BasePickUp : CustomBehaviour
 
         base.Update();
     }
+
+    protected virtual void PlaySFX()
+    {
+        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
+    }
+
+    protected virtual void PlayParticleFX()
+    {
+        // Spawn the touched particle effect where the pickup is
+        // Only if one exists
+        if (m_touchedParticle != PooledDB.Particle.None)
+        {
+            PooledDB.Instance.Spawn(m_touchedParticle, transform.position, true);
+        }
+    }
+
 
     // Allows item to follow player if being attracted
     public void Activate()

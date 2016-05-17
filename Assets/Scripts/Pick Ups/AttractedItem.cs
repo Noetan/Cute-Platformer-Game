@@ -52,7 +52,7 @@ public class AttractedItem : MonoBehaviour
     GameObject m_goal = null;
     // The item's rigidbody
     Rigidbody m_rigidbody = null;
-    //bool m_defaultGravity = false;
+    bool m_defaultGravity = false;
     // The item's colldiers
     //List<Collider> m_itemColliders = new List<Collider>();
     // The item's script    
@@ -64,6 +64,8 @@ public class AttractedItem : MonoBehaviour
         m_item = GetComponent<BasePickUp>();
         Assert.IsNotNull(m_rigidbody);
         Assert.IsNotNull(m_item);
+
+        m_defaultGravity = m_rigidbody.useGravity;
 
         /*
         // Get all the colliders of our pick up item
@@ -84,14 +86,19 @@ public class AttractedItem : MonoBehaviour
     {
         m_goal = PlayerController.Player;
         Assert.IsNotNull(m_goal);
-
-        //m_defaultGravity = m_rigidbody.useGravity;
-        //m_rigidbody.isKinematic = false;
     }
 
     void OnEnable()
     {
         m_currentState = State.idle;
+        m_rigidbody.useGravity = m_defaultGravity;
+
+        /*
+        for (int i = 0; i < m_itemColliders.Count; i++)
+        {
+            m_itemColliders[i].enabled = true;
+            Debug.Log("enabling " + m_itemColliders[i]);
+        }*/
     }
 
     void FixedUpdate()
@@ -157,16 +164,6 @@ public class AttractedItem : MonoBehaviour
         }
     }
 
-    public void Reset()
-    {  
-        /*
-        for (int i = 0; i < m_itemColliders.Count; i++)
-        {
-            m_itemColliders[i].enabled = true;
-            Debug.Log("enabling " + m_itemColliders[i]);
-        }*/
-    }
-
     // Bounces the item up before starting to attract
     IEnumerator<float> _Hop()
     {
@@ -206,8 +203,16 @@ public class AttractedItem : MonoBehaviour
             m_itemColliders[i].enabled = false;
             //Debug.Log("disabling " + m_itemColliders[i]);
         }*/
-        m_rigidbody.useGravity = false;
-        m_currentState = State.active;
+
+        if (m_item != null)
+        {
+            m_rigidbody.useGravity = false;
+            m_currentState = State.active;
+        }
+        else
+        {
+            m_currentState = State.finished;
+        }
     }
 
     // Start the attraction process

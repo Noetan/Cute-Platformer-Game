@@ -7,7 +7,12 @@ using UnityEngine.Assertions;
 public class Konpeito : BasePickUp
 {
     #region Inspector
-    [Header("Konpeito Graphics")]
+    [Header("Konpeito settings")]
+    // Whether this drop is added individually or as a mass spawned event
+    // Affects how the audio is played
+    [SerializeField]
+    bool m_massSpawned = false;
+    // The available colour materials to cycle through on spawn
     [SerializeField]
     Material[] m_colorSet;
 
@@ -15,14 +20,28 @@ public class Konpeito : BasePickUp
     // Possible values for the konpeito to be worth
     [SerializeField]
     int[] m_values = { 1, 2, 5, 10, 15, 20 };
+    // The default pitch shift
     [SerializeField]
-    bool m_massSpawned = false;
+    [Range(-12, 12)]
+    int m_defaultPitch = 0;
+    // The limit of the pitch shift
+    [SerializeField]
+    [Range(-12, 12)]
+    int m_endPitch = 2;
+    // How long before the pitch shift resets to normal
+    [SerializeField]
+    float m_pitchResetDelay = 5.0f;
+    [SerializeField]
+    float m_pitchStep = 0.5f;
     #endregion
     
     // Used to cycle through the available colours
     static int m_currentColor = 0;
     // cache propety id of konpeito's material's shader's color
     int m_trailShaderColorID = -1;
+    // Used to cycle through the pick up sounds
+    static float m_pitchDiff = 0;
+    static float m_pitchStartTime = 0.0f;
 
     protected override void Awake()
     {
@@ -34,8 +53,22 @@ public class Konpeito : BasePickUp
 
         m_trailShaderColorID = Shader.PropertyToID("_TintColor");         
         CycleColor();
+
+        m_pitchDiff = m_defaultPitch;
     }
-    static float diff = -12.0f;
+
+    
+
+    protected override void Update()
+    {
+        if (Time.time - m_pitchResetDelay > m_pitchStartTime)
+        {
+            m_pitchDiff = m_defaultPitch;
+        }
+
+        base.Update();
+    }
+
     protected override void PickUp()
     {
         // Increase the player's moneys
@@ -49,29 +82,28 @@ public class Konpeito : BasePickUp
             Debug.LogWarning("konpeito values is not set and empty");
         }
 
-        // Disable the item
-        CurrentState = State.Disabled;
-        ShowModel(false);
-        
-        Debug.Log(diff);
+        base.PickUp();
+    }
+
+    protected override void PlaySFX()
+    {
         if (m_massSpawned)
         {
             AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
         }
         else
         {
-            AudioPool.Instance.PlayPitchShift(m_touchedSFX, transform.position, m_SFXSettings, diff++, "CollectiblesPitchShift");
-        }
+            AudioSource test = AudioPool.Instance.PlayPitchShift(m_touchedSFX, transform.position, m_SFXSettings
+                , m_pitchDiff, "CollectiblesPitchShift");
 
-        // Spawn the touched particle effect where the pickup is
-        // Only if one exists
-        if (m_touchedParticle != PooledDB.Particle.None)
-        {
-            PooledDB.Instance.Spawn(m_touchedParticle, transform.position, true);
+            // Only shift the pitch if the audio was successfully played
+            if (test != null)
+            {
+                m_pitchDiff = (m_pitchDiff + m_pitchStep);
+                m_pitchDiff = Mathf.Clamp(m_pitchDiff, m_defaultPitch, m_endPitch);
+                m_pitchStartTime = Time.time;
+            }
         }
-
-        // Self store this pickup if it applies
-        SelfStore();        
     }
 
     // Pick a random color from the ColorSet and assign it

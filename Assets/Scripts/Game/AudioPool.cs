@@ -57,7 +57,7 @@ public class AudioPool : MonoBehaviour
         // Set up the object pool of audio sources
         m_AudioSources = new GameObjectPool(1, m_emptyPrefab, this.gameObject);
     }
-    
+
     IEnumerator<float> StoreClip(CustomBehaviour cb)
     {
         while (cb.GetAudioSource.isPlaying)
@@ -126,7 +126,7 @@ public class AudioPool : MonoBehaviour
         newSound.SetActive(true);
         Timing.RunCoroutine(StoreClip(cb), Segment.SlowUpdate);
 
-        return audSrc;       
+        return audSrc;
     }
 
     /// <summary>
@@ -142,7 +142,15 @@ public class AudioPool : MonoBehaviour
     /// </summary>
     public AudioSource PlayRandom(AudioClip[] clips, Vector3 pos, AudioClipSettings settings)
     {
-        return PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
+        if (clips.Length > 0)
+        {
+            return PlayRandom(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings);
+        }
+        else
+        {
+            Debug.LogWarning("Empty clips array passed into PlayRandom");
+            return null;
+        }
     }
 
     /// <summary>
@@ -166,7 +174,16 @@ public class AudioPool : MonoBehaviour
     public AudioSource PlayPitchShift(AudioClip[] clips, Vector3 pos, AudioClipSettings settings
         , float semitoneDiff, string pitchShifter)
     {
-        return PlayPitchShift(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings, semitoneDiff, pitchShifter);
+        if (clips.Length > 0)
+        {
+            return PlayPitchShift(clips[UnityEngine.Random.Range(0, clips.Length)], pos, settings, semitoneDiff, pitchShifter);
+        }
+        else
+        {
+            Debug.LogWarning("Empty clips array passed into PlayPitchShift");
+            return null;
+        }
+        
     }
 }
 
@@ -203,7 +220,7 @@ public class AudioClipSettings
             m_minPitch = Mathf.Clamp(value, -3.0f, 3.0f);
         }
     }
-    
+
     public float MaxPitch
     {
         get { return m_maxPitch; }
@@ -212,7 +229,7 @@ public class AudioClipSettings
             m_maxPitch = Mathf.Clamp(value, -3.0f, 3.0f);
         }
     }
-    
+
     public float MinVolume
     {
         get { return m_minVolume; }
@@ -221,7 +238,7 @@ public class AudioClipSettings
             m_minVolume = Mathf.Clamp(value, 0.0f, 1.0f);
         }
     }
-    
+
     public float MaxVolume
     {
         get { return m_maxVolume; }
