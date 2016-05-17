@@ -271,6 +271,18 @@ public class PlayerMove : MonoBehaviour
 					{
 						movingObjSpeed = Vector3.zero;
 					}
+
+                    // If the player Triggers world events or objects (button pushing, floor buttons, reactions to player etc)
+                    if (hit.transform.tag == "Triggerable")
+                    {
+                        TriggerableObject triggerable = hit.transform.GetComponent<TriggerableObject>();
+
+                        if (triggerable != null)
+                        {
+                            triggerable.StandingOn(transform.position);
+                        }
+                    }
+
 					//yes our feet are on something
 					return true;
 				}

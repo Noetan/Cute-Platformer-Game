@@ -64,4 +64,40 @@ public static class Helper
 
         return System.Enum.GetValues(type).Length;
     }
+
+    public static Vector3 ClampAngleOnPlane(Vector3 origin, Vector3 direction, float angle, Vector3 planeNormal)
+    {
+        float a = Vector3.Angle(origin, direction);
+
+        if (a < angle)
+            return direction;
+
+        Vector3 r = Vector3.Cross(planeNormal, origin);
+
+        float s = Vector3.Angle(r, direction);
+        float rotationAngle = (s < 90 ? 1 : -1) * angle;
+        Quaternion rotation = Quaternion.AngleAxis(rotationAngle, planeNormal);
+
+        return rotation * origin;
+    }
+
+    public static bool PointAbovePlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point)
+    {
+        Vector3 direction = point - planePoint;
+        return Vector3.Angle(direction, planeNormal) < 90;
+    }
+
+    public static bool Timer(float startTime, float duration)
+    {
+        return Time.time > startTime + duration;
+    }
+
+    public static float ClampAngle(float angle)
+    {
+        if (angle < -360F)
+            angle += 360F;
+        if (angle > 360F)
+            angle -= 360F;
+        return angle;
+    }
 }
