@@ -3,12 +3,20 @@ using System.Collections;
 
 public class TiltingBridge : TriggerableObject {
 
-    public float TiltSpeed = 3.0f;
-    public float TiltAcceleration = 1.0f;
-    public float TiltDecceleration = 2.0f;
-    public float MaxTilt = 45.0f;
-    public float TiltSlowBarrier = 10.0f;
-    public Transform Bridge;
+    #region Inspector
+    [SerializeField]
+    float TiltSpeed = 3.0f;
+    [SerializeField]
+    float TiltAcceleration = 1.0f;
+    [SerializeField]
+    float TiltDecceleration = 2.0f;
+    [SerializeField]
+    float MaxTilt = 45.0f;
+    [SerializeField]
+    float TiltSlowBarrier = 10.0f;
+    [SerializeField]
+    Transform Bridge;
+    #endregion
 
     private Vector3 tiltPlane;
 
