@@ -1,7 +1,7 @@
 ﻿// Standalone helper functions that can be called from anywhere
 
 using UnityEngine;
-//using System.Collections.Generic;
+
 public static class Helper
 {
     /// <summary>
@@ -10,8 +10,14 @@ public static class Helper
     /// </summary>
     public static System.Collections.Generic.List<int> SeparateDigits(int number)
     {
+        if (number <= 0 )
+        {
+            Debug.LogError("Helper.SeparateDigits not giving a postive number");
+            return null;
+        }
+
         var digitsList = new System.Collections.Generic.List<int>();
-        
+
         while (number > 0)
         {
             digitsList.Add(number % 10);
@@ -29,7 +35,7 @@ public static class Helper
     {
         return Random.value < .5 ? 1.0f : -1.0f;
     }
- 
+
     /// <summary>
     /// Returns whether the number is positive or negative
     /// </summary>
@@ -38,7 +44,7 @@ public static class Helper
     {
         return number >= 0 ? 1 : -1;
     }
-    
+
     /// <summary>
     /// Returns a random point on a sphere within the defined range given
     /// </summary>
@@ -57,12 +63,33 @@ public static class Helper
         return targetDirection * v;
     }
 
+    /// <summary>
+    /// Counts the number of entries in an enum
+    /// </summary>
     public static int CountEnum(System.Type type)
     {
         if (!type.IsEnum)
-            Debug.LogWarning("HELPER: COUNTENUM NOT GIVEN AN ENUM");
+            Debug.LogError("HELPER: COUNTENUM NOT GIVEN AN ENUM");
 
         return System.Enum.GetValues(type).Length;
+    }
+
+    /// <summary>
+    /// Adjusts a linear intepolation to match an ease in and ease out curve. Wikipedia smoothstep for image.
+    /// </summary>
+    /// <param name="percentage">Between 0.0 and 1.0</param>
+    public static float SmoothStep(float percentage)
+    {
+        return percentage * percentage * (3f - 2f * percentage);
+    }
+
+    /// <summary>
+    /// Adjusts a linear intepolation to match an ease in and ease out curve. Wikipedia smoothstep for image.
+    /// </summary>
+    /// <param name="percentage">Between 0.0 and 1.0</param>
+    public static float SmootherStep(float percentage)
+    {
+        return percentage*percentage*percentage * (percentage * (6f * percentage - 15f) + 10f);
     }
 
     public static Vector3 ClampAngleOnPlane(Vector3 origin, Vector3 direction, float angle, Vector3 planeNormal)
