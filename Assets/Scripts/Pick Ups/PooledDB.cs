@@ -22,7 +22,8 @@ public class PooledDB : MonoBehaviour
         None,
         DropsTouchShatter,
         PlayerJumpGround,
-        PlayerJumpAir
+        PlayerJumpAir,
+        DropsSpawnShine
     }
     public enum PickUp
     {
@@ -46,7 +47,7 @@ public class PooledDB : MonoBehaviour
 
     GameObjectPool[] m_Particles = new GameObjectPool[Enum.GetValues(typeof(Particle)).Length];
     GameObjectPool[] m_PickUps = new GameObjectPool[Enum.GetValues(typeof(PickUp)).Length];
-    #endregion
+
 
     void Awake()
     {
@@ -66,7 +67,7 @@ public class PooledDB : MonoBehaviour
             m_PickUps[i] = new GameObjectPool(0, m_PickUpsPrefabs[i], this.gameObject);
         }
     }
-
+    #endregion
 
     // Spawn methods    
     public GameObject Spawn(Particle type, Vector3 pos, bool active)

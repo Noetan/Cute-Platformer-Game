@@ -127,4 +127,22 @@ public static class Helper
             angle -= 360F;
         return angle;
     }
+
+    [System.Serializable]
+    public struct RangeFloat
+    {
+        [SerializeField]
+        public float Min;
+        [SerializeField]
+        public float Max;
+    }
+
+    [System.Serializable]
+    public struct RangeInt
+    {
+        [SerializeField]
+        public int Min;
+        [SerializeField]
+        public int Max;
+    }
 }

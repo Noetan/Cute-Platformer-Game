@@ -31,6 +31,8 @@ public class AttractedItem : MonoBehaviour
     // How long after it explodes before the item start attracting
     [SerializeField]
     float m_explodeDelay = 0.75f;
+    [SerializeField]
+    AudioClip m_SFX;
     #endregion
 
     enum State
@@ -226,6 +228,11 @@ public class AttractedItem : MonoBehaviour
 
         // Disables the item's animations (which prevent movement)
         m_item.Activate();
+
+        if (m_SFX != null)
+        {
+            AudioPool.Instance.Play(m_SFX, transform.position);
+        }
 
         if (attractMode == AttractMode.pickedup)
         {

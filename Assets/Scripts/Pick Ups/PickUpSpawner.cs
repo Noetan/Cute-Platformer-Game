@@ -19,16 +19,22 @@ public class PickUpSpawner : CustomBehaviour
 
     [Header("Spawn properties")]
     [SerializeField]
-    float m_emitSpeed = 150f;
+    Helper.RangeFloat m_emitSpeed;
     [SerializeField]
     float m_emitAngle = 75f;
     [SerializeField]
-    int m_emitAmountMin = 50;
+    Helper.RangeInt m_emitAmount;
     [SerializeField]
-    int m_emitAmountMax = 50;
-
+    [Tooltip("Measured in frames between each spawn")]
+    int m_spawnSpeed = 5;
     [SerializeField]
     bool m_spawnOnEnable = true;
+
+    [Header("Spawn Effects")]
+    [SerializeField]
+    AudioClip m_sfx;
+    [SerializeField]
+    PooledDB.Particle m_particleEffect;
     #endregion
 
     // Prevent the spawner getting triggered multiple times
@@ -65,7 +71,11 @@ public class PickUpSpawner : CustomBehaviour
         var directionUp = Quaternion.LookRotation(transform.up, -transform.forward);
 
         // Get random amount
-        int amount = Random.Range(m_emitAmountMin, m_emitAmountMax);
+        int amount = Random.Range(m_emitAmount.Min, m_emitAmount.Max);
+
+        // Play spawning effects
+        SFX();
+        ParticleFX();
 
         for (int i = 0; i < amount; i++)
         {
@@ -83,15 +93,36 @@ public class PickUpSpawner : CustomBehaviour
             Debug.DrawLine(transform.position, transform.position + (newPoint * 5), Color.red, 60);
 
             // Wait for the pickup to initialize Start()
-            yield return 0f;
+            for (int j = 0; j < m_spawnSpeed; j++)
+            {
+                yield return 0f;
+            }
 
             var goScript = GO.GetComponent<AttractedItem>();
 
-            goScript.AddForce(newPoint * m_emitSpeed);
+            goScript.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max));
             goScript.StartAttract(AttractedItem.AttractMode.explode);
         }
-
+        
         // Store spawner back into pool
         SelfStore();
     }
+
+    protected virtual void SFX()
+    {
+        if (m_sfx != null)
+        {
+            AudioPool.Instance.Play(m_sfx, transform.position);
+        }
+    }
+
+    protected virtual void ParticleFX()
+    {
+        if (m_particleEffect != PooledDB.Particle.None)
+        {
+            PooledDB.Instance.Spawn(m_particleEffect, transform.position, true);
+        }
+
+    }
+
 }
