@@ -40,7 +40,7 @@ public class PickUpSpawner : CustomBehaviour
     // Prevent the spawner getting triggered multiple times
     bool finished = false;
 
-    protected override void OnEnable()
+    void OnEnable()
     {
         // Prevent this being called when the gameobject is first created
         // As this is called even if the GO is immeditately set inactive
@@ -49,7 +49,6 @@ public class PickUpSpawner : CustomBehaviour
 
         if (m_spawnOnEnable)
         {
-            base.OnEnable();
             Timing.RunCoroutine(_Spawn(m_itemType));
         }
 

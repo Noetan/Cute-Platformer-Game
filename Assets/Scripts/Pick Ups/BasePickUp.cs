@@ -65,7 +65,7 @@ public class BasePickUp : CustomBehaviour
         Assert.IsNotNull(m_light);
     }
 
-    protected override void OnEnable () 
+    void OnEnable () 
 	{
         /// Note this gets called multiple times at the start of the level for some reason ///
         /// Keep that in mind when doing things here, nothing that must only be called once ///
@@ -111,7 +111,7 @@ public class BasePickUp : CustomBehaviour
         SelfStore();
     }
 
-    protected override void FixedUpdate()
+    void FixedUpdate()
     {
         switch(CurrentState)
         {
@@ -127,8 +127,6 @@ public class BasePickUp : CustomBehaviour
                 }
                 break;
         }
-
-        base.Update();
     }
 
     protected virtual void PlaySFX()
@@ -151,5 +149,27 @@ public class BasePickUp : CustomBehaviour
     public void Activate()
     {
         CurrentState = State.Active;
+    }
+
+    void ShowModel(bool enable)
+    {
+        m_meshRend.enabled = enable;
+
+        if (m_light != null)
+        {
+            m_light.enabled = enable;
+        }
+
+        if (m_particleSystem != null)
+        {
+            if (enable)
+            {
+                m_particleSystem.Play();
+            }
+            else
+            {
+                m_particleSystem.Stop();
+            }
+        }
     }
 }

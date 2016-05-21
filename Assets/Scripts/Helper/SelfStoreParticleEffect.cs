@@ -13,11 +13,9 @@ public class SelfStoreParticleEffect : CustomBehaviour
 {
     protected override void Awake()
     {
-        m_particleSystem = GetComponent<ParticleSystem>();
-
-        Assert.IsNotNull(m_particleSystem);
-
         base.Awake();
+
+        Assert.IsNotNull(m_particleSystem);    
     }
 
     protected override void Start()
@@ -27,7 +25,7 @@ public class SelfStoreParticleEffect : CustomBehaviour
         base.Start();
     }
 
-    protected override void OnEnable()
+    void OnEnable()
     {
         Timing.RunCoroutine(_CheckIfAlive(), Segment.SlowUpdate);        
     }

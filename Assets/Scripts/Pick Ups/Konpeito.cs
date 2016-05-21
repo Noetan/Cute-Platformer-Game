@@ -55,18 +55,14 @@ public class Konpeito : BasePickUp
         CycleColor();
 
         m_pitchDiff = m_defaultPitch;
-    }
+    }    
 
-    
-
-    protected override void Update()
+    void Update()
     {
         if (Time.time - m_pitchResetDelay > m_pitchStartTime)
         {
             m_pitchDiff = m_defaultPitch;
         }
-
-        base.Update();
     }
 
     protected override void PickUp()
