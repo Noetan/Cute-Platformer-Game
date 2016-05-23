@@ -29,6 +29,7 @@ public class AudioPool : MonoBehaviour
     [SerializeField]
     [Tooltip("Match these with the MixerGroup enum")]
     AudioMixerGroup[] m_mixerGroups;
+
     [Header("Settings")]
     // How much time must pass before a single instance audioclip can play again
     // Note this ends when the clip stops playing regardless of how high you set this
@@ -50,7 +51,7 @@ public class AudioPool : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        Assert.IsNull(Instance, "More than 1 instance of AudioPool detected. ONLY HAVE 1 IN THE SCENE PLZ");
+        Assert.IsNull(Instance, "More than 1 instance of AudioPool detected. ONLY HAVE 1 IN THE SCENE PLZ");        
         Instance = this;
 
         DefaultSettings = new AudioClipSettings();
@@ -148,7 +149,7 @@ public class AudioPool : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Empty clips array passed into PlayRandom");
+            Debug.Log("Empty clips array passed into PlayRandom");
             return null;
         }
     }

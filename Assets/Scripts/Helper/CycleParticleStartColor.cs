@@ -26,7 +26,6 @@ public class CycleParticleStartColor : MonoBehaviour
     void Start()
     {
         Color.RGBToHSV(m_ParticleSys.startColor, out m_startHSV.x, out m_startHSV.y, out m_startHSV.z);
-        Debug.Log("start color: " + m_startHSV);
     }
     
 	void FixedUpdate ()

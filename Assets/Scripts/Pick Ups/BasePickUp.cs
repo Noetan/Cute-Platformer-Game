@@ -1,8 +1,6 @@
 ﻿// Base class for world items that can be "picked up" by touching them with the player
 using UnityEngine;
 using UnityEngine.Assertions;
-using System.Collections.Generic;
-using MovementEffects;
 
 public class BasePickUp : CustomBehaviour
 {
@@ -17,17 +15,13 @@ public class BasePickUp : CustomBehaviour
     [SerializeField]
     bool m_rotate = false;
     [SerializeField]
-    float m_rotateSpeedMin = 50f;
-    [SerializeField]
-    float m_rotateSpeedMax = 100f;
+    Helper.RangeFloat m_rotateSpeedRange;
 
     // Does the item float/bob up and down when active
     [SerializeField]
     bool m_bob = false;
     [SerializeField]
-    float m_bobSpeedMin = 1.0f;
-    [SerializeField]
-    float m_bobSpeedMax = 1.5f;
+    Helper.RangeFloat m_bobSpeedRange;
     [SerializeField]
     float m_bobHeight = 1.0f;
 
@@ -54,8 +48,8 @@ public class BasePickUp : CustomBehaviour
 
     protected override void Awake()
     {
-        m_rotateSpeed = Random.Range(m_rotateSpeedMin, m_rotateSpeedMax);
-        m_bobSpeed = Random.Range(m_bobSpeedMin, m_bobSpeedMax);
+        m_rotateSpeed = Random.Range(m_rotateSpeedRange.Min, m_rotateSpeedRange.Max);
+        m_bobSpeed = Random.Range(m_bobSpeedRange.Min, m_bobSpeedRange.Max);
 
         CurrentState = State.Idle;
 
@@ -84,7 +78,6 @@ public class BasePickUp : CustomBehaviour
         m_defaultPosition = transform.position;
         CurrentState = State.Idle;
         ShowModel(true);
-        //Debug.Log("basepickup start");
 
         base.Start();  
 	} 
@@ -101,7 +94,7 @@ public class BasePickUp : CustomBehaviour
     {
         // Disable the item
         CurrentState = State.Disabled;
-        ShowModel(false);
+        //ShowModel(false);
 
         PlaySFX();
 
@@ -151,6 +144,7 @@ public class BasePickUp : CustomBehaviour
         CurrentState = State.Active;
     }
 
+    // Unused for now, not needed?
     void ShowModel(bool enable)
     {
         m_meshRend.enabled = enable;
