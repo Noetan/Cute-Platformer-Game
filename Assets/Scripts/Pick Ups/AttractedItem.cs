@@ -136,9 +136,8 @@ public class AttractedItem : MonoBehaviour
     {
         if (m_currentState == State.idle)
         {
-            // Check if the player is close enough to trigger the attraction
-            float dist = Vector3.Distance(transform.position, m_goal.transform.position);
-            if (dist > m_attractRadius)
+            // Check if the player is close enough to trigger the attraction            
+            if (Vector3.Distance(transform.position, m_goal.transform.position) > m_attractRadius)
             {
                 return;
             }
@@ -146,7 +145,7 @@ public class AttractedItem : MonoBehaviour
             // Check if there is a wall between the player and the item
             RaycastHit hitInfo;
             if (Physics.Linecast(gameObject.transform.position, m_goal.transform.position
-                , out hitInfo, LayerMask.NameToLayer(""), QueryTriggerInteraction.Ignore))
+                , out hitInfo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 //Debug.DrawLine(gameObject.transform.position, m_goal.transform.position, Color.red, 60);
                 //Debug.Log(string.Format("blocked {0}, {1}", gameObject.transform.position, m_player.transform.position), gameObject);     

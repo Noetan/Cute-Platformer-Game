@@ -149,7 +149,6 @@ public class AudioPool : MonoBehaviour
         }
         else
         {
-            Debug.Log("Empty clips array passed into PlayRandom");
             return null;
         }
     }

@@ -97,10 +97,15 @@ public class PickUpSpawner : CustomBehaviour
                 yield return 0f;
             }
 
-            var goScript = GO.GetComponent<AttractedItem>();
+            var goAtrI = GO.GetComponent<AttractedItem>();
+            var goRB = GO.GetComponent<Rigidbody>();
 
-            goScript.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max));
-            goScript.StartAttract(AttractedItem.AttractMode.explode);
+            goRB.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max), ForceMode.VelocityChange);
+            if (goAtrI != null)
+            {
+                //goAtrI.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max));
+                goAtrI.StartAttract(AttractedItem.AttractMode.explode);
+            }
         }
         
         // Store spawner back into pool
