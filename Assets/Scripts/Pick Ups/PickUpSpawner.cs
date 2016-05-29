@@ -19,16 +19,17 @@ public class PickUpSpawner : CustomBehaviour
 
     [Header("Spawn properties")]
     [SerializeField]
+    [Tooltip("Measured in frames between each spawn")]
+    int m_spawnSpeed = 5;
+    [SerializeField]
+    bool m_spawnOnEnable = true;
+    [Header("Spawn properties - Requires rigidbody")]
+    [SerializeField]
     Helper.RangeFloat m_emitSpeed;
     [SerializeField]
     float m_emitAngle = 75f;
     [SerializeField]
     Helper.RangeInt m_emitAmount;
-    [SerializeField]
-    [Tooltip("Measured in frames between each spawn")]
-    int m_spawnSpeed = 5;
-    [SerializeField]
-    bool m_spawnOnEnable = true;
 
     [Header("Spawn Effects")]
     [SerializeField]
@@ -100,10 +101,12 @@ public class PickUpSpawner : CustomBehaviour
             var goAtrI = GO.GetComponent<AttractedItem>();
             var goRB = GO.GetComponent<Rigidbody>();
 
-            goRB.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max), ForceMode.VelocityChange);
+            if (goRB != null)
+            {
+                goRB.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max), ForceMode.VelocityChange);
+            }
             if (goAtrI != null)
             {
-                //goAtrI.AddForce(newPoint * Random.Range(m_emitSpeed.Min, m_emitSpeed.Max));
                 goAtrI.StartAttract(AttractedItem.AttractMode.explode);
             }
         }
