@@ -6,11 +6,36 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Camera
+    100004: Cube
+    100006: Heart
+    100008: heart
+    100010: Icosphere
+    100012: Lamp
+    100014: Sun
     400000: //RootNode
+    400002: Camera
+    400004: Cube
+    400006: Heart
+    400008: heart
+    400010: Icosphere
+    400012: Lamp
+    400014: Sun
     2300000: //RootNode
+    2300002: Cube
+    2300004: Heart
+    2300006: heart
+    2300008: Icosphere
     3300000: //RootNode
+    3300002: Cube
+    3300004: Heart
+    3300006: heart
+    3300008: Icosphere
     4300000: Cylinder.001
     4300002: Heart
+    4300004: heart
+    4300006: Cube
+    4300008: Icosphere
   materials:
     importMaterials: 1
     materialName: 0
@@ -51,7 +76,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 180
+    normalSmoothAngle: 60
     normalImportMode: 1
     tangentImportMode: 3
   importAnimation: 1
