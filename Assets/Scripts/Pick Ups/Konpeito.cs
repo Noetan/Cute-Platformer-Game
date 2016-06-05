@@ -47,9 +47,7 @@ public class Konpeito : BasePickUp
     {
         base.Awake();
         
-        m_trailRender = GetComponent<TrailRenderer>();
-        
-        Assert.IsNotNull(m_trailRender);
+        Assert.IsNotNull(GetTrailRenderer);
 
         m_trailShaderColorID = Shader.PropertyToID("_TintColor");         
         CycleColor();
@@ -130,11 +128,11 @@ public class Konpeito : BasePickUp
             return;
         }
 
-        m_meshRend.material = m_colorSet[newColor];
+        GetMeshRenderer.material = m_colorSet[newColor];
 
-        m_light.color = m_colorSet[newColor].color;   // Use this with emissive shader
+        GetLight.color = m_colorSet[newColor].color;   // Use this with emissive shader
         //m_light.color = ColorSet[newColor].GetColor("_ReflectionTint");   // Use this is using reflective shader
 
-        m_trailRender.material.SetColor(m_trailShaderColorID, m_colorSet[newColor].color);
+        GetTrailRenderer.material.SetColor(m_trailShaderColorID, m_colorSet[newColor].color);
     }
 }

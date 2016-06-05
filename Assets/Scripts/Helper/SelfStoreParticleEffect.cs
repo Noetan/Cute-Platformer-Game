@@ -11,11 +11,9 @@ using MovementEffects;
 
 public class SelfStoreParticleEffect : CustomBehaviour
 {
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-
-        Assert.IsNotNull(m_particleSystem);    
+        Assert.IsNotNull(GetParticlSys);    
     }
 
     protected override void Start()
@@ -35,7 +33,7 @@ public class SelfStoreParticleEffect : CustomBehaviour
         while (true)
         {
             // When the effect is finished, store it back in the pool
-            if (!m_particleSystem.IsAlive(true))
+            if (!GetParticlSys.IsAlive(true))
             {
                 if (m_parentPool != null)
                 {

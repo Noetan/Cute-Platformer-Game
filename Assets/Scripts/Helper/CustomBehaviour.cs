@@ -10,24 +10,15 @@ public class CustomBehaviour : MonoBehaviour
 {
     protected GameObjectPool m_parentPool;
 
-    protected MeshRenderer m_meshRend = null;
-    protected TrailRenderer m_trailRender = null;
-    protected Light m_light = null;
-    protected ParticleSystem m_particleSystem = null;
-    protected AudioSource m_AudioSource = null;
+    MeshRenderer m_meshRend = null;
+    TrailRenderer m_trailRender = null;
+    Light m_light = null;
+    ParticleSystem m_particleSystem = null;
+    AudioSource m_AudioSource = null;
 
     protected bool m_startDone = false;
 
     #region Unity Functions
-    protected virtual void Awake()
-    {
-        m_meshRend = GetComponent<MeshRenderer>();
-        m_trailRender = GetComponent<TrailRenderer>();
-        m_light = GetComponent<Light>();
-        m_particleSystem = GetComponent<ParticleSystem>();
-        m_AudioSource = GetComponent<AudioSource>();
-    }
-
     protected virtual void Start()
     {
         m_startDone = true;
@@ -61,9 +52,67 @@ public class CustomBehaviour : MonoBehaviour
     {
         get
         {
+            if (m_AudioSource == null)
+            {
+                m_AudioSource = GetComponent<AudioSource>();
+            }
+
             return m_AudioSource;
         }
     }
+
+    protected ParticleSystem GetParticlSys
+    {
+        get
+        {
+            if (m_particleSystem == null)
+            {
+                m_particleSystem = GetComponent<ParticleSystem>();
+            }
+
+            return m_particleSystem;
+        }
+    }
+
+    protected Light GetLight
+    {
+        get
+        {
+            if (m_light == null)
+            {
+                m_light = GetComponent<Light>();
+            }
+
+            return m_light;
+        }
+    }
+
+    protected TrailRenderer GetTrailRenderer
+    {
+        get
+        {
+            if (m_trailRender == null)
+            {
+                m_trailRender = GetComponent<TrailRenderer>();
+            }
+
+            return m_trailRender;
+        }
+    }
+
+    protected MeshRenderer GetMeshRenderer
+    {
+        get
+        {
+            if (m_meshRend == null)
+            {
+                m_meshRend = GetComponent<MeshRenderer>();
+            }
+
+            return m_meshRend;
+        }
+    }
+
 
     #region Internals
     IEnumerator<float> _WaitAndStore(float delay)

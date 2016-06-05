@@ -46,17 +46,15 @@ public class BasePickUp : CustomBehaviour
     float m_bobSpeed = 0.0f;
     Vector3 m_defaultPosition = Vector3.zero;
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
         m_rotateSpeed = Random.Range(m_rotateSpeedRange.Min, m_rotateSpeedRange.Max);
         m_bobSpeed = Random.Range(m_bobSpeedRange.Min, m_bobSpeedRange.Max);
 
         CurrentState = State.Idle;
 
-        base.Awake();
-
-        Assert.IsNotNull(m_meshRend);
-        Assert.IsNotNull(m_light);
+        Assert.IsNotNull(GetMeshRenderer);
+        Assert.IsNotNull(GetLight);
     }
 
     void OnEnable () 
@@ -147,22 +145,22 @@ public class BasePickUp : CustomBehaviour
     // Unused for now, not needed?
     void ShowModel(bool enable)
     {
-        m_meshRend.enabled = enable;
+        GetMeshRenderer.enabled = enable;
 
-        if (m_light != null)
+        if (GetLight != null)
         {
-            m_light.enabled = enable;
+            GetLight.enabled = enable;
         }
 
-        if (m_particleSystem != null)
+        if (GetParticlSys != null)
         {
             if (enable)
             {
-                m_particleSystem.Play();
+                GetParticlSys.Play();
             }
             else
             {
-                m_particleSystem.Stop();
+                GetParticlSys.Stop();
             }
         }
     }
