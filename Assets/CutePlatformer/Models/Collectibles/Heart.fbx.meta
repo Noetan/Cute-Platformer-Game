@@ -13,6 +13,7 @@ ModelImporter:
     100010: Icosphere
     100012: Lamp
     100014: Sun
+    100016: HeartCollider
     400000: //RootNode
     400002: Camera
     400004: Cube
@@ -21,21 +22,25 @@ ModelImporter:
     400010: Icosphere
     400012: Lamp
     400014: Sun
+    400016: HeartCollider
     2300000: //RootNode
     2300002: Cube
     2300004: Heart
     2300006: heart
     2300008: Icosphere
+    2300010: HeartCollider
     3300000: //RootNode
     3300002: Cube
     3300004: Heart
     3300006: heart
     3300008: Icosphere
+    3300010: HeartCollider
     4300000: Cylinder.001
     4300002: Heart
     4300004: heart
     4300006: Cube
     4300008: Icosphere
+    4300010: HeartCollider
   materials:
     importMaterials: 1
     materialName: 0
