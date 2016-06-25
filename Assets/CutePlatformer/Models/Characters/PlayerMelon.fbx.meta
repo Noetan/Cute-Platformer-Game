@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 658545aaf3f3afb4e83a6ded4ec13e8d
-timeCreated: 1466318315
+timeCreated: 1466326180
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -12,6 +12,11 @@ ModelImporter:
     100008: MelonHat1
     100010: MelonHatRibbon1
     100012: //RootNode
+    100014: MelonCloak0
+    100016: MelonCloak0Ribbon
+    100018: MelonHair0Thick
+    100020: MelonHair0Thin
+    100022: MelonHat1Ribbon
     400000: MelonBody
     400002: MelonCloak1
     400004: MelonHairThick
@@ -19,24 +24,47 @@ ModelImporter:
     400008: MelonHat1
     400010: MelonHatRibbon1
     400012: //RootNode
+    400014: MelonCloak0
+    400016: MelonCloak0Ribbon
+    400018: MelonHair0Thick
+    400020: MelonHair0Thin
+    400022: MelonHat1Ribbon
     2300000: MelonBody
     2300002: MelonCloak1
     2300004: MelonHairThick
     2300006: MelonHairThin
     2300008: MelonHat1
     2300010: MelonHatRibbon1
+    2300012: MelonCloak0
+    2300014: MelonCloak0Ribbon
+    2300016: MelonHair0Thick
+    2300018: MelonHair0Thin
+    2300020: MelonHat1Ribbon
+    2300022: //RootNode
     3300000: MelonBody
     3300002: MelonCloak1
     3300004: MelonHairThick
     3300006: MelonHairThin
     3300008: MelonHat1
     3300010: MelonHatRibbon1
+    3300012: MelonCloak0
+    3300014: MelonCloak0Ribbon
+    3300016: MelonHair0Thick
+    3300018: MelonHair0Thin
+    3300020: MelonHat1Ribbon
+    3300022: //RootNode
     4300000: MelonHatRibbon1
     4300002: MelonHat1
     4300004: MelonCloak1
     4300006: MelonBody
     4300008: MelonHairThin
     4300010: MelonHairThick
+    4300012: MelonBody0
+    4300014: MelonHat1Ribbon
+    4300016: MelonCloak0
+    4300018: MelonCloak0Ribbon
+    4300020: MelonHair0Thick
+    4300022: MelonHair0Thin
   materials:
     importMaterials: 1
     materialName: 0
@@ -64,11 +92,11 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    importBlendShapes: 0
+    importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 0
+    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
@@ -77,9 +105,9 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 20
-    normalImportMode: 1
-    tangentImportMode: 3
+    normalSmoothAngle: 0
+    normalImportMode: 0
+    tangentImportMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
