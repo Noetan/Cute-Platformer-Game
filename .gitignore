@@ -66,8 +66,6 @@ $RECYCLE.BIN/
 /.vs/Cute-Platformer-Game/v14/.suo
 /Assets/Audio
 /Assets/Fungus
-/Assets/Game Jam Menu Template
-/Assets/GeometryFXParticles
 /Assets/Graphics
 /Assets/JMO Assets
 /Assets/Physics Platformer Kit
@@ -79,4 +77,4 @@ $RECYCLE.BIN/
 /Assets/SampleScenes/
 /Assets/CutePlatformer/Materials/Refracted Water Projector.mat
 /Assets/desktop.ini.meta
-/Assets/DOTWeen
+/Assets/Third Party
