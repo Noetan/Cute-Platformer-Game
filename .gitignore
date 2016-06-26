@@ -78,3 +78,4 @@ $RECYCLE.BIN/
 /Assets/CutePlatformer/Materials/Refracted Water Projector.mat
 /Assets/desktop.ini.meta
 /Assets/Third Party
+!/Assets/Third Party/*.meta
