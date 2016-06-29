@@ -15,6 +15,11 @@ public class ExtraJumpEnabler : MonoBehaviour
     // How high we jump in midair
     [SerializeField]
     float m_airJumpVel = 12f;
+    // Drag when player is 'sliding' down a wall
+    [SerializeField]
+    float wallSlideDrag = 7.5f;
+    // Default drag value;
+    float dragDefault;
     // FX to play on mid air jump
     [SerializeField]
     public GameObject midAirJumpParticleEffect;
@@ -53,6 +58,8 @@ public class ExtraJumpEnabler : MonoBehaviour
         m_characterMotor = GetComponent<CharacterMotor>();
         m_rigidBody = GetComponent<Rigidbody>();
         CanWallJump = false;
+
+        dragDefault = m_rigidBody.drag;
     }
 
     // Update is called once per frame
@@ -62,6 +69,10 @@ public class ExtraJumpEnabler : MonoBehaviour
         {
             WallJump();
             return;
+        }
+        else if (m_rigidBody.drag != dragDefault)
+        {
+            m_rigidBody.drag = dragDefault;
         }
 
         //If we receive a jump button down, we're not grounded and we can double jump...
@@ -145,6 +156,7 @@ public class ExtraJumpEnabler : MonoBehaviour
     {
         if (!CanWallJump)
         {
+            m_rigidBody.drag = dragDefault;
             return;
         }
         if (Input.GetButtonDown("Jump") && !m_isGrounded && CanWallJump && m_currentWall != null)
@@ -190,7 +202,14 @@ public class ExtraJumpEnabler : MonoBehaviour
                 CanWallJump = true;
                 m_currentWall = col.gameObject;
                 m_collisionNormal = contact.normal;
+                m_rigidBody.drag = wallSlideDrag;
             }
         }
+    }
+
+    void OnCollisionExit(Collision col)
+    {
+        m_currentWall = null;
+        m_rigidBody.drag = dragDefault;
     }
 }
