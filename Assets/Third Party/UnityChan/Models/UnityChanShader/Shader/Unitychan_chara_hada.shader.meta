@@ -1,7 +1,12 @@
 fileFormatVersion: 2
 guid: d02764d56f42dac43926db279821f725
+timeCreated: 1467263648
+licenseType: Free
 ShaderImporter:
-  defaultTextures: []
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _FalloffSampler: {fileID: 2800000, guid: 373dbf51efaff3948b5586bd69d29169, type: 3}
+  - _RimLightSampler: {fileID: 2800000, guid: 0fe0884274e837e448bec0708ad09eba, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

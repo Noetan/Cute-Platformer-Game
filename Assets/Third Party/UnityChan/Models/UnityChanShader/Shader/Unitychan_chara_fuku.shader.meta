@@ -1,7 +1,16 @@
 fileFormatVersion: 2
 guid: 5c0cbeeb275bce5459626e8b9fcad521
+timeCreated: 1467263628
+licenseType: Free
 ShaderImporter:
-  defaultTextures: []
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _FalloffSampler: {fileID: 2800000, guid: b4cd138f0445774468a695fcff18faf4, type: 3}
+  - _RimLightSampler: {fileID: 2800000, guid: 0fe0884274e837e448bec0708ad09eba, type: 3}
+  - _SpecularReflectionSampler: {fileID: 2800000, guid: d2fd9193be53a884a92448c2863e579a,
+      type: 3}
+  - _EnvMapSampler: {instanceID: 0}
+  - _NormalMapSampler: {fileID: 2800000, guid: 7cac480163b51004898dfaba3edaf259, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
