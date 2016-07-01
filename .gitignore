@@ -79,3 +79,4 @@ $RECYCLE.BIN/
 /Assets/desktop.ini.meta
 /Assets/Third Party
 !/Assets/Third Party/*.meta
+desktop.ini.meta
