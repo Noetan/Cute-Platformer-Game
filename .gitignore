@@ -64,19 +64,11 @@ $RECYCLE.BIN/
 *.msp
 /.vs/UnityVS.Cute-Platformer-Game/v14/*.suo
 /.vs/Cute-Platformer-Game/v14/.suo
-/Assets/Audio
-/Assets/Fungus
-/Assets/Graphics
-/Assets/JMO Assets
 /Assets/Physics Platformer Kit
 /Assets/Plugins
-/Assets/PrimitivePlus
-/Assets/Quantum Theory
 /Assets/Tree_Textures
-/Assets/Ultimate Game Tools
 /Assets/SampleScenes/
 /Assets/CutePlatformer/Materials/Refracted Water Projector.mat
-/Assets/desktop.ini.meta
-/Assets/Third Party
-!/Assets/Third Party/*.meta
+/Assets/Third Party/
 desktop.ini.meta
+!*.meta
