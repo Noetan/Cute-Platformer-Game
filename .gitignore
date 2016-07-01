@@ -72,3 +72,5 @@ $RECYCLE.BIN/
 /Assets/Third Party/
 desktop.ini.meta
 !*.meta
+/Assets/CutePlatformer/Materials/desktop.ini.meta
+/Assets/CutePlatformer/desktop.ini.meta
