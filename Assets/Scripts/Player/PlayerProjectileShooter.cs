@@ -36,7 +36,7 @@ public class PlayerProjectileShooter: MonoBehaviour
     void Update()
     {
         // Check if we pressed our Fire key, and that we can shoot
-        if (Input.GetButtonDown("Fire") && CanShoot)
+        if (Input.GetAxis("Fire") >0 && CanShoot)
         {
             // Check if we're not already playing our animation.
             // Can't use right now...
