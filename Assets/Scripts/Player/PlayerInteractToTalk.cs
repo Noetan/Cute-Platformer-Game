@@ -20,7 +20,7 @@ public class PlayerInteractToTalk : MonoBehaviour {
 
     void OnTriggerStay(Collider col)
     {
-        if (col.CompareTag("Talkable") && Input.GetButtonDown("Grab")) // ideally check grounded here too
+        if (col.CompareTag("Talkable") && Input.GetButtonDown("Grab")) // ideally check grounded & player speed here too
         {
             m_flowchart.ExecuteBlock(col.GetComponent<NPCIdentifier>().NameForNPC);
         }
