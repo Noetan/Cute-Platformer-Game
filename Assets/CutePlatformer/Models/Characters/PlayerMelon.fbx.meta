@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 658545aaf3f3afb4e83a6ded4ec13e8d
-timeCreated: 1467711981
+timeCreated: 1467881104
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -530,7 +530,7 @@ ModelImporter:
       humanName: LeftUpperArm
       limit:
         min: {x: -90, y: -65, z: -35}
-        max: {x: 90, y: 80, z: 85}
+        max: {x: 90, y: 100, z: 85}
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 1
@@ -538,7 +538,7 @@ ModelImporter:
       humanName: RightUpperArm
       limit:
         min: {x: -90, y: -65, z: -35}
-        max: {x: 90, y: 80, z: 85}
+        max: {x: 90, y: 100, z: 85}
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 1

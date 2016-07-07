@@ -18,9 +18,6 @@ public class PlayerMove : MonoBehaviour
     // floorChecks object. FloorChecks are raycasted down from to check the player is grounded.
     [SerializeField]
     Transform m_floorChecks;
-    // object with animation controller on, which you want to animate
-    [SerializeField]
-    Animator m_animator;
     // play when jumping
     [SerializeField]
     AudioClip m_jumpSound;
@@ -97,9 +94,9 @@ public class PlayerMove : MonoBehaviour
 	EnemyAI enemyAI;
 	DealDamage dealDamage;
     
-    //Rigidbody m_Rigidbody;
     AudioSource m_AudioSource;
     Collider m_Collider;
+    Animator m_animator;
 
     GameObjectPool smokeCircularPool;
     GameObjectPool smokePuffPool;
@@ -145,9 +142,9 @@ public class PlayerMove : MonoBehaviour
 		dealDamage = GetComponent<DealDamage>();
 		characterMotor = GetComponent<CharacterMotor>();
 
-        //m_Rigidbody = GetComponent<Rigidbody>();
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
+        m_animator = GetComponentInChildren<Animator>();
 
         smokeCircularPool = new GameObjectPool(1, m_jumpParticleEffect);
         smokePuffPool = new GameObjectPool(2, m_midAirJumpParticleEffect);
@@ -200,10 +197,10 @@ public class PlayerMove : MonoBehaviour
 		characterMotor.ManageSpeed (curDecel, m_maxSpeed + movingObjSpeed.magnitude, true);
 		//set animation values
 		if(m_animator)
-		{
+		{            
 			m_animator.SetFloat("DistanceToTarget", characterMotor.DistanceToTarget);
 			m_animator.SetBool("Grounded", grounded);
-			m_animator.SetFloat("YVelocity", PlayerController.RB.velocity.y);
+			m_animator.SetFloat("YVelocity", PlayerController.RB.velocity.y);            
 		}
 	}
 	
@@ -415,7 +412,7 @@ public class PlayerMove : MonoBehaviour
         get { return m_jumpVelocity; }
     }
 
-    public Animator AnimatorComp
+    public Animator ModelAnimator
     {
         get { return m_animator; }
     }

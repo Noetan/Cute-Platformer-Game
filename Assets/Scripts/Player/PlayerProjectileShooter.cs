@@ -110,7 +110,7 @@ public class PlayerProjectileShooter: MonoBehaviour
     bool CheckIfPlaying(string Anim, int Layer)
     {
         // Grabs the AnimatorStateInfo out of PlayerMove animator for the desired Layer.
-        AnimatorStateInfo AnimInfo = m_playerMove.AnimatorComp.GetCurrentAnimatorStateInfo(Layer);
+        AnimatorStateInfo AnimInfo = m_playerMove.ModelAnimator.GetCurrentAnimatorStateInfo(Layer);
         // Returns the bool we want, by checking if the string ANIM given is playing.
         return AnimInfo.IsName(Anim);
     }

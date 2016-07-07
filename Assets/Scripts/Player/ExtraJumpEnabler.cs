@@ -95,7 +95,7 @@ public class ExtraJumpEnabler : MonoBehaviour
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
-        m_isGrounded = m_playerMove.AnimatorComp.GetBool("Grounded");
+        m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
         //If I can't double jump...
         if (!m_canDoubleJump)
         {
@@ -176,7 +176,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
             StartCoroutine( m_playerMove.Jump(WallJumpYVelocity, true, true) );
 
-            m_playerMove.AnimatorComp.Play("Jump1", 0);
+            m_playerMove.ModelAnimator.Play("Jump1", 0);
             //And lets set the double jump to false!
             CanWallJump = false;
 
