@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Assertions;
 
 public class Sliding : MonoBehaviour {
 
@@ -29,6 +29,9 @@ public class Sliding : MonoBehaviour {
         // Pick the Player Move component
         m_playerMove = GetComponent<PlayerMove>();
         m_rigidBody = GetComponent<Rigidbody>();
+
+        Assert.IsNotNull(m_playerMove);
+        Assert.IsNotNull(m_rigidBody);
     }
 
 
@@ -53,8 +56,8 @@ public class Sliding : MonoBehaviour {
         {
             // Check X and Z velocities
             // If they're 0, we aren't moving anymore and shouldn't be sliding
-            if (m_rigidBody.velocity[0] == 0 &&
-                m_rigidBody.velocity[2] == 0)
+            if (m_rigidBody.velocity.x == 0 &&
+                m_rigidBody.velocity.z == 0)
             {
                 SetSliding(false);
             }
@@ -73,12 +76,12 @@ public class Sliding : MonoBehaviour {
         if (m_isSliding)
         {
             m_playerMove.enabled = false;
-            m_playerMove.GetComponent<BoxCollider>().material = m_SlidingMat;
+            m_playerMove.GetComponent<Collider>().material = m_SlidingMat;
         }
         else
         {
             m_playerMove.enabled = true;
-            m_playerMove.GetComponent<BoxCollider>().material = m_DefaultMat;
+            m_playerMove.GetComponent<Collider>().material = m_DefaultMat;
         }
     }
 }

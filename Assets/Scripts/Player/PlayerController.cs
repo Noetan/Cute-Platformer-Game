@@ -64,6 +64,7 @@ public class PlayerController : MonoBehaviour
     {
         get { return Input.GetAxis("Horizontal"); }
     }
+
     public float InputV
     {
         get { return Input.GetAxis("Vertical"); }
@@ -77,6 +78,11 @@ public class PlayerController : MonoBehaviour
     public int CurrentKonpeito
     {
         get { return m_konpeito; }
+    }
+
+    public bool Grounded
+    {
+        get { return MoveComp.Grounded; }
     }
     #endregion
 }

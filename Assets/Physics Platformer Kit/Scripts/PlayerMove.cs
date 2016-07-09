@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using MemoryManagment; // Object pools
+using Prime31.MessageKit;
 
 //handles player movement, utilising the CharacterMotor class
 [RequireComponent(typeof(CharacterMotor))]
@@ -17,13 +18,7 @@ public class PlayerMove : MonoBehaviour
     bool m_sidescroller;
     // floorChecks object. FloorChecks are raycasted down from to check the player is grounded.
     [SerializeField]
-    Transform m_floorChecks;
-    // play when jumping
-    [SerializeField]
-    AudioClip m_jumpSound;
-    // play when landing on ground	
-    [SerializeField]
-    AudioClip m_landSound;                 
+    Transform m_floorChecks;           
 
     // movement
     [Header("movement")]
@@ -63,13 +58,7 @@ public class PlayerMove : MonoBehaviour
     // how early before hitting the ground you can press jump, and still have it work
     [SerializeField]
     float m_jumpLeniancy = 0.17f;
-
-    // Smoke puff that plays on jumps and landing
-    [SerializeField]
-    GameObject m_jumpParticleEffect;
-    // Smoke puff that plays when jumping in the air
-    [SerializeField]
-    GameObject m_midAirJumpParticleEffect;
+    
     // Where relative to the player should it play
     [SerializeField]
     Transform m_jumpingEffectLocation;
@@ -113,8 +102,15 @@ public class PlayerMove : MonoBehaviour
     float OriginalMaxSpeed;
     float OriginalMaxAccel;
 
-    private bool canJump = true;
+    bool canJump = true;
 
+    public enum JumpType
+    {
+        Normal,
+        Air,
+        Wall
+    }
+    
     // setup
     void Awake()
 	{
@@ -145,9 +141,6 @@ public class PlayerMove : MonoBehaviour
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
         m_animator = GetComponentInChildren<Animator>();
-
-        smokeCircularPool = new GameObjectPool(1, m_jumpParticleEffect);
-        smokePuffPool = new GameObjectPool(2, m_midAirJumpParticleEffect);
 
         // gets child objects of floorcheckers, and puts them in an array
         // later these are used to raycast downward and see if we are on the ground
@@ -192,16 +185,11 @@ public class PlayerMove : MonoBehaviour
 		grounded = IsGrounded ();
 		//move, rotate, manage speed
 		characterMotor.MoveTo (moveDirection, curAccel, 0.7f, true);
-		if (m_rotateSpeed != 0 && direction.magnitude != 0)
-			characterMotor.RotateToDirection (moveDirection , curRotateSpeed * 5, true);
-		characterMotor.ManageSpeed (curDecel, m_maxSpeed + movingObjSpeed.magnitude, true);
-		//set animation values
-		if(m_animator)
-		{            
-			m_animator.SetFloat("DistanceToTarget", characterMotor.DistanceToTarget);
-			m_animator.SetBool("Grounded", grounded);
-			m_animator.SetFloat("YVelocity", PlayerController.RB.velocity.y);            
-		}
+        if (m_rotateSpeed != 0 && direction.magnitude != 0)
+        {
+            characterMotor.RotateToDirection(moveDirection, curRotateSpeed * 5, true);
+        }
+		characterMotor.ManageSpeed (curDecel, m_maxSpeed + movingObjSpeed.magnitude, true);        
 	}
 	
 	//prevents rigidbody from sliding down slight slopes (read notes in characterMotor class for more info on friction)
@@ -297,12 +285,11 @@ public class PlayerMove : MonoBehaviour
 		groundedCount = (grounded) ? groundedCount += Time.deltaTime : 0f;
 		
 		//play landing sound
-		if(groundedCount < 0.25 && groundedCount != 0 && !m_AudioSource.isPlaying && m_landSound && PlayerController.RB.velocity.y < 1)
+		if(groundedCount < 0.25 && groundedCount != 0 && PlayerController.RB.velocity.y < 1)
 		{
-			m_AudioSource.volume = Mathf.Abs(PlayerController.RB.velocity.y)/40;
-			m_AudioSource.clip = m_landSound;
-			m_AudioSource.Play ();
+            MessageKit.post((int)Constants.Messages.PlayerLand);
 		}
+
 		//if we press jump in the air, save the time
 		if (Input.GetButtonDown ("Jump") && !grounded)
 			airPressTime = Time.time;
@@ -345,24 +332,17 @@ public class PlayerMove : MonoBehaviour
 
         canJump = false;
 
+        if (!midAir)
+        {
+            MessageKit<JumpType>.post((int)Constants.Messages.PlayerJump, JumpType.Normal);
+        }
+        else if (midAir)
+        {
+            MessageKit<JumpType>.post((int)Constants.Messages.PlayerJump, JumpType.Air);
+        }
+
         // 0 out the y velocity so we can double jump at any time
         PlayerController.RB.velocity = new Vector3(PlayerController.RB.velocity.x, jumpVelocity, PlayerController.RB.velocity.z);        
-
-        // Play smoke puff particle effect
-        if (!midAir && smoke)
-        {
-            PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, m_jumpingEffectLocation.position, true); 
-        }
-        else if (midAir && smoke)
-        {
-            PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, m_jumpingEffectLocation.position, true);
-        }
-
-        // Play the jump sound
-        if (m_jumpSound)
-        {
-            AudioPool.Instance.Play(m_jumpSound, transform.position);
-        }
 
         // Wait while the player is still holding the jump button
         // and the character is still moving up
@@ -424,10 +404,6 @@ public class PlayerMove : MonoBehaviour
     public Transform JumpingEffectLocation
     {
         get { return m_jumpingEffectLocation; }
-    }
-    public GameObject JumpingParticleEffect
-    {
-        get { return m_jumpParticleEffect; }
     }
 
     public bool Crouching

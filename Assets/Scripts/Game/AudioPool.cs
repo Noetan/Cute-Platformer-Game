@@ -30,12 +30,12 @@ public class AudioPool : MonoBehaviour
     [Tooltip("Match these with the MixerGroup enum")]
     AudioMixerGroup[] m_mixerGroups;
 
-    [Header("Settings")]
+    //[Header("Settings")]
     // How much time must pass before a single instance audioclip can play again
     // Note this ends when the clip stops playing regardless of how high you set this
-    [SerializeField]
-    [Range(0.0f, 1.0f)]
-    float m_overlapThreshold = 0.1f;
+    //[SerializeField]
+    //[Range(0.0f, 1.0f)]
+    //float m_overlapThreshold = 0.03f;
 
     // A reference to this object
     public static AudioPool Instance { get; set; }
@@ -79,7 +79,7 @@ public class AudioPool : MonoBehaviour
 
     /// <summary>
     /// Plays the given audio clip with a random pitch and volume as defined in the settings given.
-    /// </summary>
+    /// </summary> 
     public AudioSource PlayRandom(AudioClip clip, Vector3 pos, AudioClipSettings settings)
     {
         if (settings.SingleInstance && m_activeClips.Count > 0)
@@ -91,7 +91,7 @@ public class AudioPool : MonoBehaviour
                 {
                     // Found and overlap period not over yet
                     // End the function and skip the audio clip
-                    if (m_activeClips[i].time < m_overlapThreshold && m_activeClips[i].isPlaying)
+                    if (m_activeClips[i].time < settings.OverlapThreshold && m_activeClips[i].isPlaying)
                     {
                         return null;
                     }
@@ -211,6 +211,8 @@ public class AudioClipSettings
     float m_maxVolume = 1.0f;
     [SerializeField]
     public bool SingleInstance = false;
+    [SerializeField]
+    public float OverlapThreshold = 0.03f;
 
     public float MinPitch
     {
@@ -251,6 +253,26 @@ public class AudioClipSettings
     public AudioMixerGroup MixerGroup
     {
         get { return AudioPool.Instance.GetMixerGroup(m_mixerGroup); }
+    }
+
+    public float Volume
+    {
+        set
+        {
+            value = Mathf.Clamp(value, 0.0f, 0.1f);
+            m_minVolume = value;
+            m_maxVolume = value;
+        }
+    }
+
+    public float Pitch
+    {
+        set
+        {
+            value = Mathf.Clamp(value, -3.0f, 3.0f);
+            m_minPitch = value;
+            m_maxPitch = value;
+        }
     }
 }
 
