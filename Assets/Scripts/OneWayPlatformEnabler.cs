@@ -88,7 +88,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
     IEnumerator CollisionBackOn()
     {
         //Change our layer to the layer that allows our fall
-        playerMove.ModelAnimator.Play("Jump1", 0);
+        //playerMove.ModelAnimator.Play("Jump1", 0);
         gameObject.layer = JumpingUpLayer;
         //Wait 0.5f for us to fall
         yield return new WaitForSeconds(0.5f);

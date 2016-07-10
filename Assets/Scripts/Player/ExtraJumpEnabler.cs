@@ -35,7 +35,7 @@ public class ExtraJumpEnabler : MonoBehaviour
     //In case of us wanting to only double jump if we're still going up on our jump, we need to store the last Y position.
     float m_lastY;
     //We'll pick the grounded bool from the Animator and store here to know if we're grounded.
-    bool m_isGrounded;
+    //bool m_isGrounded;
     //We'll store here if we're swimming or not
     bool m_isSwimming = false;
     
@@ -76,7 +76,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         }
 
         //If we receive a jump button down, we're not grounded and we can double jump...
-        if (Input.GetButtonDown("Jump") && !m_isGrounded && m_canDoubleJump)
+        if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
             StartCoroutine( m_playerMove.Jump(m_airJumpVel, true, true) );
@@ -85,7 +85,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         //If we receive a jump button down, we're not grounded and we are swimming...
-        else if (Input.GetButtonDown("Jump") && !m_isGrounded && m_isSwimming)
+        else if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && m_isSwimming)
         {
             //Do a jump with the first jump force! :D Or a third of it, because the first one is already too much for swimming
             StartCoroutine( m_playerMove.Jump(m_playerMove.JumpVelocity * m_WaterJumpStrength, false) );
@@ -95,12 +95,12 @@ public class ExtraJumpEnabler : MonoBehaviour
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
-        m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
+        //m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
         //If I can't double jump...
         if (!m_canDoubleJump)
         {
             //But I'm grounded
-            if (m_isGrounded)
+            if (m_playerMove.Grounded)
             {
                 //Then I should turn my Double Jump to on because I can certainly double jump again.
                 m_canDoubleJump = true;
@@ -110,7 +110,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         if (!CanAfterHighestJumpPoint)
         {
             //If i'm not grounded
-            if (!m_isGrounded)
+            if (!m_playerMove.Grounded)
             {
                 //If my current Y position is less than my Previously recorded Y position, then I'm going down
                 if (gameObject.transform.position.y < m_lastY)
@@ -159,7 +159,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_rigidBody.drag = dragDefault;
             return;
         }
-        if (Input.GetButtonDown("Jump") && !m_isGrounded && CanWallJump && m_currentWall != null)
+        if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && CanWallJump && m_currentWall != null)
         {
             Vector3 WallPos = m_currentWall.transform.position;
             Vector3 myPos = transform.position;
@@ -176,13 +176,13 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
             StartCoroutine( m_playerMove.Jump(WallJumpYVelocity, true, true) );
 
-            m_playerMove.ModelAnimator.Play("Jump1", 0);
+            //m_playerMove.ModelAnimator.Play("Jump1", 0);
             //And lets set the double jump to false!
             CanWallJump = false;
 
             //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
-        if (CanWallJump && !m_isGrounded && m_currentWall != null)
+        if (CanWallJump && !m_playerMove.Grounded && m_currentWall != null)
         {
             //characterMotor.RotateToDirection(transform.position-CurrentWall.transform.position,900f,true);
             Vector3 WallPos = m_currentWall.transform.position;

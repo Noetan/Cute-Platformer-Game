@@ -27,6 +27,8 @@ public class PlayerEffects : MonoBehaviour
 
     // Animation states
     int jumpAnimSt;
+    int jumpDoubleAnimSt;
+    int jumpLongAnimSt;
     // Animation parameters
     int speedAnim;
     int groundAnim;
@@ -40,13 +42,15 @@ public class PlayerEffects : MonoBehaviour
 
         Assert.IsNotNull(m_animator);
 
-        MessageKit<PlayerMove.JumpType>.addObserver((int)Constants.Messages.PlayerJump, OnJump);
-        MessageKit.addObserver((int)Constants.Messages.PlayerLand, OnLand);
+        MessageKit<PlayerMove.JumpType>.addObserver(MessageTypes.PLAYER_JUMP, OnJump);
+        MessageKit.addObserver(MessageTypes.PLAYER_LAND, OnLand);
 
         landSFXsettings.SingleInstance = true;
         landSFXsettings.OverlapThreshold = 2.0f;
 
-        jumpAnimSt = Animator.StringToHash("Jump.Jump_StandToUp");
+        jumpAnimSt = Animator.StringToHash("Base Layer.Jump");
+        jumpDoubleAnimSt = Animator.StringToHash("Base Layer.Jump_Somersault");
+        jumpLongAnimSt = Animator.StringToHash("Base Layer.Jump_Long");
 
         speedAnim = Animator.StringToHash("Speed");
         groundAnim = Animator.StringToHash("Grounded");
@@ -58,32 +62,48 @@ public class PlayerEffects : MonoBehaviour
         m_animator.SetFloat(speedAnim, PlayerController.RB.velocity.magnitude);
         m_animator.SetBool(groundAnim, PlayerController.Instance.Grounded);
         m_animator.SetFloat(yVelAnim, PlayerController.RB.velocity.y);
+        
     }
 
+    #region Message Handlers
+
+    /// Called when the player jumps
+    Vector3 feetPos = Vector3.zero;
     void OnJump(PlayerMove.JumpType jumpType)
     {
-        // Animation
-        m_animator.Play(jumpAnimSt, 0);
-
         // Sound
         AudioPool.Instance.Play(m_jumpSFX, transform.position);
 
         // Particle effects
-        Vector3 effectPos = transform.position - new Vector3(0, feetOffset, 0);
+        feetPos = transform.position - new Vector3(0, feetOffset, 0);
 
-        if (jumpType == PlayerMove.JumpType.Normal)
+
+        switch(jumpType)
         {
-            PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, effectPos, true);
-        }
-        else if (jumpType == PlayerMove.JumpType.Air)
-        {
-            PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, effectPos, true);
+            case PlayerMove.JumpType.Normal:
+                m_animator.Play(jumpAnimSt, 0);
+                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, feetPos, true);
+                break;
+
+            case PlayerMove.JumpType.Air:
+                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, feetPos, true);
+                m_animator.Play(jumpDoubleAnimSt, 0);
+                break;
+
+            case PlayerMove.JumpType.Long:
+                m_animator.Play(jumpLongAnimSt, 0);
+                break;
+
+            case PlayerMove.JumpType.High:
+                break;
         }
     }
 
+    /// Called when the player lands on the ground
     void OnLand()
     {
         landSFXsettings.Volume = Mathf.Abs(PlayerController.RB.velocity.y) / m_landSFXDamp;
         AudioPool.Instance.PlayRandom(m_landSFX, transform.position, landSFXsettings);
     }
+    #endregion
 }

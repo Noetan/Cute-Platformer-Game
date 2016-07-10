@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public static string Tag;
     static Health HealthComp;
     public static PlayerMove MoveComp;
+    public static Animator AnimatorComp;
 
     #region Inspector Variables
     #endregion
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
         Tag = Player.tag;
         HealthComp = GetComponent<Health>();
         MoveComp = GetComponent<PlayerMove>();
+        AnimatorComp = GetComponentInChildren<Animator>();
     }
 
     void Update()

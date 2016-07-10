@@ -25,7 +25,7 @@ public class PlayerMelee : MonoBehaviour
     private bool m_hasDived = false;
 
     // Check if we are grounded, using animator
-    private bool m_isGrounded;
+    //private bool m_isGrounded;
 
     private List<GameObject> BeingPunched = new List<GameObject>();
 
@@ -90,12 +90,12 @@ public class PlayerMelee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_isGrounded)
+        if (m_playerMove.Grounded)
         {
             m_canDive = true;
             m_hasDived = false;
         }
-        else if (!m_isGrounded && !m_hasDived)
+        else if (!m_playerMove.Grounded && !m_hasDived)
         {
             m_canDive = true;
         }
@@ -151,7 +151,7 @@ public class PlayerMelee : MonoBehaviour
             else
             {
                 //Tell the anim ator to play the left punch, and change the bool so next punch will be right punch!
-                m_playerMove.ModelAnimator.Play("ArmsThrow", 1);
+                //m_playerMove.ModelAnimator.Play("ArmsThrow", 1);
                 punchleft = false;
                 //Then start the coroutine so the punch effect happens when the animation already reached the interest part.
                 Timing.RunCoroutine(_WaitAndPunch());
@@ -162,7 +162,7 @@ public class PlayerMelee : MonoBehaviour
     void FixedUpdate()
     {
         //Let's pick the Grounded Bool from the animator, since the player grounded bool is private and we can't get it directly..
-        m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
+        //m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
 
         // Check if our slide from dive has stopped, so we can stop diving
         if (!m_Sliding.m_isSliding && m_diving)
@@ -287,7 +287,7 @@ public class PlayerMelee : MonoBehaviour
     bool CheckIfPlaying(string Anim, int Layer)
     {
         //Grabs the AnimatorStateInfo out of our PlayerMove animator for the desired Layer.
-        AnimatorStateInfo AnimInfo = m_playerMove.ModelAnimator.GetCurrentAnimatorStateInfo(Layer);
+        AnimatorStateInfo AnimInfo = PlayerController.AnimatorComp.GetCurrentAnimatorStateInfo(Layer);
         //Returns the bool we want, by checking if the string ANIM given is playing.
         return AnimInfo.IsName(Anim);
     }

@@ -2,11 +2,11 @@
 // Useful for avoiding the use of strings so less typo related bugs
 // Plus the benefit of IDE auto-complete
 
-public static class Constants
+// List of messages used with MessageKit
+// Add your own here. MessageKit uses ints, not strings to avoid typos.
+public static class MessageTypes
 {
-    public enum Messages
-    {
-        PlayerJump,
-        PlayerLand
-    }
+    public const int PLAYER_JUMP = 0;
+    public const int PLAYER_LAND = 1;
 }
+

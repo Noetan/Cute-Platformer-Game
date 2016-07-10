@@ -199,7 +199,7 @@ public class Climbing : MonoBehaviour {
         playerMove.enabled = true;
         playerRB.isKinematic = false;
         //Let's turn off our climbing animation
-        playerMove.ModelAnimator.SetBool("ClimbingWall", false);
+        //playerMove.ModelAnimator.SetBool("ClimbingWall", false);
         //And in a couple of F time we'll want to climb agian so we'll start this coroutine
         Timing.RunCoroutine(_CanClimbAgain());
     }

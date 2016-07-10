@@ -9,6 +9,16 @@ using Prime31.MessageKit;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerMove : MonoBehaviour 
 {
+    public enum JumpType
+    {
+        Normal,
+        Air,
+        Wall,
+        Spring,
+        Long,
+        High
+    }
+
     #region Inspector
     // setup
     [Header("Setup")]
@@ -58,11 +68,6 @@ public class PlayerMove : MonoBehaviour
     // how early before hitting the ground you can press jump, and still have it work
     [SerializeField]
     float m_jumpLeniancy = 0.17f;
-    
-    // Where relative to the player should it play
-    [SerializeField]
-    Transform m_jumpingEffectLocation;
-
 #endregion
 
     [HideInInspector]
@@ -83,12 +88,7 @@ public class PlayerMove : MonoBehaviour
 	EnemyAI enemyAI;
 	DealDamage dealDamage;
     
-    AudioSource m_AudioSource;
     Collider m_Collider;
-    Animator m_animator;
-
-    GameObjectPool smokeCircularPool;
-    GameObjectPool smokePuffPool;
 
     bool isCrouching = false;
     [SerializeField]
@@ -104,12 +104,7 @@ public class PlayerMove : MonoBehaviour
 
     bool canJump = true;
 
-    public enum JumpType
-    {
-        Normal,
-        Air,
-        Wall
-    }
+
     
     // setup
     void Awake()
@@ -137,10 +132,8 @@ public class PlayerMove : MonoBehaviour
 		m_mainCam = GameObject.FindGameObjectWithTag("MainCamera").transform;
 		dealDamage = GetComponent<DealDamage>();
 		characterMotor = GetComponent<CharacterMotor>();
-
-        m_AudioSource = GetComponent<AudioSource>();
+        
         m_Collider = GetComponent<Collider>();
-        m_animator = GetComponentInChildren<Animator>();
 
         // gets child objects of floorcheckers, and puts them in an array
         // later these are used to raycast downward and see if we are on the ground
@@ -287,7 +280,7 @@ public class PlayerMove : MonoBehaviour
 		//play landing sound
 		if(groundedCount < 0.25 && groundedCount != 0 && PlayerController.RB.velocity.y < 1)
 		{
-            MessageKit.post((int)Constants.Messages.PlayerLand);
+            MessageKit.post(MessageTypes.PLAYER_LAND);
 		}
 
 		//if we press jump in the air, save the time
@@ -311,11 +304,13 @@ public class PlayerMove : MonoBehaviour
                     || isCrouching && PlayerController.RB.velocity[2] < -0.1f)
                 {
                     FixedJump(m_crouchingLongJumpForce);
+                    MessageKit<JumpType>.post(MessageTypes.PLAYER_JUMP, JumpType.Long);
                 }
                 else if (isCrouching && PlayerController.RB.velocity[0] <= 0.1f
                     || isCrouching && PlayerController.RB.velocity[2] <= 0.1f)
                 {
                     FixedJump(m_crouchingBackflipJumpForce);
+                    MessageKit<JumpType>.post(MessageTypes.PLAYER_JUMP, JumpType.High);
                 }
             }
 		}
@@ -334,11 +329,11 @@ public class PlayerMove : MonoBehaviour
 
         if (!midAir)
         {
-            MessageKit<JumpType>.post((int)Constants.Messages.PlayerJump, JumpType.Normal);
+            MessageKit<JumpType>.post(MessageTypes.PLAYER_JUMP, JumpType.Normal);
         }
         else if (midAir)
         {
-            MessageKit<JumpType>.post((int)Constants.Messages.PlayerJump, JumpType.Air);
+            MessageKit<JumpType>.post(MessageTypes.PLAYER_JUMP, JumpType.Air);
         }
 
         // 0 out the y velocity so we can double jump at any time
@@ -392,18 +387,10 @@ public class PlayerMove : MonoBehaviour
         get { return m_jumpVelocity; }
     }
 
-    public Animator ModelAnimator
-    {
-        get { return m_animator; }
-    }
     public float RotateSpeed
     {
         get { return m_rotateSpeed; }
         set { m_rotateSpeed = value; }
-    }
-    public Transform JumpingEffectLocation
-    {
-        get { return m_jumpingEffectLocation; }
     }
 
     public bool Crouching
