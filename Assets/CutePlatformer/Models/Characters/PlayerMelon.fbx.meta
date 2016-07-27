@@ -181,6 +181,118 @@ ModelImporter:
     100346: Shoulder02.L_end
     100348: Shoulder02.R
     100350: Shoulder02.R_end
+    100352: Camera
+    100354: chest
+    100356: Cube
+    100358: f_index.01.L
+    100360: f_index.01.R
+    100362: f_index.02.L
+    100364: f_index.02.L_end
+    100366: f_index.02.R
+    100368: f_index.02.R_end
+    100370: f_middle.01.L
+    100372: f_middle.01.R
+    100374: f_middle.02.L
+    100376: f_middle.02.L_end
+    100378: f_middle.02.R
+    100380: f_middle.02.R_end
+    100382: f_pinky.01.L
+    100384: f_pinky.01.R
+    100386: f_pinky.02.L
+    100388: f_pinky.02.L_end
+    100390: f_pinky.02.R
+    100392: f_pinky.02.R_end
+    100394: f_ring.01.L
+    100396: f_ring.01.R
+    100398: f_ring.02.L
+    100400: f_ring.02.L_end
+    100402: f_ring.02.R
+    100404: f_ring.02.R_end
+    100406: foot.L
+    100408: foot.R
+    100410: forearm.L
+    100412: forearm.R
+    100414: hairSide1.L
+    100416: hairSide1.R
+    100418: hairSide2.L
+    100420: hairSide2.L_end
+    100422: hairSide2.R
+    100424: hairSide2.R_end
+    100426: hand.L
+    100428: hand.R
+    100430: HatBack
+    100432: HatBack_end
+    100434: HatFront
+    100436: HatFront_end
+    100438: HatSide.L
+    100440: HatSide.L_end
+    100442: HatSide.R
+    100444: HatSide.R_end
+    100446: HatTail1
+    100448: HatTail1_end
+    100450: head
+    100452: hips
+    100454: Lamp
+    100456: MelonHat0
+    100458: metarig
+    100460: neck
+    100462: ref
+    100464: ref.001
+    100466: ref.002
+    100468: ref.003
+    100470: refBack
+    100472: refFootSide
+    100474: refHead
+    100476: refHeadFront
+    100478: refHeadFront.002
+    100480: refHeadFront.003
+    100482: refHeadFront.004
+    100484: refHeadFront.005
+    100486: refHeadSide
+    100488: refHeadSide.001
+    100490: refHeadSide.002
+    100492: refNew
+    100494: refSide
+    100496: refYuko.001
+    100498: shin.L
+    100500: shin.R
+    100502: shoulder.L
+    100504: shoulder.R
+    100506: skirtB1.L
+    100508: skirtB1.R
+    100510: skirtB2.L
+    100512: skirtB2.L_end
+    100514: skirtB2.R
+    100516: skirtB2.R_end
+    100518: skirtF1.L
+    100520: skirtF1.R
+    100522: skirtF2.L
+    100524: skirtF2.L_end
+    100526: skirtF2.R
+    100528: skirtF2.R_end
+    100530: skirtM1.L
+    100532: skirtM1.R
+    100534: skirtM2.L
+    100536: skirtM2.L_end
+    100538: skirtM2.R
+    100540: skirtM2.R_end
+    100542: spine
+    100544: thigh.L
+    100546: thigh.R
+    100548: thumb.01.L
+    100550: thumb.01.R
+    100552: thumb.02.L
+    100554: thumb.02.R
+    100556: thumb.03.L
+    100558: thumb.03.L_end
+    100560: thumb.03.R
+    100562: thumb.03.R_end
+    100564: toe.L
+    100566: toe.L_end
+    100568: toe.R
+    100570: toe.R_end
+    100572: upper_arm.L
+    100574: upper_arm.R
     400000: Armpit01.L
     400002: Armpit01.R
     400004: Armpit02.L
@@ -357,8 +469,126 @@ ModelImporter:
     400346: Shoulder02.L_end
     400348: Shoulder02.R
     400350: Shoulder02.R_end
+    400352: Camera
+    400354: chest
+    400356: Cube
+    400358: f_index.01.L
+    400360: f_index.01.R
+    400362: f_index.02.L
+    400364: f_index.02.L_end
+    400366: f_index.02.R
+    400368: f_index.02.R_end
+    400370: f_middle.01.L
+    400372: f_middle.01.R
+    400374: f_middle.02.L
+    400376: f_middle.02.L_end
+    400378: f_middle.02.R
+    400380: f_middle.02.R_end
+    400382: f_pinky.01.L
+    400384: f_pinky.01.R
+    400386: f_pinky.02.L
+    400388: f_pinky.02.L_end
+    400390: f_pinky.02.R
+    400392: f_pinky.02.R_end
+    400394: f_ring.01.L
+    400396: f_ring.01.R
+    400398: f_ring.02.L
+    400400: f_ring.02.L_end
+    400402: f_ring.02.R
+    400404: f_ring.02.R_end
+    400406: foot.L
+    400408: foot.R
+    400410: forearm.L
+    400412: forearm.R
+    400414: hairSide1.L
+    400416: hairSide1.R
+    400418: hairSide2.L
+    400420: hairSide2.L_end
+    400422: hairSide2.R
+    400424: hairSide2.R_end
+    400426: hand.L
+    400428: hand.R
+    400430: HatBack
+    400432: HatBack_end
+    400434: HatFront
+    400436: HatFront_end
+    400438: HatSide.L
+    400440: HatSide.L_end
+    400442: HatSide.R
+    400444: HatSide.R_end
+    400446: HatTail1
+    400448: HatTail1_end
+    400450: head
+    400452: hips
+    400454: Lamp
+    400456: MelonHat0
+    400458: metarig
+    400460: neck
+    400462: ref
+    400464: ref.001
+    400466: ref.002
+    400468: ref.003
+    400470: refBack
+    400472: refFootSide
+    400474: refHead
+    400476: refHeadFront
+    400478: refHeadFront.002
+    400480: refHeadFront.003
+    400482: refHeadFront.004
+    400484: refHeadFront.005
+    400486: refHeadSide
+    400488: refHeadSide.001
+    400490: refHeadSide.002
+    400492: refNew
+    400494: refSide
+    400496: refYuko.001
+    400498: shin.L
+    400500: shin.R
+    400502: shoulder.L
+    400504: shoulder.R
+    400506: skirtB1.L
+    400508: skirtB1.R
+    400510: skirtB2.L
+    400512: skirtB2.L_end
+    400514: skirtB2.R
+    400516: skirtB2.R_end
+    400518: skirtF1.L
+    400520: skirtF1.R
+    400522: skirtF2.L
+    400524: skirtF2.L_end
+    400526: skirtF2.R
+    400528: skirtF2.R_end
+    400530: skirtM1.L
+    400532: skirtM1.R
+    400534: skirtM2.L
+    400536: skirtM2.L_end
+    400538: skirtM2.R
+    400540: skirtM2.R_end
+    400542: spine
+    400544: thigh.L
+    400546: thigh.R
+    400548: thumb.01.L
+    400550: thumb.01.R
+    400552: thumb.02.L
+    400554: thumb.02.R
+    400556: thumb.03.L
+    400558: thumb.03.L_end
+    400560: thumb.03.R
+    400562: thumb.03.R_end
+    400564: toe.L
+    400566: toe.L_end
+    400568: toe.R
+    400570: toe.R_end
+    400572: upper_arm.L
+    400574: upper_arm.R
     2300000: MelonHat1Ribbon
+    2300002: Cube
+    2300004: MelonHat0
+    2300006: refHead
     3300000: MelonHat1Ribbon
+    3300002: Cube
+    3300004: MelonHat0
+    3300006: refHead
     4300000: MelonCloak0
     4300002: MelonCloak0_Ribbon
     4300004: MelonBody
@@ -367,6 +597,9 @@ ModelImporter:
     4300010: MelonSkirt
     4300012: MelonHat1
     4300014: MelonHat1Ribbon
+    4300016: MelonHat0
+    4300018: Cube
+    4300020: refHead
     9500000: //RootNode
     13700000: MelonBody
     13700002: MelonCloak0
@@ -416,8 +649,8 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
-    tangentImportMode: 2
+    normalImportMode: 1
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
