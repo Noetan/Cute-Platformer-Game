@@ -1,15 +1,16 @@
-﻿// Adds a button to the SpringManager's component panel
+﻿// Adds a button to automatically assign the child bone
 
 using UnityEngine;
 using UnityEditor;
 using UnityChan;
 
 [CustomEditor(typeof(SpringBone))]
+[CanEditMultipleObjects]
 public class SpringBoneEditor : Editor
 {
     Transform[] children;
     SpringBone sb;
-    int currentChild = 1;
+    int currentChild = 1; // 1 because 0 is itself and not the first child
 
     public override void OnInspectorGUI()
     {
@@ -19,19 +20,27 @@ public class SpringBoneEditor : Editor
 
         GUILayout.Space(10);
 
+        if (GUILayout.Button("Find First Child"))
+        {
+            sb.child = GetNextChild(false);
+        }
         if (GUILayout.Button("Find Next Child"))
         {
-            sb.child = GetNextChild();
+            sb.child = GetNextChild(true);
         }
     }
 
-    Transform GetNextChild()
+    Transform GetNextChild(bool cycle)
     {
-        if (children == null)
+        children = sb.GetComponentsInChildren<Transform>(false);
+
+        if (cycle)
         {
-            children = sb.GetComponentsInChildren<Transform>(false);
+            return children[(currentChild++ % children.Length)];
         }
-        
-        return children[(currentChild++ % children.Length)];
+        else
+        {
+            return children[1];
+        }
     }
 }

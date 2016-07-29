@@ -1,4 +1,4 @@
-﻿// Adds a button to the SpringManager's component panel
+﻿// Adds a button to the SpringManager's component panel to automatically find SpringBones
 
 using UnityEngine;
 using UnityEditor;
@@ -12,11 +12,10 @@ public class SpringManagerEditor : Editor
         SpringManager sm = (SpringManager)target;
 
         DrawDefaultInspector();
-        
+                
         if (GUILayout.Button("Find Spring Bones"))
         {
-            SpringBone[] bones = sm.gameObject.GetComponentsInChildren<SpringBone>();
-            sm.springBones = bones;
+            sm.springBones = sm.gameObject.GetComponentsInChildren<SpringBone>(false);
         }
     }
 }
