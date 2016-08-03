@@ -3,6 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityChan;
+using UnityEngine.Assertions;
 
 [CustomEditor(typeof(SpringBone))]
 [CanEditMultipleObjects]
@@ -34,6 +35,8 @@ public class SpringBoneEditor : Editor
     {
         children = sb.GetComponentsInChildren<Transform>(false);
 
+        Assert.IsTrue(children.Length > 0);
+		
         if (cycle)
         {
             return children[(currentChild++ % children.Length)];

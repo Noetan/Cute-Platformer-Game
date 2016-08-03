@@ -293,6 +293,42 @@ ModelImporter:
     100570: toe.R_end
     100572: upper_arm.L
     100574: upper_arm.R
+    100576: HatRoot
+    100578: MelonCloak1
+    100580: MelonCloak1_Ribbon
+    100582: MelonFace
+    100584: ORG-skirtMidB1
+    100586: ORG-skirtMidB1_end
+    100588: ORG-skirtMidF1
+    100590: ORG-skirtMidF1_end
+    100592: ORG-skirtSide1.L
+    100594: ORG-skirtSide1.L_end
+    100596: ORG-skirtSide1.R
+    100598: ORG-skirtSide1.R_end
+    100600: ORG-skirtSide2.L
+    100602: ORG-skirtSide2.L_end
+    100604: ORG-skirtSide2.R
+    100606: ORG-skirtSide2.R_end
+    100608: ORG-skirtSide3.L
+    100610: ORG-skirtSide3.L_end
+    100612: ORG-skirtSide3.R
+    100614: ORG-skirtSide3.R_end
+    100616: ORG-skirtSide4.L
+    100618: ORG-skirtSide4.L_end
+    100620: ORG-skirtSide4.R
+    100622: ORG-skirtSide4.R_end
+    100624: ORG-skirtSide5.L
+    100626: ORG-skirtSide5.L_end
+    100628: ORG-skirtSide5.R
+    100630: ORG-skirtSide5.R_end
+    100632: ORG-skirtThighB1.L
+    100634: ORG-skirtThighB1.L_end
+    100636: ORG-skirtThighB1.R
+    100638: ORG-skirtThighB1.R_end
+    100640: ORG-skirtThighF1.L
+    100642: ORG-skirtThighF1.L_end
+    100644: ORG-skirtThighF1.R
+    100646: ORG-skirtThighF1.R_end
     400000: Armpit01.L
     400002: Armpit01.R
     400004: Armpit02.L
@@ -581,14 +617,52 @@ ModelImporter:
     400570: toe.R_end
     400572: upper_arm.L
     400574: upper_arm.R
+    400576: HatRoot
+    400578: MelonCloak1
+    400580: MelonCloak1_Ribbon
+    400582: MelonFace
+    400584: ORG-skirtMidB1
+    400586: ORG-skirtMidB1_end
+    400588: ORG-skirtMidF1
+    400590: ORG-skirtMidF1_end
+    400592: ORG-skirtSide1.L
+    400594: ORG-skirtSide1.L_end
+    400596: ORG-skirtSide1.R
+    400598: ORG-skirtSide1.R_end
+    400600: ORG-skirtSide2.L
+    400602: ORG-skirtSide2.L_end
+    400604: ORG-skirtSide2.R
+    400606: ORG-skirtSide2.R_end
+    400608: ORG-skirtSide3.L
+    400610: ORG-skirtSide3.L_end
+    400612: ORG-skirtSide3.R
+    400614: ORG-skirtSide3.R_end
+    400616: ORG-skirtSide4.L
+    400618: ORG-skirtSide4.L_end
+    400620: ORG-skirtSide4.R
+    400622: ORG-skirtSide4.R_end
+    400624: ORG-skirtSide5.L
+    400626: ORG-skirtSide5.L_end
+    400628: ORG-skirtSide5.R
+    400630: ORG-skirtSide5.R_end
+    400632: ORG-skirtThighB1.L
+    400634: ORG-skirtThighB1.L_end
+    400636: ORG-skirtThighB1.R
+    400638: ORG-skirtThighB1.R_end
+    400640: ORG-skirtThighF1.L
+    400642: ORG-skirtThighF1.L_end
+    400644: ORG-skirtThighF1.R
+    400646: ORG-skirtThighF1.R_end
     2300000: MelonHat1Ribbon
     2300002: Cube
     2300004: MelonHat0
     2300006: refHead
+    2300008: MelonCloak1
     3300000: MelonHat1Ribbon
     3300002: Cube
     3300004: MelonHat0
     3300006: refHead
+    3300008: MelonCloak1
     4300000: MelonCloak0
     4300002: MelonCloak0_Ribbon
     4300004: MelonBody
@@ -600,6 +674,9 @@ ModelImporter:
     4300016: MelonHat0
     4300018: Cube
     4300020: refHead
+    4300022: MelonCloak1_Ribbon
+    4300024: MelonCloak1
+    4300026: MelonFace
     9500000: //RootNode
     13700000: MelonBody
     13700002: MelonCloak0
@@ -608,9 +685,13 @@ ModelImporter:
     13700008: MelonHair0Thin
     13700010: MelonHat1
     13700012: MelonSkirt
+    13700014: MelonCloak1_Ribbon
+    13700016: MelonFace
+    13700018: MelonHat1Ribbon
+    13700020: MelonCloak1
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 2
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
