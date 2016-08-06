@@ -4,22 +4,32 @@
 // Holds a static reference to our player object
 
 using UnityEngine;
+using Prime31.MessageKit;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
     public static GameObject Player;
     public static Rigidbody RB;
+    public static CapsuleCollider MainCollider;
     public static string Tag;
     static Health HealthComp;
     public static PlayerMove MoveComp;
     public static Animator AnimatorComp;
 
     #region Inspector Variables
+    [SerializeField]
+    [Tooltip("How fast the player needs to have clicked the button again to register a double tap. Measured in seconds.")]
+    float m_doubleTapTime = 0.3f;
     #endregion
 
-    //int m_hp = 0;
-    int m_konpeito = 0;
+    // Drops
+    int m_dropsCount = 0;
+    int DROPS_MAX_COUNT = 9999999;
+
+    // Controller events
+    int m_crouchPressCount = 0;
+    float m_crouchResetTime = 0;
 
     void Awake()
     {
@@ -29,19 +39,39 @@ public class PlayerController : MonoBehaviour
         Tag = Player.tag;
         HealthComp = GetComponent<Health>();
         MoveComp = GetComponent<PlayerMove>();
-        AnimatorComp = GetComponentInChildren<Animator>();
+        AnimatorComp = GetComponentInChildren<Animator>();        
+        MainCollider = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
-        // Player movement
-        if (Input.GetButton("Crouch") && MoveComp.Grounded)
+        // Player movement //
+        if (Input.GetButton(Buttons.Crouch) && MoveComp.Grounded)
         {
             MoveComp.Crouching = true;
         }
         else
         {
             MoveComp.Crouching = false;
+        }
+
+        // Detecting crouch double taps //
+        // Increment number of taps and set the reset time
+        if (Input.GetButtonDown(Buttons.Crouch))
+        {
+            m_crouchPressCount++;
+            m_crouchResetTime = Time.time + m_doubleTapTime;
+        }
+        // Fire the doubletapped event
+        if (m_crouchPressCount >= 2)
+        {
+            MessageKit.post(MessageTypes.DOUBLETAP_CROUCH);
+            m_crouchPressCount = 0;
+        }
+        // If the reset time has passed then that means the player never tapped again in time
+        if (Time.time > m_crouchResetTime)
+        {
+            m_crouchPressCount = 0;
         }
     }
 
@@ -55,21 +85,18 @@ public class PlayerController : MonoBehaviour
 
     public void AddKonpeito(int diff)
     {
-        int newKonp = m_konpeito += diff;
-        newKonp = Mathf.Clamp(newKonp, 0, 9999999);
-
-        m_konpeito = newKonp;
+        m_dropsCount = Mathf.Clamp(m_dropsCount += diff, 0, DROPS_MAX_COUNT);
     }
 
     #region Getters
     public float InputH
     {
-        get { return Input.GetAxis("Horizontal"); }
+        get { return Input.GetAxis(Buttons.Horizontal); }
     }
 
     public float InputV
     {
-        get { return Input.GetAxis("Vertical"); }
+        get { return Input.GetAxis(Buttons.Vertical); }
     }
 
     public int CurrentHealth
@@ -79,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
     public int CurrentKonpeito
     {
-        get { return m_konpeito; }
+        get { return m_dropsCount; }
     }
 
     public bool Grounded

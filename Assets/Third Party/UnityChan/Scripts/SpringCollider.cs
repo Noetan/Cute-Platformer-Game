@@ -19,7 +19,7 @@ namespace UnityChan
         [SerializeField]
         bool m_showDebug = true;
 
-		private void OnDrawGizmosSelected ()
+		private void OnDrawGizmos()
 		{
             if (m_showDebug)
             {

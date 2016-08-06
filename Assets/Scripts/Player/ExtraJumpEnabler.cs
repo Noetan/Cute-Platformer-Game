@@ -76,7 +76,7 @@ public class ExtraJumpEnabler : MonoBehaviour
         }
 
         //If we receive a jump button down, we're not grounded and we can double jump...
-        if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && m_canDoubleJump)
+        if (Input.GetButtonDown(Buttons.Jump) && !m_playerMove.Grounded && m_canDoubleJump)
         {
             //Do a jump with the first jump force! :D
             StartCoroutine( m_playerMove.Jump(m_airJumpVel, true, true) );
@@ -85,7 +85,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             //Instantiate(midAirJumpParticleEffect, m_playerMove.JumpingEffectLocation.position, midAirJumpParticleEffect.transform.rotation);
         }
         //If we receive a jump button down, we're not grounded and we are swimming...
-        else if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && m_isSwimming)
+        else if (Input.GetButtonDown(Buttons.Jump) && !m_playerMove.Grounded && m_isSwimming)
         {
             //Do a jump with the first jump force! :D Or a third of it, because the first one is already too much for swimming
             StartCoroutine( m_playerMove.Jump(m_playerMove.JumpVelocity * m_WaterJumpStrength, false) );
@@ -127,7 +127,7 @@ public class ExtraJumpEnabler : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //If the object has the tag Water that means we're in water now...
-        if (other.gameObject.tag == "Water")
+        if (other.CompareTag(Tags.Water))
         {
             m_isSwimming = true;
 
@@ -139,7 +139,7 @@ public class ExtraJumpEnabler : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         //If a object with the gametag water exited my Trigger...
-        if (other.gameObject.tag == "Water")
+        if (other.CompareTag(Tags.Water))
         {
             m_isSwimming = false;
 
@@ -159,7 +159,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_rigidBody.drag = dragDefault;
             return;
         }
-        if (Input.GetButtonDown("Jump") && !m_playerMove.Grounded && CanWallJump && m_currentWall != null)
+        if (Input.GetButtonDown(Buttons.Jump) && !m_playerMove.Grounded && CanWallJump && m_currentWall != null)
         {
             Vector3 WallPos = m_currentWall.transform.position;
             Vector3 myPos = transform.position;

@@ -8,5 +8,47 @@ public static class MessageTypes
 {
     public const int PLAYER_JUMP = 0;
     public const int PLAYER_LAND = 1;
+    public const int DOUBLETAP_CROUCH = 2;
 }
+
+public static class Layers
+{
+    public const int DEFAULT = 0;
+    public const int PLAYER = 28;
+    public const int IGNORE_PLAYER = 29;
+}
+
+public static class Tags
+{
+    public const string Player = "Player";
+    public const string Pickup = "Pickup";
+    public const string Pushable = "Pushable";
+    public const string Water = "Water";
+    public const string Enemy = "Enemy";
+    public const string Coin = "Coin";
+    public const string MovingPlatform = "MovingPlatform";
+    public const string Checkpoint = "Checkpoint";
+    public const string Waypoint = "Waypoint";
+    public const string OneWayPlatform = "OneWayPlatform";
+    public const string ClimbableRope = "ClimbableRope";
+    public const string Ladder = "Ladder";
+    public const string ClimbableWall = "ClimbableWall";
+    public const string BalancableSurface = "BalancableSurface";
+    public const string BalancableRope = "BalancableRope";
+    public const string FxTemporaire = "FxTemporaire";
+    public const string Spring = "Spring";
+    public const string Talkable = "Talkable";
+    public const string Triggerable = "Triggerable";
+    public const string AttractedItem = "AttractedItem";
+}
+
+public static class Buttons
+{
+    public const string Crouch = "Crouch";
+    public const string Jump = "Jump";
+    public const string Melee = "Melee";
+    public const string Horizontal = "Horizontal";
+    public const string Vertical = "Vertical";
+}
+
 

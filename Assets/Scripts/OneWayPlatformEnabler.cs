@@ -1,4 +1,6 @@
-﻿
+﻿///
+/// DEPRECATED - Add OneWayPlatform to the individual platforms instead
+///
 
 using UnityEngine;
 using System.Collections;
@@ -93,7 +95,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
         //Wait 0.5f for us to fall
         yield return new WaitForSeconds(0.5f);
         //Then turn it back to the layer that lets us collide with that!
-        gameObject.layer = PlayerLayer;
+        gameObject.layer = Layers.PLAYER;
     }
 
     //This is an udpate that is called less frequently
@@ -111,7 +113,7 @@ public class OneWayPlatformEnabler : MonoBehaviour
                 if (CanPassThroughPlatforms)
                 {
                     CanPassThroughPlatforms = false;
-                    gameObject.layer = PlayerLayer;
+                    gameObject.layer = Layers.PLAYER;
                 }
             }
             else

@@ -104,7 +104,7 @@ public class PlayerMelee : MonoBehaviour
             m_canDive = false;
         }
 
-        if (Input.GetButtonDown("Jump") && m_diving)
+        if (Input.GetButtonDown(Buttons.Jump) && m_diving)
         {
             StopDive();
         }
@@ -114,7 +114,7 @@ public class PlayerMelee : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown("Melee"))
+        if (Input.GetButtonDown(Buttons.Melee))
         {
             #region reference
             //First off, let's check if we're not already punching, see if the punch animations are playing.

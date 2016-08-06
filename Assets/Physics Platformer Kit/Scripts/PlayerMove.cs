@@ -212,58 +212,66 @@ public class PlayerMove : MonoBehaviour
 			RaycastHit hit;
 			if(Physics.Raycast(check.position, Vector3.down, out hit, dist + 0.05f))
 			{
-				if(!hit.transform.GetComponent<Collider>().isTrigger)
-				{
-					//slope control
-					slope = Vector3.Angle (hit.normal, Vector3.up);
-					//slide down slopes
-					if(slope > m_slopeLimit && hit.transform.tag != "Pushable")
-					{
-						Vector3 slide = new Vector3(0f, -m_slideAmount, 0f);
-                        PlayerController.RB.AddForce (slide, ForceMode.Force);
-					}
-					//enemy bouncing
-					if (hit.transform.tag == "Enemy" && PlayerController.RB.velocity.y < 0)
-					{
-						enemyAI = hit.transform.GetComponent<EnemyAI>();
-						enemyAI.BouncedOn();
-						onEnemyBounce ++;
-						dealDamage.Attack(hit.transform.gameObject, 1, 0f, 0f);
-					}
-                    if (hit.transform.CompareTag("Spring") && PlayerController.RB.velocity.y < 0)
+                Collider[] allColliders = hit.transform.GetComponents<Collider>();
+                for (int i = 0; i < allColliders.Length; i++)
+                {
+                    if (!allColliders[i].isTrigger)
                     {
-                        JumpSpring jSpring = hit.transform.GetComponent<JumpSpring>();
-                        jSpring.BouncedOn();
-                    }
-					else
-						onEnemyBounce = 0;
-					//moving platforms
-					if (hit.transform.tag == "MovingPlatform" || hit.transform.tag == "Pushable")
-					{
-						movingObjSpeed = hit.transform.GetComponent<Rigidbody>().velocity;
-						movingObjSpeed.y = 0f;
-                        //9.5f is a magic number, if youre not moving properly on platforms, experiment with this number
-                        PlayerController.RB.AddForce(movingObjSpeed * m_movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
-					}
-					else
-					{
-						movingObjSpeed = Vector3.zero;
-					}
-
-                    // If the player Triggers world events or objects (button pushing, floor buttons, reactions to player etc)
-                    if (hit.transform.tag == "Triggerable")
-                    {
-                        TriggerableObject triggerable = hit.transform.GetComponent<TriggerableObject>();
-
-                        if (triggerable != null)
+                        //slope control
+                        slope = Vector3.Angle(hit.normal, Vector3.up);
+                        //slide down slopes
+                        if (slope > m_slopeLimit && !hit.transform.CompareTag(Tags.Pushable))
                         {
-                            triggerable.StandingOn(transform.position);
+                            Vector3 slide = new Vector3(0f, -m_slideAmount, 0f);
+                            PlayerController.RB.AddForce(slide, ForceMode.Force);
                         }
-                    }
+                        //enemy bouncing
+                        if (hit.transform.CompareTag(Tags.Enemy) && PlayerController.RB.velocity.y < 0)
+                        {
+                            enemyAI = hit.transform.GetComponent<EnemyAI>();
+                            enemyAI.BouncedOn();
+                            onEnemyBounce++;
+                            dealDamage.Attack(hit.transform.gameObject, 1, 0f, 0f);
+                        }
 
-					//yes our feet are on something
-					return true;
-				}
+                        if (hit.transform.CompareTag(Tags.Spring) && PlayerController.RB.velocity.y < 0)
+                        {
+                            JumpSpring jSpring = hit.transform.GetComponent<JumpSpring>();
+                            jSpring.BouncedOn();
+                        }
+                        else
+                        {
+                            onEnemyBounce = 0;
+                        }
+
+                        //moving platforms
+                        if (hit.transform.CompareTag(Tags.MovingPlatform) || hit.transform.CompareTag(Tags.Pushable))
+                        {
+                            movingObjSpeed = hit.transform.GetComponent<Rigidbody>().velocity;
+                            movingObjSpeed.y = 0f;
+                            //9.5f is a magic number, if youre not moving properly on platforms, experiment with this number
+                            PlayerController.RB.AddForce(movingObjSpeed * m_movingPlatformFriction * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                        }
+                        else
+                        {
+                            movingObjSpeed = Vector3.zero;
+                        }
+
+                        // If the player Triggers world events or objects (button pushing, floor buttons, reactions to player etc)
+                        if (hit.transform.CompareTag(Tags.Triggerable))
+                        {
+                            TriggerableObject triggerable = hit.transform.GetComponent<TriggerableObject>();
+
+                            if (triggerable != null)
+                            {
+                                triggerable.StandingOn(transform.position);
+                            }
+                        }
+
+                        //yes our feet are on something
+                        return true;
+                    }
+                }
 			}
 		}
 		movingObjSpeed = Vector3.zero;
