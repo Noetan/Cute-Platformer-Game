@@ -122,7 +122,10 @@ public class BasePickUp : CustomBehaviour
 
     protected virtual void PlaySFX()
     {
-        AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
+        if (m_touchedSFX.Length > 0)
+        {
+            AudioPool.Instance.PlayRandom(m_touchedSFX, transform.position, m_SFXSettings);
+        }
     }
 
     protected virtual void PlayParticleFX()

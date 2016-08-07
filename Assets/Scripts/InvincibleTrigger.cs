@@ -28,6 +28,7 @@ public class InvincibleTrigger : MonoBehaviour
 
     public void StartInvincibility()
     {
+        Debug.Log("invincible!");
         isInvincible = true;
         InvincibilityCollider.enabled = true;
         StartCoroutine(Wait(invincibilityDuration));
@@ -46,7 +47,9 @@ public class InvincibleTrigger : MonoBehaviour
         {
             return;
         }
-        if (other.tag == "Enemy" || other.tag == "Pickup")
+        //if (other.CompareTag(Tags.Enemy) || other.CompareTag(Tags.Pickup))
+        // Pickups are power ups e.g. health, coins, star i.e. things you pick up not physical objects
+        if (other.CompareTag(Tags.Enemy))
         {
             if (!other.GetComponent<Health>().flashing)
             {

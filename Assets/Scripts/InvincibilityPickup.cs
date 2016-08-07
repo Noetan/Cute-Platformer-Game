@@ -1,15 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class InvincibilityPickup : MonoBehaviour {
-
-    void OnTriggerEnter(Collider col)
+﻿public class InvincibilityPickup : BasePickUp
+{
+    protected override void PickUp()
     {
-        if (col.tag == "Player")
-        {
-            col.GetComponent<InvincibleTrigger>().StartInvincibility();
-            Destroy(this.gameObject);
-        }
-    }
+        PlayerController.Instance.GetComponent<InvincibleTrigger>().StartInvincibility();
 
+        base.PickUp();        
+    }
 }
