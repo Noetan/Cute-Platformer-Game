@@ -57,6 +57,20 @@ public class BasePickUp : CustomBehaviour
         Assert.IsNotNull(GetLight);
     }
 
+    protected override void Start()
+    {
+        Collider[] colliders = GetComponents<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (!colliders[i].isTrigger)
+            {
+                Physics.IgnoreCollision(colliders[i], PlayerController.MainCollider, true);
+            }
+        }
+
+        base.Start();
+    }
+
     void OnEnable () 
 	{
         /// Note this gets called multiple times at the start of the level for some reason ///

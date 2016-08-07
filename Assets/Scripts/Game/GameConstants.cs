@@ -14,12 +14,13 @@ public static class MessageTypes
 public static class Layers
 {
     public const int DEFAULT = 0;
-    public const int PLAYER = 28;
-    public const int IGNORE_PLAYER = 29;
+    public const int PLAYER = 8;
+    public const int LEDGE_GRAB_SURFACE = 9;
 }
 
 public static class Tags
 {
+    public const string Untagged = "Untagged";
     public const string Player = "Player";
     public const string Pickup = "Pickup";
     public const string Pushable = "Pushable";
@@ -40,6 +41,7 @@ public static class Tags
     public const string Talkable = "Talkable";
     public const string Triggerable = "Triggerable";
     public const string AttractedItem = "AttractedItem";
+    public const string MainCamera = "MainCamera";
 }
 
 public static class Buttons

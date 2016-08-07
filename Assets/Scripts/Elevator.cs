@@ -33,6 +33,8 @@ public class Elevator : SimpleStateMachine
 
     private Vector3 forward;
 
+    Rigidbody rb;
+
     void Start()
     {
 
@@ -54,18 +56,20 @@ public class Elevator : SimpleStateMachine
             currentState = ElevatorStates.Descend;
             transform.position = flipTarget;
         }
+
+        rb = GetComponent<Rigidbody>();
     }
 
     void Ascend_FixedUpdate()
     {
 
-        if (transform.position == ascendTarget)
+        if (rb.position == ascendTarget)
         {
             currentState = ElevatorStates.Rotate;
             return;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, ascendTarget, RiseSpeed * Time.deltaTime);
+        rb.MovePosition(Vector3.MoveTowards(transform.position, ascendTarget, RiseSpeed * Time.deltaTime));
     }
 
     float rot;
@@ -83,8 +87,8 @@ public class Elevator : SimpleStateMachine
 
         if (rot > 180)
         {
-            transform.position = flipTarget;
-            transform.rotation = Quaternion.identity;
+            rb.position = flipTarget;
+            rb.rotation = Quaternion.identity;
             currentState = ElevatorStates.Descend;
             return;
         }
@@ -99,7 +103,7 @@ public class Elevator : SimpleStateMachine
             return;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, descendRoot, RiseSpeed * Time.deltaTime);
+        rb.MovePosition(Vector3.MoveTowards(transform.position, descendRoot, RiseSpeed * Time.deltaTime));
     }
 
     void Swap_FixedUpdate()
@@ -109,11 +113,11 @@ public class Elevator : SimpleStateMachine
 
         float velocity = distance / time;
 
-        transform.position -= forward * velocity * Time.deltaTime;
+        rb.MovePosition(rb.position - (forward * velocity * Time.deltaTime));
 
         if (Vector3.Distance(descendRoot, transform.position) > Horizontal)
         {
-            transform.position = ascendRoot;
+            rb.position = ascendRoot;
             currentState = ElevatorStates.Ascend;
             return;
         }

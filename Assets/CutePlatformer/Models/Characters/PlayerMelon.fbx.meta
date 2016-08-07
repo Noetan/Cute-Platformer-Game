@@ -329,6 +329,9 @@ ModelImporter:
     100642: ORG-skirtThighF1.L_end
     100644: ORG-skirtThighF1.R
     100646: ORG-skirtThighF1.R_end
+    100648: refYuko.000
+    100650: MelonHairThickRig
+    100652: MelonHairThinRig
     400000: Armpit01.L
     400002: Armpit01.R
     400004: Armpit02.L
@@ -653,6 +656,9 @@ ModelImporter:
     400642: ORG-skirtThighF1.L_end
     400644: ORG-skirtThighF1.R
     400646: ORG-skirtThighF1.R_end
+    400648: refYuko.000
+    400650: MelonHairThickRig
+    400652: MelonHairThinRig
     2300000: MelonHat1Ribbon
     2300002: Cube
     2300004: MelonHat0
