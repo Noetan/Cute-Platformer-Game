@@ -61,7 +61,8 @@ namespace UnityChan
 			if (springManager != null)
 				return springManager;
 
-			if (t.parent != null) {
+			if (t.parent != null)
+            {
 				return GetParentSpringManager (t.parent);
 			}
 
@@ -102,14 +103,14 @@ namespace UnityChan
 			currTipPos = ((currTipPos - trs.position).normalized * springLength) + trs.position;
 
 			//衝突判定
-			for (int i = 0; i < colliders.Length; i++) {
-				if (Vector3.Distance (currTipPos, colliders [i].transform.position) <= (radius + colliders [i].radius)) {
+			for (int i = 0; i < colliders.Length; i++)
+            {
+				if (Vector3.Distance (currTipPos, colliders [i].transform.position) <= (radius + colliders [i].radius))
+                {
 					Vector3 normal = (currTipPos - colliders [i].transform.position).normalized;
 					currTipPos = colliders [i].transform.position + (normal * (radius + colliders [i].radius));
 					currTipPos = ((currTipPos - trs.position).normalized * springLength) + trs.position;
 				}
-
-
 			}
 
 			prevTipPos = temp;
@@ -128,8 +129,8 @@ namespace UnityChan
 		{
 			if (debug) {
 				Gizmos.color = Color.yellow;
-				Gizmos.DrawWireSphere (currTipPos, radius);
-			}
+                Gizmos.DrawWireSphere(currTipPos, radius * transform.lossyScale.x);
+            }
 		}
 	}
 }

@@ -109,7 +109,7 @@ public class PlayerMelee : MonoBehaviour
             StopDive();
         }
 
-        if (m_Sliding.m_isSliding)
+        if (m_Sliding.IsSliding)
         {
             return;
         }
@@ -165,7 +165,7 @@ public class PlayerMelee : MonoBehaviour
         //m_isGrounded = m_playerMove.ModelAnimator.GetBool("Grounded");
 
         // Check if our slide from dive has stopped, so we can stop diving
-        if (!m_Sliding.m_isSliding && m_diving)
+        if (!m_Sliding.IsSliding && m_diving)
         {
             StopDive();
         }

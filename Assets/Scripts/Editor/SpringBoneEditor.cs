@@ -29,6 +29,10 @@ public class SpringBoneEditor : Editor
         {
             sb.child = GetNextChild(true);
         }
+
+        GUILayout.Space(5);
+
+        GUILayout.TextArea("Note: debug sphere scaled with the world scale.x\nNote: DOES COLLISION NOT WORK WITH NON-1 SCALES");
     }
 
     Transform GetNextChild(bool cycle)

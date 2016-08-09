@@ -328,7 +328,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    // A variable height jump that goes striaght up
+    // A variable height jump that goes striaght up based on how long the jump button is held for
     public IEnumerator Jump(float jumpVelocity, bool smoke, bool midAir = false)
     {
         // If we can't jump, return without doing anything
@@ -370,7 +370,7 @@ public class PlayerMove : MonoBehaviour
     }
 
     // A jump of fixed height/direction
-    public void FixedJump(Vector3 JumpForce)
+    public void FixedJump(Vector3 jumpForce, bool smoke)
     {
         if (!canJump)
         {
@@ -379,9 +379,13 @@ public class PlayerMove : MonoBehaviour
 
         canJump = false;
 
-        PlayerController.RB.AddRelativeForce(JumpForce, ForceMode.VelocityChange);
+        PlayerController.RB.AddRelativeForce(jumpForce, ForceMode.VelocityChange);
 
         StartCoroutine(WaitAndSetCanJumpOn());
+    }
+    public void FixedJump(Vector3 jumpForce)
+    {
+        FixedJump(jumpForce, false);
     }
 
     // Wait and set canJump to true;

@@ -7,7 +7,6 @@
 //https://twitter.com/ricopin416
 //
 using UnityEngine;
-using System.Collections;
 
 namespace UnityChan
 {
@@ -24,7 +23,7 @@ namespace UnityChan
             if (m_showDebug)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(transform.position, radius);
+                Gizmos.DrawWireSphere(transform.position, radius * transform.lossyScale.x);
             }
 		}
 	}
