@@ -32,7 +32,7 @@ public class SpringBoneEditor : Editor
 
         GUILayout.Space(5);
 
-        GUILayout.TextArea("Note: debug sphere scaled with the world scale.x\nNote: DOES COLLISION NOT WORK WITH NON-1 SCALES");
+        GUILayout.TextArea("WARNING: Uses world scale.x to scale the bones and colliders.\nDO NOT SCALE THE GAMEOBJECT NON-UNIFORMLY (Very bad idea with rigidbodies anyway).");
     }
 
     Transform GetNextChild(bool cycle)

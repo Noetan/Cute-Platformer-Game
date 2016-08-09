@@ -23,8 +23,16 @@ namespace UnityChan
             if (m_showDebug)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(transform.position, radius * transform.lossyScale.x);
+                Gizmos.DrawWireSphere(transform.position, ScaledRadius);
             }
 		}
+
+        public float ScaledRadius
+        {
+            get
+            {
+                return radius * transform.lossyScale.x;
+            }
+        }
 	}
 }

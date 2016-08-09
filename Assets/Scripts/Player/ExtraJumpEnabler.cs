@@ -20,9 +20,6 @@ public class ExtraJumpEnabler : MonoBehaviour
     float wallSlideDrag = 7.5f;
     // Default drag value;
     float dragDefault;
-    // FX to play on mid air jump
-    [SerializeField]
-    public GameObject midAirJumpParticleEffect;
     [SerializeField]
     float m_WaterJumpStrength = 0.33f;
     #endregion
@@ -175,8 +172,7 @@ public class ExtraJumpEnabler : MonoBehaviour
             m_collisionNormal = new Vector3(m_collisionNormal.x, 0f, m_collisionNormal.z);
             m_rigidBody.AddForce(m_collisionNormal * WallJumpHorizontalMultiplier);
             StartCoroutine( m_playerMove.Jump(WallJumpYVelocity, true, true) );
-
-            //m_playerMove.ModelAnimator.Play("Jump1", 0);
+            
             //And lets set the double jump to false!
             CanWallJump = false;
 

@@ -20,7 +20,6 @@ public class PlayerEffects : MonoBehaviour
     #endregion
 
     Animator m_animator;
-    float feetOffset = 0f;
 
     // Sound effect settings
     AudioClipSettings landSFXsettings = new AudioClipSettings();
@@ -38,7 +37,6 @@ public class PlayerEffects : MonoBehaviour
     void Start()
     {
         m_animator = GetComponentInChildren<Animator>();
-        feetOffset = GetComponent<CapsuleCollider>().height / 2;
 
         Assert.IsNotNull(m_animator);
 
@@ -68,25 +66,20 @@ public class PlayerEffects : MonoBehaviour
     #region Message Handlers
 
     /// Called when the player jumps
-    Vector3 feetPos = Vector3.zero;
     void OnJump(PlayerMove.JumpType jumpType)
     {
         // Sound
         AudioPool.Instance.Play(m_jumpSFX, transform.position);
 
-        // Particle effects
-        feetPos = transform.position - new Vector3(0, feetOffset, 0);
-
-
         switch(jumpType)
         {
             case PlayerMove.JumpType.Normal:
                 m_animator.Play(jumpAnimSt, 0);
-                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, feetPos, true);
+                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, PlayerController.Instance.FeetPos, true);
                 break;
 
             case PlayerMove.JumpType.Air:
-                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, feetPos, true);
+                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, PlayerController.Instance.FeetPos, true);
                 m_animator.Play(jumpDoubleAnimSt, 0);
                 break;
 

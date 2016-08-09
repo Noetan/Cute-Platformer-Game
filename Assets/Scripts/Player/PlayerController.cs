@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     float m_doubleTapTime = 0.3f;
     #endregion
 
+    #region Variables
     // Drops
     int m_dropsCount = 0;
     int DROPS_MAX_COUNT = 9999999;
@@ -30,6 +31,54 @@ public class PlayerController : MonoBehaviour
     // Controller events
     int m_crouchPressCount = 0;
     float m_crouchResetTime = 0;
+
+    // Other variables
+    Vector3 m_feetPos = Vector3.zero;
+    #endregion
+
+    #region Getters
+    public float InputH
+    {
+        get { return Input.GetAxis(Buttons.Horizontal); }
+    }
+
+    public float InputV
+    {
+        get { return Input.GetAxis(Buttons.Vertical); }
+    }
+
+    public int CurrentHealth
+    {
+        get { return HealthComp.currentHealth; }
+    }
+
+    public int CurrentKonpeito
+    {
+        get { return m_dropsCount; }
+    }
+
+    public bool Grounded
+    {
+        get { return MoveComp.Grounded; }
+    }
+
+    public Vector3 FeetPos
+    {
+        get
+        {
+            return transform.position + LocalFeePos;
+        }
+    }
+
+    public Vector3 LocalFeePos
+    {
+        get
+        {
+            return m_feetPos;
+        }
+    }
+
+    #endregion
 
     void Awake()
     {
@@ -41,6 +90,11 @@ public class PlayerController : MonoBehaviour
         MoveComp = GetComponent<PlayerMove>();
         AnimatorComp = GetComponentInChildren<Animator>();        
         MainCollider = GetComponent<CapsuleCollider>();
+    }
+
+    void Start()
+    {
+        m_feetPos = Vector3.zero - new Vector3(0, MainCollider.height / 2, 0);
     }
 
     void Update()
@@ -88,30 +142,5 @@ public class PlayerController : MonoBehaviour
         m_dropsCount = Mathf.Clamp(m_dropsCount += diff, 0, DROPS_MAX_COUNT);
     }
 
-    #region Getters
-    public float InputH
-    {
-        get { return Input.GetAxis(Buttons.Horizontal); }
-    }
 
-    public float InputV
-    {
-        get { return Input.GetAxis(Buttons.Vertical); }
-    }
-
-    public int CurrentHealth
-    {
-        get { return HealthComp.currentHealth; }
-    }
-
-    public int CurrentKonpeito
-    {
-        get { return m_dropsCount; }
-    }
-
-    public bool Grounded
-    {
-        get { return MoveComp.Grounded; }
-    }
-    #endregion
 }

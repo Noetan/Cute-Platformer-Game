@@ -35,17 +35,17 @@ namespace UnityChan
 		public bool debug = true;
 		//Kobayashi:Thredshold Starting to activate activeRatio
 		public float threshold = 0.01f;
-		private float springLength;
-		private Quaternion localRotation;
-		private Transform trs;
-		private Vector3 currTipPos;
-		private Vector3 prevTipPos;
+		float springLength;
+		Quaternion localRotation;
+		Transform trs;
+		Vector3 currTipPos;
+		Vector3 prevTipPos;
 		//Kobayashi
-		private Transform org;
+		Transform org;
 		//Kobayashi:Reference for "SpringManager" component with unitychan 
-		private SpringManager managerRef;
+		SpringManager managerRef;
 
-		private void Awake ()
+		void Awake ()
 		{
 			trs = transform;
 			localRotation = transform.localRotation;
@@ -54,7 +54,7 @@ namespace UnityChan
 			managerRef = GetParentSpringManager (transform);
 		}
 
-		private SpringManager GetParentSpringManager (Transform t)
+		SpringManager GetParentSpringManager (Transform t)
 		{
 			var springManager = t.GetComponent<SpringManager> ();
 
@@ -69,7 +69,7 @@ namespace UnityChan
 			return null;
 		}
 
-		private void Start ()
+		void Start ()
 		{
 			springLength = Vector3.Distance (trs.position, child.position);
 			currTipPos = child.position;
@@ -105,10 +105,10 @@ namespace UnityChan
 			//衝突判定
 			for (int i = 0; i < colliders.Length; i++)
             {
-				if (Vector3.Distance (currTipPos, colliders [i].transform.position) <= (radius + colliders [i].radius))
+				if (Vector3.Distance (currTipPos, colliders [i].transform.position) <= (ScaledRadius + colliders[i].ScaledRadius))
                 {
 					Vector3 normal = (currTipPos - colliders [i].transform.position).normalized;
-					currTipPos = colliders [i].transform.position + (normal * (radius + colliders [i].radius));
+					currTipPos = colliders [i].transform.position + (normal * (ScaledRadius + colliders [i].ScaledRadius));
 					currTipPos = ((currTipPos - trs.position).normalized * springLength) + trs.position;
 				}
 			}
@@ -125,12 +125,20 @@ namespace UnityChan
 			trs.rotation = Quaternion.Lerp (org.rotation, secondaryRotation, managerRef.dynamicRatio);
 		}
 
-		private void OnDrawGizmos ()
+		void OnDrawGizmos ()
 		{
 			if (debug) {
 				Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(currTipPos, radius * transform.lossyScale.x);
+                Gizmos.DrawWireSphere(currTipPos, ScaledRadius);
             }
 		}
+
+        float ScaledRadius
+        {
+            get
+            {
+                return radius * transform.lossyScale.x;
+            }
+        }
 	}
 }
