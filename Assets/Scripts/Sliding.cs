@@ -58,7 +58,6 @@ public class Sliding : MonoBehaviour
         {
             m_playerMove.enabled = true;
             m_collider.material = m_DefaultMat;
-            Debug.Log("sliding stopped");
         }
     }
 

@@ -27,7 +27,7 @@ public class BasePickUp : CustomBehaviour
 
     [Header("Effects")]
     [SerializeField]
-    protected PooledDB.Particle m_touchedParticle = PooledDB.Particle.None;
+    protected Pools.Particles m_touchedParticle = Pools.Particles.None;
     [SerializeField]
     protected AudioClip[] m_touchedSFX;
     [SerializeField]
@@ -146,7 +146,7 @@ public class BasePickUp : CustomBehaviour
     {
         // Spawn the touched particle effect where the pickup is
         // Only if one exists
-        if (m_touchedParticle != PooledDB.Particle.None)
+        if (m_touchedParticle != Pools.Particles.None)
         {
             PooledDB.Instance.Spawn(m_touchedParticle, transform.position, true);
         }

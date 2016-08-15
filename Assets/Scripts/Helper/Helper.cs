@@ -1,6 +1,7 @@
 ﻿// Standalone helper functions that can be called from anywhere
 
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public static class Helper
 {
@@ -10,11 +11,7 @@ public static class Helper
     /// </summary>
     public static System.Collections.Generic.List<int> SeparateDigits(int number)
     {
-        if (number <= 0 )
-        {
-            Debug.LogError("Helper.SeparateDigits not giving a postive number");
-            return null;
-        }
+        Assert.IsTrue(number > 0);
 
         var digitsList = new System.Collections.Generic.List<int>();
 
@@ -68,8 +65,8 @@ public static class Helper
     /// </summary>
     public static int CountEnum(System.Type type)
     {
-        if (!type.IsEnum)
-            Debug.LogError("HELPER: COUNTENUM NOT GIVEN AN ENUM");
+        Assert.IsTrue(type.IsEnum);
+        //Debug.LogError("HELPER: CountEnum NOT GIVEN AN ENUM: " + System.Environment.StackTrace);
 
         return System.Enum.GetValues(type).Length;
     }
@@ -89,7 +86,7 @@ public static class Helper
     /// <param name="percentage">Between 0.0 and 1.0</param>
     public static float SmootherStep(float percentage)
     {
-        return percentage*percentage*percentage * (percentage * (6f * percentage - 15f) + 10f);
+        return percentage * percentage * percentage * (percentage * (6f * percentage - 15f) + 10f);
     }
 
     public static Vector3 ClampAngleOnPlane(Vector3 origin, Vector3 direction, float angle, Vector3 planeNormal)
@@ -144,5 +141,28 @@ public static class Helper
         public int Min;
         [SerializeField]
         public int Max;
+    }
+
+    /**
+    * Use a linearly distributed random number (x) to get a
+    * random number in the range of an exponential PDF.
+    *
+    * Parameters:
+    *     exponent - PDF's exponent
+    *     x - random number from a linearly distributed range in [0,1]
+    *     min/max - range of values in pdf
+    * E.g Helper.BiasedRandom(2, Random.Range(0f, 1f), 1, 10);
+    * would generate numbers in the range [1,10], but significantly skewed to the right.
+    */
+    public static float BiasedRandom(float exponent, float x, float min, float max)
+    {
+        if (exponent == -1)
+        {
+            return Mathf.Exp(Mathf.Log(max - min) * x) * min;
+        }
+        else
+        {
+            return Mathf.Exp(Mathf.Log(x * (-Mathf.Pow(min, exponent + 1) + Mathf.Pow(max, exponent + 1)) + Mathf.Pow(min, exponent + 1)) / (exponent + 1));
+        }
     }
 }

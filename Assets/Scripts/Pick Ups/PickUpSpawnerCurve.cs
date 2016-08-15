@@ -7,7 +7,7 @@ public class PickUpSpawnerCurve : MonoBehaviour
 {
     // The pickup to spawn
     [SerializeField]
-    PooledDB.PickUp m_item = PooledDB.PickUp.None;
+    Pools.PickUps m_item = Pools.PickUps.None;
     // How many pickups to spawn
     [SerializeField]
     [Tooltip("Note: Might not spawn evenly with closed lines")]

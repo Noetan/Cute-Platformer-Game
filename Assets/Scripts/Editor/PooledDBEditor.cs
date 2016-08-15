@@ -12,25 +12,25 @@ public class PooledDBEditor : Editor
         string helpBox = "";
         string particleEnum = "";
         string pickupEnum = "";
-
-        for (int i = 0; i < Helper.CountEnum(typeof(PooledDB.Particle)); i++)
+        
+        for (int i = 0; i < Helper.CountEnum(typeof(Pools.Particles)); i++)
         {
-            particleEnum = particleEnum + "\n" + i + ". " + Enum.GetName(typeof(PooledDB.Particle), i);
+            particleEnum = particleEnum + "\n" + i + ". " + Enum.GetName(typeof(Pools.Particles), i);
         }
 
-        for (int i = 0; i < Helper.CountEnum(typeof(PooledDB.PickUp)); i++)
+        for (int i = 0; i < Helper.CountEnum(typeof(Pools.PickUps)); i++)
         {
-            pickupEnum = pickupEnum + "\n" + i + ". " + Enum.GetName(typeof(PooledDB.PickUp), i);
+            pickupEnum = pickupEnum + "\n" + i + ". " + Enum.GetName(typeof(Pools.PickUps), i);
         }
 
         helpBox = string.Format("  Particles ({0}) \n{1} \n\n  Pick Ups ({2}) \n{3}", 
-            Helper.CountEnum(typeof(PooledDB.Particle)),
+            Helper.CountEnum(typeof(Pools.Particles)),
             particleEnum,
-            Helper.CountEnum(typeof(PooledDB.PickUp)),
+            Helper.CountEnum(typeof(Pools.PickUps)),
             pickupEnum );
 
         EditorGUILayout.HelpBox(helpBox, MessageType.None, false);
-
+        
         DrawDefaultInspector();
     }
 }

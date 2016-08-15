@@ -75,11 +75,11 @@ public class PlayerEffects : MonoBehaviour
         {
             case PlayerMove.JumpType.Normal:
                 m_animator.Play(jumpAnimSt, 0);
-                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpGround, PlayerController.Instance.FeetPos, true);
+                PooledDB.Instance.Spawn(Pools.Particles.PlayerJumpGround, PlayerController.Instance.FeetPos, true);
                 break;
 
             case PlayerMove.JumpType.Air:
-                PooledDB.Instance.Spawn(PooledDB.Particle.PlayerJumpAir, PlayerController.Instance.FeetPos, true);
+                PooledDB.Instance.Spawn(Pools.Particles.PlayerJumpAir, PlayerController.Instance.FeetPos, true);
                 m_animator.Play(jumpDoubleAnimSt, 0);
                 break;
 

@@ -53,4 +53,37 @@ public static class Buttons
     public const string Vertical = "Vertical";
 }
 
+public static class Pools
+{
+    public enum Particles
+    {
+        None,
+        DropsTouchShatter,
+        PlayerJumpGround,
+        PlayerJumpAir,
+        DropsSpawnShine
+    }
+    public enum PickUps
+    {
+        None,
+        Drop,
+        Health,
+        DropsSpawner,
+        DropMass
+    }
+}
+
+public enum MixerGroups
+{
+    Master,
+    Music,
+    SFX,
+    Dialogue,
+    VoiceClips,
+    Ambient,
+    Collectibles,
+    Tunes,
+    Menu
+}
+
 

@@ -13,13 +13,13 @@ public class AudioPoolEditor : Editor
         string helpBox = "";
         string clipString = "";
 
-        for (int i = 0; i < Helper.CountEnum(typeof(AudioPool.MixerGroup)); i++)
+        for (int i = 0; i < Helper.CountEnum(typeof(MixerGroups)); i++)
         {
-            clipString = clipString + "\n" + i + ". " + Enum.GetName(typeof(AudioPool.MixerGroup), i);
+            clipString = clipString + "\n" + i + ". " + Enum.GetName(typeof(MixerGroups), i);
         }
 
         helpBox = string.Format("   MixerGroup ({0}) \n{1}",
-            Helper.CountEnum(typeof(AudioPool.MixerGroup)),
+            Helper.CountEnum(typeof(MixerGroups)),
             clipString);
 
         EditorGUILayout.HelpBox(helpBox, MessageType.None, false);

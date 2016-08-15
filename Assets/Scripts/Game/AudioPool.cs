@@ -8,27 +8,13 @@ using UnityEngine.Audio;
 
 public class AudioPool : MonoBehaviour
 {
-    // Even if these go unused best to leave them in to avoid breaking any references
-    public enum MixerGroup
-    {
-        Master,
-        Music,
-        SFX,
-        Dialogue,
-        VoiceClips,
-        Ambient,
-        Collectibles,
-        Tunes,
-        Menu
-    }
-
     #region Internals
-    [Header("Don't touch")]
-    [SerializeField]
-    GameObject m_emptyPrefab;
     [SerializeField]
     [Tooltip("Match these with the MixerGroup enum")]
     AudioMixerGroup[] m_mixerGroups;
+    [Header("Don't touch")]
+    [SerializeField]
+    GameObject m_emptyPrefab;
 
     //[Header("Settings")]
     // How much time must pass before a single instance audioclip can play again
@@ -71,7 +57,7 @@ public class AudioPool : MonoBehaviour
     /// <summary>
     /// Returns the Mixer Group linked with the enum entry provided
     /// </summary>
-    public AudioMixerGroup GetMixerGroup(MixerGroup mg)
+    public AudioMixerGroup GetMixerGroup(MixerGroups mg)
     {
         return m_mixerGroups[(int)mg];
     }
@@ -194,8 +180,8 @@ public class AudioPool : MonoBehaviour
 [Serializable]
 public class AudioClipSettings
 {
-    [SerializeField]
-    AudioPool.MixerGroup m_mixerGroup = AudioPool.MixerGroup.SFX;
+    //[SerializeField]
+    MixerGroups m_mixerGroup = MixerGroups.SFX;
     [Header("Randomization")]
     [SerializeField]
     [Range(-3.0f, 3.0f)]

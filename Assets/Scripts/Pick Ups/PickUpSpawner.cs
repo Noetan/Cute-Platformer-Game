@@ -15,7 +15,7 @@ public class PickUpSpawner : CustomBehaviour
     #region Inspector
     [Header("Required")]
     [SerializeField]
-    PooledDB.PickUp m_itemType;
+    Pools.PickUps m_itemType;
 
     [Header("Spawn properties")]
     [SerializeField]
@@ -35,7 +35,7 @@ public class PickUpSpawner : CustomBehaviour
     [SerializeField]
     AudioClip m_sfx;
     [SerializeField]
-    PooledDB.Particle m_particleEffect;
+    Pools.Particles m_particleEffect;
     #endregion
 
     // Prevent the spawner getting triggered multiple times
@@ -57,14 +57,14 @@ public class PickUpSpawner : CustomBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!finished && other.CompareTag("Player"))
+        if (!finished && other.CompareTag(Tags.Player))
         {
             finished = true;
             Timing.RunCoroutine(_Spawn(m_itemType));
         }
     }
 
-    IEnumerator<float> _Spawn(PooledDB.PickUp type)
+    IEnumerator<float> _Spawn(Pools.PickUps type)
     {
         // transform.rotation points forward, not up as we want
         // so rotate our spawner's rotation back 90 degrees
@@ -125,7 +125,7 @@ public class PickUpSpawner : CustomBehaviour
 
     protected virtual void ParticleFX()
     {
-        if (m_particleEffect != PooledDB.Particle.None)
+        if (m_particleEffect != Pools.Particles.None)
         {
             PooledDB.Instance.Spawn(m_particleEffect, transform.position, true);
         }
