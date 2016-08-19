@@ -89,7 +89,7 @@ public class BasePickUp : CustomBehaviour
 
         m_defaultPosition = transform.position;
         CurrentState = State.Idle;
-        ShowModel(true);
+        //ShowModel(true);
 
         base.Start();  
 	} 

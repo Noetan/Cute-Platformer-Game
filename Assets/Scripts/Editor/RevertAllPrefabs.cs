@@ -8,7 +8,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class RevertAllPrefabs
+public class RevertAllPrefabsEditor
 {
     [MenuItem("Tools/Revert to Prefab")]
     static void Revert()
