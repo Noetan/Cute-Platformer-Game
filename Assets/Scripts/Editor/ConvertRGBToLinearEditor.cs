@@ -12,7 +12,7 @@ public class ConvertColorToLinearEditor : EditorWindow
 
     Color m_gammaOld = Color.white;
 
-    [MenuItem("Tools/Convert Colour to Linear")]
+    [MenuItem("Tools/Convert Colour Space")]
     public static void ShowWindow()
     {
         EditorWindow thisWindow = EditorWindow.GetWindow(typeof(ConvertColorToLinearEditor));

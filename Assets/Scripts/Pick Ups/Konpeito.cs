@@ -122,16 +122,12 @@ public class Konpeito : BasePickUp
     /// <param name="newColor">Must be a valid index in the ColorSet</param>
     void SetColor(int newColor)
     {
-        if (m_colorSet[newColor] == null)
-        {
-            Debug.LogWarning("Konpeito ColorSet not complete");
-            return;
-        }
+        Assert.IsNotNull(m_colorSet[newColor], "Konpeito ColorSet not complete");
 
         GetMeshRenderer.material = m_colorSet[newColor];
 
-        GetLight.color = m_colorSet[newColor].color;   // Use this with emissive shader
-        //m_light.color = ColorSet[newColor].GetColor("_ReflectionTint");   // Use this is using reflective shader
+        GetLight.color = m_colorSet[newColor].color;   // Use this with qt emissive shader
+        //m_light.color = ColorSet[newColor].GetColor("_ReflectionTint");   // Use this is using qt reflective shader
 
         GetTrailRenderer.material.SetColor(m_trailShaderColorID, m_colorSet[newColor].color);
     }

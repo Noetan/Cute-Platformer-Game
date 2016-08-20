@@ -8,15 +8,51 @@ ModelImporter:
     100000: Heart
     100002: HeartCollider
     100004: //RootNode
+    100006: Camera
+    100008: Cube
+    100010: heart
+    100012: Heart.001
+    100014: Heart.002
+    100016: HeartColliderOld
+    100018: Icosphere
+    100020: Lamp
+    100022: Sun
     400000: Heart
     400002: HeartCollider
     400004: //RootNode
+    400006: Camera
+    400008: Cube
+    400010: heart
+    400012: Heart.001
+    400014: Heart.002
+    400016: HeartColliderOld
+    400018: Icosphere
+    400020: Lamp
+    400022: Sun
     2300000: Heart
     2300002: HeartCollider
+    2300004: Cube
+    2300006: heart
+    2300008: Heart.001
+    2300010: Heart.002
+    2300012: HeartColliderOld
+    2300014: Icosphere
     3300000: Heart
     3300002: HeartCollider
+    3300004: Cube
+    3300006: heart
+    3300008: Heart.001
+    3300010: Heart.002
+    3300012: HeartColliderOld
+    3300014: Icosphere
     4300000: HeartCollider
     4300002: Heart
+    4300004: Heart.002
+    4300006: Heart.001
+    4300008: HeartColliderOld
+    4300010: heart
+    4300012: Cube
+    4300014: Icosphere
   materials:
     importMaterials: 1
     materialName: 0
