@@ -55,6 +55,12 @@ public class PlayerEffects : MonoBehaviour
         yVelAnim = Animator.StringToHash("YVelocity");
     }
 
+    void OnDestroy()
+    {
+        MessageKit<PlayerMove.JumpType>.removeObserver(MessageTypes.PLAYER_JUMP, OnJump);
+        MessageKit.removeObserver(MessageTypes.PLAYER_LAND, OnLand);
+    }
+
     void FixedUpdate()
     {
         m_animator.SetFloat(speedAnim, PlayerController.RB.velocity.magnitude);
