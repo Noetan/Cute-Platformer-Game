@@ -48,12 +48,23 @@ public class Konpeito : BasePickUp
         base.Awake();
         
         Assert.IsNotNull(GetTrailRenderer);
+        Assert.IsNotNull(GetLight);
 
         m_trailShaderColorID = Shader.PropertyToID("_TintColor");         
         CycleColor();
 
         m_pitchDiff = m_defaultPitch;
-    }    
+    }
+
+    protected override void ShowModel(bool enable)
+    {
+        if (GetLight != null)
+        {
+            GetLight.enabled = enable;
+        }
+
+        base.ShowModel(enable);
+    }
 
     void Update()
     {

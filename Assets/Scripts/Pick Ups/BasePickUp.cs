@@ -54,7 +54,6 @@ public class BasePickUp : CustomBehaviour
         CurrentState = State.Idle;
 
         Assert.IsNotNull(GetMeshRenderer);
-        Assert.IsNotNull(GetLight);
     }
 
     protected override void Start()
@@ -160,14 +159,9 @@ public class BasePickUp : CustomBehaviour
     }
 
     // Unused for now, not needed?
-    void ShowModel(bool enable)
+    protected virtual void ShowModel(bool enable)
     {
         GetMeshRenderer.enabled = enable;
-
-        if (GetLight != null)
-        {
-            GetLight.enabled = enable;
-        }
 
         if (GetParticlSys != null)
         {

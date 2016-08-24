@@ -332,6 +332,23 @@ ModelImporter:
     100648: refYuko.000
     100650: MelonHairThickRig
     100652: MelonHairThinRig
+    100654: MelonBody.001
+    100656: MelonBody.002
+    100658: MelonBody.003
+    100660: MelonCloak1.001
+    100662: MelonCloak1.002
+    100664: MelonCloak1.002_MeshPart0
+    100666: MelonCloak1.002_MeshPart1
+    100668: MelonCloak1.003
+    100670: MelonCloak1.ZBAK
+    100672: MelonCloak1_Ribbon.001
+    100674: MelonCloak1_Ribbon.002
+    100676: MelonHat1.001
+    100678: MelonHat1.002
+    100680: MelonHat1.003
+    100682: MelonHat1.zbak
+    100684: MelonSkirt.zBak
+    100686: MelonSkirtRig
     400000: Armpit01.L
     400002: Armpit01.R
     400004: Armpit02.L
@@ -659,16 +676,47 @@ ModelImporter:
     400648: refYuko.000
     400650: MelonHairThickRig
     400652: MelonHairThinRig
+    400654: MelonBody.001
+    400656: MelonBody.002
+    400658: MelonBody.003
+    400660: MelonCloak1.001
+    400662: MelonCloak1.002
+    400664: MelonCloak1.002_MeshPart0
+    400666: MelonCloak1.002_MeshPart1
+    400668: MelonCloak1.003
+    400670: MelonCloak1.ZBAK
+    400672: MelonCloak1_Ribbon.001
+    400674: MelonCloak1_Ribbon.002
+    400676: MelonHat1.001
+    400678: MelonHat1.002
+    400680: MelonHat1.003
+    400682: MelonHat1.zbak
+    400684: MelonSkirt.zBak
+    400686: MelonSkirtRig
     2300000: MelonHat1Ribbon
     2300002: Cube
     2300004: MelonHat0
     2300006: refHead
     2300008: MelonCloak1
+    2300010: MelonBody.001
+    2300012: MelonBody.002
+    2300014: MelonBody.003
+    2300016: MelonCloak1.001
+    2300018: MelonCloak1.002_MeshPart0
+    2300020: MelonCloak1.002_MeshPart1
+    2300022: MelonCloak1.003
     3300000: MelonHat1Ribbon
     3300002: Cube
     3300004: MelonHat0
     3300006: refHead
     3300008: MelonCloak1
+    3300010: MelonBody.001
+    3300012: MelonBody.002
+    3300014: MelonBody.003
+    3300016: MelonCloak1.001
+    3300018: MelonCloak1.002_MeshPart0
+    3300020: MelonCloak1.002_MeshPart1
+    3300022: MelonCloak1.003
     4300000: MelonCloak0
     4300002: MelonCloak0_Ribbon
     4300004: MelonBody
@@ -683,6 +731,21 @@ ModelImporter:
     4300022: MelonCloak1_Ribbon
     4300024: MelonCloak1
     4300026: MelonFace
+    4300028: MelonCloak1.003
+    4300030: MelonCloak1.002_MeshPart0
+    4300032: MelonCloak1.002_MeshPart1
+    4300034: MelonCloak1.001
+    4300036: MelonBody.003
+    4300038: MelonBody.002
+    4300040: MelonBody.001
+    4300042: MelonCloak1.ZBAK
+    4300044: MelonSkirt.zBak
+    4300046: MelonCloak1_Ribbon.002
+    4300048: MelonCloak1_Ribbon.001
+    4300050: MelonHat1.003
+    4300052: MelonHat1.002
+    4300054: MelonHat1.001
+    4300056: MelonHat1.zbak
     9500000: //RootNode
     13700000: MelonBody
     13700002: MelonCloak0
@@ -695,6 +758,14 @@ ModelImporter:
     13700016: MelonFace
     13700018: MelonHat1Ribbon
     13700020: MelonCloak1
+    13700022: MelonCloak1.ZBAK
+    13700024: MelonCloak1_Ribbon.001
+    13700026: MelonCloak1_Ribbon.002
+    13700028: MelonHat1.001
+    13700030: MelonHat1.002
+    13700032: MelonHat1.003
+    13700034: MelonHat1.zbak
+    13700036: MelonSkirt.zBak
   materials:
     importMaterials: 1
     materialName: 2
@@ -702,11 +773,17 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nDefault bone length found in this file is different
+      form the one found in the source avatar:\n\t'ORG-thigh.L' : position error =
+      223.645706 mm\n\t'ORG-shin.L' : position error = 346.337891 mm\n\t'ORG-foot.L'
+      : position error = 297.574524 mm\n\t'ORG-toe.L' : position error = 157.987198
+      mm\n\t'ORG-thigh.R' : position error = 223.645706 mm\n\t'ORG-shin.R' : position
+      error = 346.337769 mm\n\t'ORG-foot.R' : position error = 297.574493 mm\n\t'ORG-toe.R'
+      : position error = 157.987228 mm\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 3

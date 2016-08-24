@@ -106,7 +106,7 @@ public class CustomBehaviour : MonoBehaviour
         {
             if (m_meshRend == null)
             {
-                m_meshRend = GetComponent<MeshRenderer>();
+                m_meshRend = GetComponentInChildren<MeshRenderer>();
             }
 
             return m_meshRend;
