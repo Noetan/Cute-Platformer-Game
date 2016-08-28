@@ -143,6 +143,21 @@ public static class Helper
         public int Max;
     }
 
+    [System.Serializable]
+    public struct Vec2Int
+    {
+        [SerializeField]
+        public int x;
+        [SerializeField]
+        public int y;
+
+        public Vec2Int(int newX, int newY)
+        {
+            x = newX;
+            y = newY;
+        }
+    }
+
     /**
     * Use a linearly distributed random number (x) to get a
     * random number in the range of an exponential PDF.
@@ -164,5 +179,23 @@ public static class Helper
         {
             return Mathf.Exp(Mathf.Log(x * (-Mathf.Pow(min, exponent + 1) + Mathf.Pow(max, exponent + 1)) + Mathf.Pow(min, exponent + 1)) / (exponent + 1));
         }
+    }
+
+    /// <summary>
+    /// Returns the texture offset needed to change a material to the item given.
+    /// Assumes texture is a uniform spritesheet.
+    /// Assumes you give it the right gridsize.
+    /// Assumes you give it an index within range.
+    /// </summary>
+    /// <param name="mat">The material to change.</param>
+    /// <param name="gridSize">Number of rows and columns.</param>
+    /// <param name="index">Which item in grid to change to.</param>
+    /// <returns>The offset.</returns>
+    public static Vector2 GetTexGridOffset(Material mat, Vec2Int gridSize, int index)
+    {
+        float rowOffset = (index % gridSize.x) * mat.mainTextureScale.x;
+        float colOffset = (1 - mat.mainTextureScale.y) - ((index / gridSize.y) * mat.mainTextureScale.y);        
+
+        return new Vector2(rowOffset, colOffset);
     }
 }
